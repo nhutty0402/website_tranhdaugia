@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatPrice, formatCountdown } from '../data/mockData';
-import { Heart, Eye, Zap, Clock, Shield, ArrowRight } from 'lucide-react';
+import { Heart, Eye, Zap, Clock, Shield, ArrowRight, Lock } from 'lucide-react';
 import styles from './ArtworkCard.module.css';
 
 const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
   const endTime = session?.end_time;
-  const isLive = session?.status === 'live';
+  const isSealed = session?.auction_type === 'sealed';
+  const isLive = session?.status === 'live' && !isSealed;
   const isUpcoming = session?.status === 'upcoming';
 
   return (
@@ -31,18 +32,28 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
               <Zap size={14} /> Vào phòng đấu giá
             </Link>
           )}
+          {isSealed && (
+            <Link to={`/artwork/${artwork.artwork_id}`} className="btn btn-secondary btn-sm">
+              <Lock size={14} /> Đặt giá kín
+            </Link>
+          )}
         </div>
 
         {/* Top badges */}
         <div className={styles.topBadges}>
+          {isSealed && (
+            <span className="badge badge-sealed">
+              <Lock size={11} /> ĐẤU GIÁ KÍN
+            </span>
+          )}
           {isLive && <span className="badge badge-live">LIVE</span>}
           {isUpcoming && (
-            <span className="badge" style={{ background: 'rgba(52,152,219,0.15)', color: '#3498DB', border: '1px solid rgba(52,152,219,0.3)' }}>
-              <Clock size={10} /> SẮP MỞ
+            <span className="badge badge-upcoming">
+              <Clock size={11} /> SẮP MỞ
             </span>
           )}
           {artwork.is_featured && (
-            <span className="badge badge-gold">✦ NỔI BẬT</span>
+            <span className="badge badge-featured">✦ NỔI BẬT</span>
           )}
         </div>
 
@@ -80,8 +91,12 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
 
         <div className={styles.footer}>
           <div>
-            <p className={styles.priceLabel}>{isLive ? 'Giá hiện tại' : 'Giá khởi điểm'}</p>
-            <p className={styles.price}>{formatPrice(artwork.current_price)}</p>
+            <p className={styles.priceLabel}>
+              {isSealed ? 'Giá khởi điểm (Kín)' : isLive ? 'Giá hiện tại' : 'Giá khởi điểm'}
+            </p>
+            <p className={styles.price}>
+              {isSealed ? formatPrice(session?.min_bid || artwork.reserve_price) : formatPrice(artwork.current_price)}
+            </p>
           </div>
           <div className={styles.trustBadge}>
             <Shield size={12} color="var(--gold-primary)" />
@@ -89,8 +104,8 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
           </div>
         </div>
 
-        {/* Countdown for live auctions */}
-        {isLive && endTime && <AuctionCountdown endTime={endTime} />}
+        {/* Countdown for live & sealed auctions */}
+        {(isLive || isSealed) && endTime && <AuctionCountdown endTime={endTime} />}
       </div>
     </div>
   );

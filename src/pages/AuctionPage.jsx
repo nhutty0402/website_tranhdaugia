@@ -1,38 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Zap, ArrowRight, Trophy, Users } from 'lucide-react';
+import { Clock, Zap, ArrowRight, Trophy, Users, Lock, PlusCircle, Shield, EyeOff } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, QUICK_BID_STEPS,
   formatPrice, formatPriceFull, formatCountdown,
 } from '../data/mockData';
+import CreateAuctionModal from '../components/CreateAuctionModal';
 import styles from './AuctionPage.module.css';
 
 const AuctionPage = ({ addToast, currentUser }) => {
-  const liveSessions = AUCTION_SESSIONS.filter(s => s.status === 'live');
-  const upcomingSessions = AUCTION_SESSIONS.filter(s => s.status === 'upcoming');
+  const [sessions, setSessions] = useState(AUCTION_SESSIONS);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+
+  const livePublicSessions = sessions.filter(s => s.status === 'live' && s.auction_type !== 'sealed');
+  const sealedSessions = sessions.filter(s => s.auction_type === 'sealed');
+  const upcomingSessions = sessions.filter(s => s.status === 'upcoming');
+
+  const handleCreateSuccess = (newSession) => {
+    setSessions(prev => [newSession, ...prev]);
+    addToast('✦ Đã kích hoạt phiên đấu giá thành công!', 'gold');
+  };
 
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)', paddingBottom: 80 }}>
       {/* Header */}
       <div className={styles.pageHeader}>
-        <div className="container">
-          <span className="section-label">Sàn đấu giá</span>
-          <h1 className={styles.pageTitle}>Đấu giá Trực tiếp</h1>
-          <p className={styles.pageDesc}>Tham gia các phiên đấu giá tranh nghệ thuật độc bản đang diễn ra</p>
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <span className="section-label">Sàn đấu giá</span>
+            <h1 className={styles.pageTitle}>Sàn Đấu Giá Trực Tuyến</h1>
+            <p className={styles.pageDesc}>Tham gia đấu giá công khai hoặc nộp hồ sơ đấu giá kín (Sealed-bid) có bảo chứng</p>
+          </div>
+          <button
+            id="btn-create-auction-page"
+            className="btn btn-primary"
+            onClick={() => {
+              if (!currentUser) {
+                addToast('Vui lòng đăng nhập với tư cách Họa sĩ để tạo phiên!', 'warning');
+                return;
+              }
+              setCreateModalOpen(true);
+            }}
+          >
+            <PlusCircle size={16} /> Tạo phiên đấu giá mới
+          </button>
         </div>
       </div>
 
       <div className="container" style={{ paddingTop: 40 }}>
-        {/* Live Sessions */}
+        {/* Phiên Đấu Giá Kín (Sealed-bid) */}
+        {sealedSessions.length > 0 && (
+          <div style={{ marginBottom: 48 }}>
+            <div className={styles.sectionHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                  <Lock size={12} /> SEALED-BID
+                </span>
+                <h2>Phiên Đấu Giá Kín (Bảo mật giá thầu)</h2>
+              </div>
+            </div>
+
+            <div className={styles.sessionsGrid}>
+              {sealedSessions.map(session => {
+                const artwork = ARTWORKS.find(a => a.artwork_id === session.artwork_id);
+                if (!artwork) return null;
+                return (
+                  <SealedAuctionCard
+                    key={session.session_id}
+                    session={session}
+                    artwork={artwork}
+                    currentUser={currentUser}
+                    addToast={addToast}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Live Public Sessions */}
         <div className={styles.sectionHeader}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span className="badge badge-live">LIVE</span>
-            <h2>Đang diễn ra</h2>
+            <h2>Đấu giá Công khai Trực tiếp</h2>
           </div>
         </div>
 
         <div className={styles.sessionsGrid}>
-          {liveSessions.map(session => {
+          {livePublicSessions.map(session => {
             const artwork = ARTWORKS.find(a => a.artwork_id === session.artwork_id);
             if (!artwork) return null;
             return (
@@ -63,6 +118,14 @@ const AuctionPage = ({ addToast, currentUser }) => {
           </>
         )}
       </div>
+
+      {createModalOpen && (
+        <CreateAuctionModal
+          currentUser={currentUser}
+          onClose={() => setCreateModalOpen(false)}
+          onSuccess={handleCreateSuccess}
+        />
+      )}
     </main>
   );
 };
@@ -232,6 +295,90 @@ const UpcomingCard = ({ session, artwork }) => {
           </div>
           <button className="btn btn-secondary btn-sm">Đặt lịch nhắc</button>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const SealedAuctionCard = ({ session, artwork, currentUser, addToast }) => {
+  const [countdown, setCountdown] = useState(formatCountdown(session.end_time));
+  const bids = BID_HISTORY.filter(b => b.session_id === session.session_id);
+  const totalBidders = new Set(bids.map(b => b.bidder_id || b.bidder_name)).size;
+
+  useEffect(() => {
+    const iv = setInterval(() => setCountdown(formatCountdown(session.end_time)), 1000);
+    return () => clearInterval(iv);
+  }, [session.end_time]);
+
+  const urgent = countdown.total < 3600000;
+
+  return (
+    <div className={`${styles.liveCard}`} style={{ borderColor: 'var(--border-gold)', background: 'linear-gradient(180deg, var(--bg-card) 0%, rgba(26,26,30,0.9) 100%)' }}>
+      {/* Artwork image */}
+      <div className={styles.cardImage}>
+        <img src={artwork.image} alt={artwork.title} className={styles.artImg} />
+        <div className={styles.imageOverlay}>
+          <Link to={`/artwork/${artwork.artwork_id}`} className="btn btn-primary btn-sm">
+            Chi tiết & Ra giá kín <ArrowRight size={14} />
+          </Link>
+        </div>
+        <div className={styles.imageBadges}>
+          <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Lock size={11} /> ĐẤU GIÁ KÍN
+          </span>
+        </div>
+      </div>
+
+      {/* Card body */}
+      <div className={styles.cardBody}>
+        <div>
+          <h3 className={styles.artTitle}>{artwork.title}</h3>
+          <p className={styles.artArtist}>{artwork.artist_name} · {artwork.medium}</p>
+        </div>
+
+        {/* Countdown */}
+        <div className={styles.countdown} style={{ borderColor: urgent ? 'rgba(255,71,87,0.4)' : 'rgba(212,175,55,0.25)' }}>
+          <Clock size={14} color={urgent ? 'var(--live)' : 'var(--gold-primary)'} />
+          <div className={styles.countdownBlocks}>
+            {[
+              { v: countdown.hours, l: 'GIỜ' },
+              { v: countdown.minutes, l: 'PHÚT' },
+              { v: countdown.seconds, l: 'GIÂY' },
+            ].map(({ v, l }) => (
+              <div key={l} className={styles.countdownBlock}>
+                <span className={styles.countdownNum} style={{ color: urgent ? 'var(--live)' : 'var(--gold-primary)' }}>
+                  {String(v).padStart(2, '0')}
+                </span>
+                <span className={styles.countdownLabel}>{l}</span>
+              </div>
+            ))}
+          </div>
+          <div className={styles.bidStats}>
+            <Users size={12} />
+            <span>{totalBidders} người gửi</span>
+          </div>
+        </div>
+
+        {/* Secret price notice */}
+        <div style={{ background: 'rgba(212,175,55,0.06)', border: '1px dashed var(--border-gold)', borderRadius: 10, padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <EyeOff size={18} color="var(--gold-primary)" />
+          <div>
+            <p style={{ margin: 0, fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              Giá khởi điểm: {formatPriceFull(session.min_bid || artwork.reserve_price)}
+            </p>
+            <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+              Giá thầu được bảo mật bí mật cho tới khi đóng phiên
+            </p>
+          </div>
+        </div>
+
+        <Link
+          to={`/artwork/${artwork.artwork_id}`}
+          className="btn btn-primary"
+          style={{ width: '100%', marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+        >
+          <Lock size={15} /> Nộp hồ sơ giá kín
+        </Link>
       </div>
     </div>
   );

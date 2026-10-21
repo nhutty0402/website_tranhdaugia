@@ -1,0 +1,160 @@
+.resultModal {
+  max-width: 540px;
+  width: 95%;
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px 32px;
+  position: relative;
+  text-align: center;
+}
+
+.winnerBorder {
+  border: 2px solid var(--gold-primary);
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), 0 20px 60px rgba(0,0,0,0.9);
+}
+
+.loserBorder {
+  border: 1px solid var(--border-default);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.innerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.iconCircleWinner {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.15);
+  border: 2px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.4);
+}
+
+.sparkleIcon {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  color: var(--gold-light);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+.iconCircleLoser {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.titleWinner {
+  font-family: var(--font-brand);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.titleLoser {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.artSnippet {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.artThumb {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+}
+
+.artMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.artName {
+  font-family: var(--font-brand);
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.artArtist {
+  font-size: 0.78rem;
+  color: var(--gold-primary);
+  margin: 0;
+}
+
+.winningAmount {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 2px 0 0;
+}
+
+.winningAmount strong {
+  color: var(--gold-primary);
+  font-family: var(--font-mono);
+}
+
+.escrowGuide {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(46, 204, 113, 0.08);
+  border: 1px solid rgba(46, 204, 113, 0.25);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.actionRow {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}

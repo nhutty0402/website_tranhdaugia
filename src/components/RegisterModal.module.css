@@ -97,7 +97,7 @@
 }
 
 .stepLabel {
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   white-space: nowrap;
   font-weight: 500;
@@ -305,18 +305,26 @@
 
 .pwdWrap { position: relative; }
 
+.pwdWrap input {
+  padding-right: 48px !important;
+}
+
 .eyeBtn {
   position: absolute;
-  right: 12px;
+  right: 2px;
   top: 50%;
   transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
   color: var(--text-muted);
   display: flex;
   align-items: center;
+  justify-content: center;
   transition: color 200ms;
+  border-radius: 8px;
 }
 
 .eyeBtn:hover { color: var(--text-primary); }
@@ -833,6 +841,49 @@
   flex-wrap: wrap;
 }
 
+/* ─── OTP Input ─── */
+.otpRow {
+  display: flex;
+  gap: clamp(4px, 1.8vw, 8px);
+  justify-content: center;
+  width: 100%;
+  max-width: 340px;
+  margin: 10px auto;
+}
+
+.otpBox {
+  flex: 1;
+  min-width: 0;
+  max-width: 46px;
+  height: clamp(44px, 12vw, 50px);
+  text-align: center;
+  font-size: clamp(1.1rem, 3.8vw, 1.35rem);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--gold-primary);
+  outline: none;
+  transition: all 150ms ease;
+  padding: 0;
+}
+
+.otpBox:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-muted);
+}
+
+.otpBoxFilled {
+  border-color: var(--border-gold);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.otpBoxError {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 2px var(--danger-muted) !important;
+}
+
 /* ─── Spinner ─── */
 .spinner {
   width: 15px;
@@ -847,12 +898,18 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ─── Responsive ─── */
-@media (max-width: 600px) {
-  .roleGrid { grid-template-columns: 1fr; }
+@media (max-width: 640px) {
+  .registerModal {
+    max-height: 92dvh;
+    border-radius: 20px;
+  }
+  .modalHeader { padding: 16px 16px 0; }
+  .stepperWrap { padding: 14px 16px 0; }
+  .stepContent { padding: 18px 16px 24px; gap: 16px; }
+  .roleGrid { grid-template-columns: 1fr; gap: 12px; }
+  .roleCard { padding: 18px 16px; }
   .uploadGrid { grid-template-columns: 1fr; }
   .uploadItemWide { grid-column: span 1; }
-  .otpBox { width: 40px; height: 48px; font-size: 1.2rem; }
-  .stepContent { padding: 20px 20px 24px; }
-  .modalHeader { padding: 16px 20px 0; }
-  .stepperWrap { padding: 16px 20px 0; }
+  .stepTitle { font-size: 1.2rem; }
+  .stepDesc { font-size: 0.82rem; }
 }

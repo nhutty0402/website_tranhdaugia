@@ -8,8 +8,13 @@
 
 .closeBtn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo {
@@ -91,18 +96,26 @@
   position: relative;
 }
 
+.pwdWrap input {
+  padding-right: 48px !important;
+}
+
 .eyeBtn {
   position: absolute;
-  right: 12px;
+  right: 2px;
   top: 50%;
   transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
   color: var(--text-muted);
   display: flex;
   align-items: center;
+  justify-content: center;
   transition: color 200ms ease;
+  border-radius: 8px;
 }
 
 .eyeBtn:hover { color: var(--text-primary); }
@@ -164,4 +177,198 @@
   color: var(--text-muted);
   text-align: center;
   padding: 0 8px;
+}
+
+/* Validation & Alert Styles */
+.loginAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--danger-muted);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  color: var(--danger);
+  line-height: 1.4;
+}
+
+.inputError {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--danger-muted) !important;
+}
+
+.errorText {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+/* Forgot Password Sub-screens */
+.subHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 150ms ease;
+}
+
+.backBtn:hover {
+  color: var(--text-primary);
+}
+
+.successCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 16px 8px;
+}
+
+.successIconWrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--success-muted);
+  border: 2px solid var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.25);
+}
+
+.otpRow {
+  display: flex;
+  gap: clamp(4px, 1.8vw, 8px);
+  justify-content: center;
+  width: 100%;
+  max-width: 340px;
+  margin: 8px auto;
+}
+
+.otpBox {
+  flex: 1;
+  min-width: 0;
+  max-width: 46px;
+  height: clamp(44px, 12vw, 50px);
+  text-align: center;
+  font-size: clamp(1.1rem, 3.8vw, 1.35rem);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--gold-primary);
+  outline: none;
+  transition: all 150ms ease;
+  padding: 0;
+}
+
+.otpBox:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-muted);
+}
+
+.otpBoxFilled {
+  border-color: var(--border-gold);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.otpBoxError {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 2px var(--danger-muted) !important;
+}
+
+.otpMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.resendBtn {
+  background: none;
+  border: none;
+  color: var(--gold-primary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.resendBtn:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Password Strength Indicator inside Login / Reset */
+.pwdStrength {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.pwdBars {
+  display: flex;
+  gap: 4px;
+}
+
+.pwdBar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  transition: all 250ms ease;
+}
+
+.pwdChecks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pwdCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.pwdCheckOk {
+  color: var(--success);
+}
+
+@media (max-width: 640px) {
+  .modalInner {
+    padding: 24px 16px;
+    gap: 14px;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
 }

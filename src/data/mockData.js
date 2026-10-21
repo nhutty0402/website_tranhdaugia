@@ -94,7 +94,7 @@ export const ARTWORKS = [
     curator_statement: 'Góc nhìn trừu tượng về đô thị hiện đại qua đêm, với các mảng màu xanh indigo và ánh đèn phản chiếu trên mặt nước.',
     tags: ['Đô thị', 'Đêm', 'Trừu tượng'],
     style: 'Hiện đại',
-    is_auction: false,
+    is_auction: true,
     is_featured: false,
     views: 654,
     likes: 67,
@@ -126,41 +126,73 @@ export const AUCTION_SESSIONS = [
   {
     session_id: 'as1',
     artwork_id: 'aw1',
+    auction_type: 'live', // live | sealed
+    min_bid: 15000000,
+    is_bid_visible_public: true,
     start_time: new Date(Date.now() - 3600000).toISOString(),
     end_time: new Date(Date.now() + 7200000 + 1800000).toISOString(), // ~2.5h from now
     bid_increment: 500000,
     current_highest_price: 22500000,
     winner_id: null,
+    winner_contacted_at: null,
     status: 'live',
   },
   {
     session_id: 'as2',
     artwork_id: 'aw2',
+    auction_type: 'live',
+    min_bid: 28000000,
+    is_bid_visible_public: true,
     start_time: new Date(Date.now() - 7200000).toISOString(),
     end_time: new Date(Date.now() + 3600000).toISOString(), // 1h from now
     bid_increment: 1000000,
     current_highest_price: 35000000,
     winner_id: null,
+    winner_contacted_at: null,
     status: 'live',
   },
   {
     session_id: 'as3',
     artwork_id: 'aw4',
+    auction_type: 'live',
+    min_bid: 12000000,
+    is_bid_visible_public: true,
     start_time: new Date(Date.now() + 86400000).toISOString(),
     end_time: new Date(Date.now() + 86400000 * 2).toISOString(),
     bid_increment: 500000,
     current_highest_price: 12000000,
     winner_id: null,
+    winner_contacted_at: null,
     status: 'upcoming',
+  },
+  {
+    session_id: 'as4_sealed',
+    artwork_id: 'aw3',
+    auction_type: 'sealed', // Phiên đấu giá kín (Sealed-bid)
+    min_bid: 18000000,
+    is_bid_visible_public: false,
+    start_time: new Date(Date.now() - 86400000 * 2).toISOString(),
+    end_time: new Date(Date.now() + 14400000).toISOString(), // Còn 4 tiếng
+    bid_increment: 500000,
+    current_highest_price: 26000000,
+    winner_id: null,
+    winner_contacted_at: null,
+    status: 'live',
   },
 ];
 
 export const BID_HISTORY = [
-  { bid_id: 'b1', session_id: 'as1', bidder_id: 'u1', bidder_name: 'N.M.Khôi', bid_amount: 22500000, placed_at: new Date(Date.now() - 180000).toISOString(), is_auto_bid: false, status: 'winning' },
-  { bid_id: 'b2', session_id: 'as1', bidder_id: 'u4', bidder_name: 'P.V.Long', bid_amount: 21500000, placed_at: new Date(Date.now() - 600000).toISOString(), is_auto_bid: false, status: 'outbid' },
-  { bid_id: 'b3', session_id: 'as1', bidder_id: 'u5', bidder_name: 'L.T.Hoa', bid_amount: 20000000, placed_at: new Date(Date.now() - 1200000).toISOString(), is_auto_bid: true, status: 'outbid' },
-  { bid_id: 'b4', session_id: 'as1', bidder_id: 'u6', bidder_name: 'T.Q.Bình', bid_amount: 18500000, placed_at: new Date(Date.now() - 2400000).toISOString(), is_auto_bid: false, status: 'outbid' },
-  { bid_id: 'b5', session_id: 'as1', bidder_id: 'u1', bidder_name: 'N.M.Khôi', bid_amount: 17000000, placed_at: new Date(Date.now() - 3600000).toISOString(), is_auto_bid: false, status: 'outbid' },
+  { bid_id: 'b1', session_id: 'as1', bidder_id: 'u1', bidder_name: 'N.M.Khôi', bid_amount: 22500000, placed_at: new Date(Date.now() - 180000).toISOString(), is_auto_bid: false, status: 'winning', is_visible_to_public: true, last_raised_at: new Date(Date.now() - 180000).toISOString() },
+  { bid_id: 'b2', session_id: 'as1', bidder_id: 'u4', bidder_name: 'P.V.Long', bid_amount: 21500000, placed_at: new Date(Date.now() - 600000).toISOString(), is_auto_bid: false, status: 'outbid', is_visible_to_public: true, last_raised_at: new Date(Date.now() - 600000).toISOString() },
+  { bid_id: 'b3', session_id: 'as1', bidder_id: 'u5', bidder_name: 'L.T.Hoa', bid_amount: 20000000, placed_at: new Date(Date.now() - 1200000).toISOString(), is_auto_bid: true, status: 'outbid', is_visible_to_public: true, last_raised_at: new Date(Date.now() - 1200000).toISOString() },
+  { bid_id: 'b4', session_id: 'as1', bidder_id: 'u6', bidder_name: 'T.Q.Bình', bid_amount: 18500000, placed_at: new Date(Date.now() - 2400000).toISOString(), is_auto_bid: false, status: 'outbid', is_visible_to_public: true, last_raised_at: new Date(Date.now() - 2400000).toISOString() },
+  { bid_id: 'b5', session_id: 'as1', bidder_id: 'u1', bidder_name: 'N.M.Khôi', bid_amount: 17000000, placed_at: new Date(Date.now() - 3600000).toISOString(), is_auto_bid: false, status: 'outbid', is_visible_to_public: true, last_raised_at: new Date(Date.now() - 3600000).toISOString() },
+
+  // Bids for sealed auction as4_sealed
+  { bid_id: 'sb1', session_id: 'as4_sealed', bidder_id: 'u7', bidder_name: 'Đặng Thái Hà', bid_amount: 26000000, placed_at: new Date(Date.now() - 10800000).toISOString(), is_auto_bid: false, status: 'winning', is_visible_to_public: false, last_raised_at: new Date(Date.now() - 10800000).toISOString(), notes: 'Sưu tập tư nhân, cam kết thanh toán ngay' },
+  { bid_id: 'sb2', session_id: 'as4_sealed', bidder_id: 'u1', bidder_name: 'Nguyễn Minh Khôi', bid_amount: 23500000, placed_at: new Date(Date.now() - 21600000).toISOString(), is_auto_bid: false, status: 'submitted', is_visible_to_public: false, last_raised_at: new Date(Date.now() - 21600000).toISOString(), notes: 'Yêu cầu khung gỗ sồi nguyên khối' },
+  { bid_id: 'sb3', session_id: 'as4_sealed', bidder_id: 'u8', bidder_name: 'Vũ Hoàng Nam', bid_amount: 21000000, placed_at: new Date(Date.now() - 43200000).toISOString(), is_auto_bid: false, status: 'submitted', is_visible_to_public: false, last_raised_at: new Date(Date.now() - 43200000).toISOString(), notes: 'Phòng trưng bày Heritage Gallery' },
+  { bid_id: 'sb4', session_id: 'as4_sealed', bidder_id: 'u9', bidder_name: 'Lê Thùy Dung', bid_amount: 19500000, placed_at: new Date(Date.now() - 72000000).toISOString(), is_auto_bid: false, status: 'submitted', is_visible_to_public: false, last_raised_at: new Date(Date.now() - 72000000).toISOString(), notes: 'Sưu tầm cá nhân' },
 ];
 
 export const CERTIFICATES = [

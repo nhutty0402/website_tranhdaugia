@@ -624,3 +624,112 @@
   .quickBidGrid { grid-template-columns: repeat(2, 1fr); }
   .actionBtns { flex-wrap: wrap; }
 }
+
+/* ===== Sealed Auction Specific Styles ===== */
+.sealedBox {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, rgba(26,26,30,0.85) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.sealedBadgeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sealedTimes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: var(--bg-card);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+}
+
+.timeCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeLabel {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timeVal {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.hiddenPriceCard {
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px dashed var(--border-gold);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hiddenIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hiddenMainText {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hiddenSubText {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.userSubmittedBidBox {
+  background: rgba(46, 204, 113, 0.08);
+  border: 1px solid rgba(46, 204, 113, 0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artistManageNotice {
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

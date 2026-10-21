@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Shield, Clock, Zap, Heart, Share2, Eye, ZoomIn,
   ArrowLeft, Award, AlertTriangle, Check, ChevronLeft, ChevronRight,
+  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY,
@@ -11,6 +12,9 @@ import {
 } from '../data/mockData';
 import KYCBanner from '../components/KYCBanner';
 import VerificationBadge from '../components/VerificationBadge';
+import SealedBidModal from '../components/SealedBidModal';
+import ArtistSessionDashboardModal from '../components/ArtistSessionDashboardModal';
+import AuctionResultOverlay from '../components/AuctionResultOverlay';
 import styles from './ArtworkDetailPage.module.css';
 
 const TAB_ITEMS = ['Thông tin', 'Room View', 'Vệt cọ', 'Lịch sử đặt giá'];
@@ -18,7 +22,7 @@ const TAB_ITEMS = ['Thông tin', 'Room View', 'Vệt cọ', 'Lịch sử đặt 
 const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) => {
   const { id } = useParams();
   const artwork = ARTWORKS.find(a => a.artwork_id === id) || ARTWORKS[0];
-  const session = AUCTION_SESSIONS.find(s => s.artwork_id === artwork.artwork_id);
+  const [session, setSession] = useState(AUCTION_SESSIONS.find(s => s.artwork_id === artwork.artwork_id));
   const artist = USERS.find(u => u.user_id === artwork.artist_id);
 
   const [activeTab, setActiveTab] = useState('Thông tin');
@@ -31,6 +35,64 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
   const [placing, setPlacing] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(wishlisted?.has(artwork.artwork_id));
   const bidListRef = useRef(null);
+
+  // Flow 5 Sealed Auction Modals state
+  const [sealedBidModalOpen, setSealedBidModalOpen] = useState(false);
+  const [artistDashboardOpen, setArtistDashboardOpen] = useState(false);
+  const [resultOverlayOpen, setResultOverlayOpen] = useState(false);
+
+  const isArtistOwner = currentUser && (currentUser.user_id === artwork.artist_id || currentUser.role === 'artist');
+  const isSealedAuction = session?.auction_type === 'sealed';
+
+  // Check if current user has placed a sealed bid
+  const mySealedBid = currentUser ? bids.find(b => b.bidder_id === currentUser.user_id) : null;
+  const isSessionEnded = session?.status === 'ended' || (countdown && countdown.total <= 0);
+
+  // Sealed auction bidding submission (Flow 4)
+  const handleSealedBidSubmit = (bidData) => {
+    if (bidData.is_raise) {
+      setBids(prev => prev.map(b => {
+        if (b.bidder_id === bidData.bidder_id) {
+          return {
+            ...b,
+            bid_amount: bidData.bid_amount,
+            last_raised_at: new Date().toISOString(),
+            notes: bidData.note || b.notes,
+          };
+        }
+        return b;
+      }));
+      addToast('✦ Đã tăng giá thầu thành công! Giá mới của bạn được giữ bí mật.', 'gold', 5000);
+    } else {
+      const newBid = {
+        bid_id: `sb_${Date.now()}`,
+        session_id: session.session_id,
+        bidder_id: bidData.bidder_id,
+        bidder_name: bidData.bidder_name,
+        bid_amount: bidData.bid_amount,
+        placed_at: new Date().toISOString(),
+        is_auto_bid: false,
+        status: 'submitted',
+        is_visible_to_public: false,
+        last_raised_at: new Date().toISOString(),
+        notes: bidData.note,
+      };
+      setBids(prev => [newBid, ...prev]);
+      addToast('✦ Đã gửi giá thành công! Mức giá của bạn được giữ bí mật, không thể rút.', 'gold', 5000);
+    }
+  };
+
+  const handleContactWinner = (sessionId, bid) => {
+    setSession(prev => ({ ...prev, winner_contacted_at: new Date().toISOString() }));
+  };
+
+  const handleCreateEscrow = (sess, art, bid) => {
+    addToast(`✦ Đã mở hợp đồng Escrow bảo chứng 72h cho ${bid?.bidder_name || 'người thắng'}!`, 'gold', 6000);
+  };
+
+  const handleEndSessionNow = (sessionId) => {
+    setSession(prev => ({ ...prev, status: 'ended' }));
+  };
 
   useEffect(() => {
     if (!session) return;
@@ -115,7 +177,13 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
 
               {/* Badges */}
               <div className={styles.imageBadges}>
-                {session?.status === 'live' && <span className="badge badge-live">LIVE</span>}
+                {isSealedAuction ? (
+                  <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <Lock size={11} /> PHIÊN KÍN
+                  </span>
+                ) : session?.status === 'live' ? (
+                  <span className="badge badge-live">LIVE</span>
+                ) : null}
                 <span className="badge badge-gold">✦ Độc bản</span>
               </div>
             </div>
@@ -152,7 +220,13 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                 <TextureTab artwork={artwork} />
               )}
               {activeTab === 'Lịch sử đặt giá' && (
-                <BidHistoryTab bids={bids} bidListRef={bidListRef} />
+                <BidHistoryTab
+                  bids={bids}
+                  bidListRef={bidListRef}
+                  isSealed={isSealedAuction}
+                  isArtist={isArtistOwner}
+                  currentUser={currentUser}
+                />
               )}
             </div>
           </div>
@@ -197,19 +271,41 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
 
             <hr className="divider" style={{ margin: '20px 0' }} />
 
-            {/* Auction Box */}
+            {/* Auction Box (Sealed vs Live vs Buy) */}
             {session ? (
-              <AuctionBox
-                session={session}
-                currentPrice={currentPrice}
-                countdown={countdown}
-                urgent={urgent}
-                bids={bids}
-                onBid={handleBid}
-                placing={placing}
-                artwork={artwork}
-                addToast={addToast}
-              />
+              isSealedAuction ? (
+                <SealedAuctionBox
+                  session={session}
+                  artwork={artwork}
+                  countdown={countdown}
+                  urgent={urgent}
+                  bids={bids}
+                  currentUser={currentUser}
+                  isArtistOwner={isArtistOwner}
+                  mySealedBid={mySealedBid}
+                  onOpenSealedBid={() => {
+                    if (!currentUser) { addToast('Vui lòng đăng nhập để ra giá kín!', 'warning'); return; }
+                    if ((currentUser.kyc_level || 0) < 2) {
+                      addToast('⚠️ Cần hoàn tất eKYC (Cấp L2) để tham gia đấu giá kín!', 'warning'); return;
+                    }
+                    setSealedBidModalOpen(true);
+                  }}
+                  onOpenArtistDashboard={() => setArtistDashboardOpen(true)}
+                  onOpenResult={() => setResultOverlayOpen(true)}
+                />
+              ) : (
+                <AuctionBox
+                  session={session}
+                  currentPrice={currentPrice}
+                  countdown={countdown}
+                  urgent={urgent}
+                  bids={bids}
+                  onBid={handleBid}
+                  placing={placing}
+                  artwork={artwork}
+                  addToast={addToast}
+                />
+              )
             ) : (
               <BuyBox artwork={artwork} addToast={addToast} />
             )}
@@ -249,6 +345,44 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
           </div>
         </div>
       </div>
+
+      {/* Modals for Sealed Auction */}
+      {sealedBidModalOpen && (
+        <SealedBidModal
+          artwork={artwork}
+          session={session}
+          existingBid={mySealedBid}
+          currentUser={currentUser}
+          onClose={() => setSealedBidModalOpen(false)}
+          onSubmitBid={handleSealedBidSubmit}
+        />
+      )}
+
+      {artistDashboardOpen && (
+        <ArtistSessionDashboardModal
+          session={session}
+          artwork={artwork}
+          bids={bids}
+          onClose={() => setArtistDashboardOpen(false)}
+          onContactWinner={handleContactWinner}
+          onCreateEscrow={handleCreateEscrow}
+          onEndSessionNow={handleEndSessionNow}
+          addToast={addToast}
+        />
+      )}
+
+      {resultOverlayOpen && (
+        <AuctionResultOverlay
+          isWinner={mySealedBid?.status === 'winning' || bids[0]?.bidder_id === currentUser?.user_id}
+          artwork={artwork}
+          session={session}
+          winningBid={bids[0]}
+          userBid={mySealedBid}
+          onClose={() => setResultOverlayOpen(false)}
+          onCreateEscrow={() => handleCreateEscrow(session, artwork, bids[0])}
+          onContactArtist={() => addToast(`Đã gửi tin nhắn tới họa sĩ ${artwork.artist_name}`, 'success')}
+        />
+      )}
     </main>
   );
 };
@@ -381,27 +515,48 @@ const TextureTab = ({ artwork }) => {
   );
 };
 
-const BidHistoryTab = ({ bids, bidListRef }) => (
+const BidHistoryTab = ({ bids, bidListRef, isSealed, isArtist, currentUser }) => (
   <div className={styles.bidHistory} ref={bidListRef}>
+    {isSealed && (
+      <div style={{ background: 'rgba(212,175,55,0.08)', padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-gold)', marginBottom: 8, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+        <Lock size={12} style={{ display: 'inline', marginRight: 6 }} color="var(--gold-primary)" />
+        {isArtist
+          ? 'Chế độ Họa sĩ: Bạn có toàn quyền xem giá thầu từ cao xuống thấp của các Collector.'
+          : 'Chế độ phiên kín: Mức giá của người khác được ẩn bảo mật (chỉ bạn thấy giá của chính mình).'}
+      </div>
+    )}
     {bids.length === 0 && (
       <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: 32 }}>Chưa có lượt đặt giá nào.</p>
     )}
-    {bids.map((bid, i) => (
-      <div key={bid.bid_id} className={`${styles.bidRow} ${bid.status === 'winning' ? styles.bidWinning : ''}`}>
-        <div className={styles.bidRank}>#{i + 1}</div>
-        <div className={styles.bidInfo}>
-          <span className={styles.bidder}>{bid.bidder_name}</span>
-          <span className={styles.bidTime}>
-            {new Date(bid.placed_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-          </span>
+    {bids.map((bid, i) => {
+      const isMyBid = currentUser && bid.bidder_id === currentUser.user_id;
+      const canSeePrice = !isSealed || isArtist || isMyBid;
+
+      return (
+        <div key={bid.bid_id} className={`${styles.bidRow} ${bid.status === 'winning' ? styles.bidWinning : ''}`}>
+          <div className={styles.bidRank}>#{i + 1}</div>
+          <div className={styles.bidInfo}>
+            <span className={styles.bidder}>
+              {isMyBid ? `${bid.bidder_name} (Bạn)` : isSealed ? 'Nhà sưu tầm bảo mật' : bid.bidder_name}
+            </span>
+            <span className={styles.bidTime}>
+              {new Date(bid.placed_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </span>
+          </div>
+          <div className={styles.bidAmount}>
+            <span className={styles.bidPrice}>
+              {canSeePrice ? formatPrice(bid.bid_amount) : '•••••••• ₫'}
+            </span>
+            {bid.status === 'winning' && canSeePrice && <span className="badge badge-gold">Dẫn đầu</span>}
+            {isSealed && !canSeePrice && (
+              <span className="badge" style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)' }}>
+                Đã khóa
+              </span>
+            )}
+          </div>
         </div>
-        <div className={styles.bidAmount}>
-          <span className={styles.bidPrice}>{formatPrice(bid.bid_amount)}</span>
-          {bid.status === 'winning' && <span className="badge badge-gold">Dẫn đầu</span>}
-          {bid.is_auto_bid && <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>Tự động</span>}
-        </div>
-      </div>
-    ))}
+      );
+    })}
   </div>
 );
 
@@ -463,6 +618,183 @@ const AuctionBox = ({ session, currentPrice, countdown, urgent, bids, onBid, pla
   </div>
 );
 
+const SealedAuctionBox = ({
+  session,
+  artwork,
+  countdown,
+  urgent,
+  bids,
+  currentUser,
+  isArtistOwner,
+  mySealedBid,
+  onOpenSealedBid,
+  onOpenArtistDashboard,
+  onOpenResult,
+}) => {
+  const now = new Date();
+  const isBeforeStart = new Date(session.start_time) > now;
+  const isEnded = session.status === 'ended' || new Date(session.end_time) <= now || (countdown && countdown.total <= 0);
+  const totalBidders = new Set(bids.map(b => b.bidder_id || b.bidder_name)).size;
+
+  return (
+    <div className={styles.sealedBox}>
+      {/* Badge khóa & Trạng thái (Mục 8.3) */}
+      <div className={styles.sealedBadgeHeader}>
+        <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Lock size={12} /> ĐẤU GIÁ KÍN
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {isEnded ? (
+            <span className="badge" style={{ background: 'rgba(231,76,60,0.15)', color: 'var(--danger)', border: '1px solid rgba(231,76,60,0.3)' }}>
+              ĐÃ KẾT THÚC
+            </span>
+          ) : isBeforeStart ? (
+            <span className="badge" style={{ background: 'rgba(52,152,219,0.15)', color: '#3498DB', border: '1px solid rgba(52,152,219,0.3)' }}>
+              <Clock size={10} /> SẮP MỞ
+            </span>
+          ) : (
+            <span className="badge badge-live">ĐANG DIỄN RA</span>
+          )}
+        </div>
+      </div>
+
+      {/* Đồng hồ Mở / Đóng lúc */}
+      <div className={styles.sealedTimes}>
+        <div className={styles.timeCol}>
+          <span className={styles.timeLabel}>
+            <Clock size={11} color="var(--gold-primary)" /> Mở lúc
+          </span>
+          <span className={styles.timeVal}>
+            {new Date(session.start_time).toLocaleDateString('vi-VN')} {new Date(session.start_time).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+        <div className={styles.timeCol}>
+          <span className={styles.timeLabel}>
+            <Clock size={11} color="var(--live)" /> Đóng lúc
+          </span>
+          <span className={styles.timeVal}>
+            {new Date(session.end_time).toLocaleDateString('vi-VN')} {new Date(session.end_time).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+      </div>
+
+      {/* Countdown timer if live */}
+      {!isEnded && countdown && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(212,175,55,0.06)', padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-subtle)' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Thời gian còn lại nộp giá:</span>
+          <span style={{ color: urgent ? 'var(--live)' : 'var(--gold-primary)', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, fontSize: '1rem' }}>
+            {String(countdown.hours).padStart(2, '0')}:{String(countdown.minutes).padStart(2, '0')}:{String(countdown.seconds).padStart(2, '0')}
+          </span>
+        </div>
+      )}
+
+      {/* KHÔNG hiển thị giá hiện tại - Chỉ hiển thị Card bảo mật và Giá khởi điểm */}
+      <div className={styles.hiddenPriceCard}>
+        <div className={styles.hiddenIconWrap}>
+          <EyeOff size={22} color="var(--gold-primary)" />
+        </div>
+        <div>
+          <h4 className={styles.hiddenMainText}>
+            Giá thầu bảo mật tuyệt đối
+          </h4>
+          <p className={styles.hiddenSubText}>
+            Giá hiện tại được ẩn với công chúng. Giá khởi điểm: <strong>{formatPriceFull(session.min_bid || artwork.reserve_price)}</strong>.
+            Hiện có <strong>{totalBidders} nhà sưu tầm</strong> đã gửi hồ sơ.
+          </p>
+        </div>
+      </div>
+
+      {/* Collector has already bid */}
+      {mySealedBid && (
+        <div className={styles.userSubmittedBidBox}>
+          <div>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Hồ sơ của bạn</span>
+            <p style={{ margin: '2px 0 0', fontSize: '0.95rem', fontWeight: 700, color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>
+              Đã nộp: {formatPriceFull(mySealedBid.bid_amount)}
+            </p>
+          </div>
+          <span className="badge badge-verified" style={{ fontSize: '0.72rem' }}>
+            <Check size={12} /> Đã mã hóa
+          </span>
+        </div>
+      )}
+
+      {/* Artist management section if current user is owner or artist */}
+      {isArtistOwner && (
+        <div className={styles.artistManageNotice}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <LayoutDashboard size={16} color="var(--gold-primary)" />
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              Bạn là Họa sĩ tạo phiên này.
+            </span>
+          </div>
+          <button
+            id="btn-open-artist-dashboard"
+            className="btn btn-secondary btn-sm"
+            onClick={onOpenArtistDashboard}
+          >
+            Mở Dashboard phiên
+          </button>
+        </div>
+      )}
+
+      {/* CTA Button */}
+      {isEnded ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button
+            id="btn-view-sealed-result"
+            className="btn btn-primary"
+            style={{ width: '100%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            onClick={onOpenResult}
+          >
+            <Trophy size={16} /> Xem thông báo kết quả phiên
+          </button>
+          {isArtistOwner && (
+            <button
+              className="btn btn-secondary"
+              style={{ width: '100%' }}
+              onClick={onOpenArtistDashboard}
+            >
+              Xem bảng xếp hạng thầu & Tạo Escrow
+            </button>
+          )}
+        </div>
+      ) : isBeforeStart ? (
+        <button
+          className="btn btn-secondary"
+          style={{ width: '100%', padding: '16px', fontSize: '0.95rem', cursor: 'not-allowed', opacity: 0.7 }}
+          disabled
+        >
+          <Clock size={16} /> Phiên sắp mở (Chưa đến giờ nhận giá)
+        </button>
+      ) : isArtistOwner ? (
+        <button
+          className="btn btn-secondary"
+          style={{ width: '100%', padding: '16px', fontSize: '0.95rem', cursor: 'not-allowed', opacity: 0.8 }}
+          disabled
+          title="Chủ tranh không được phép tự đặt giá vào tranh của mình"
+        >
+          <Shield size={16} /> Chủ tranh không được tự đặt giá
+        </button>
+      ) : (
+        <button
+          id="btn-open-sealed-bid-modal"
+          className="btn btn-primary"
+          style={{ width: '100%', padding: '16px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+          onClick={onOpenSealedBid}
+        >
+          <Lock size={16} /> {mySealedBid ? 'Tăng giá kín của bạn' : 'Đặt giá kín'}
+        </button>
+      )}
+
+      <div className={styles.escrowNote}>
+        <Shield size={12} color="var(--gold-primary)" />
+        <span>Giao dịch an toàn 100% qua Hợp đồng Escrow ký quỹ 72 giờ của Artisan Hub</span>
+      </div>
+    </div>
+  );
+};
+
 const BuyBox = ({ artwork, addToast }) => (
   <div className={styles.buyBox}>
     <div className={styles.currentPrice}>
@@ -477,3 +809,4 @@ const BuyBox = ({ artwork, addToast }) => (
 );
 
 export default ArtworkDetailPage;
+

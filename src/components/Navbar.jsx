@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  Palette, Search, Bell, User, Menu, X, ChevronDown,
+  Palette, Search, Bell, User, Menu, X, ChevronDown, LogOut,
 } from 'lucide-react';
 import VerificationBadge from './VerificationBadge';
 import styles from './Navbar.module.css';
@@ -13,10 +13,29 @@ const NAV_LINKS = [
   { label: 'Về chúng tôi', path: '/about' },
 ];
 
-const Navbar = ({ user, onLoginClick, onRegisterClick }) => {
+const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close menus on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    setUserMenuOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
@@ -66,12 +85,70 @@ const Navbar = ({ user, onLoginClick, onRegisterClick }) => {
             </button>
 
             {user ? (
-              <Link to="/profile" className={styles.userChip} id="nav-profile">
-                <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
-                <span className={styles.userName}>{user.full_name.split(' ').slice(-1)[0]}</span>
-                <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
-                <ChevronDown size={14} />
-              </Link>
+              <div className={styles.userMenuWrapper} ref={userMenuRef}>
+                <button
+                  type="button"
+                  id="nav-profile-btn"
+                  className={`${styles.userChip} ${userMenuOpen ? styles.userChipActive : ''}`}
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  aria-expanded={userMenuOpen}
+                  aria-label="Menu tài khoản"
+                >
+                  <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
+                  <span className={styles.userName}>{user.full_name.split(' ').slice(-1)[0]}</span>
+                  <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
+                  <ChevronDown
+                    size={14}
+                    className={`${styles.chevron} ${userMenuOpen ? styles.chevronRotated : ''}`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {userMenuOpen && (
+                  <div className={styles.userDropdown} id="nav-user-dropdown">
+                    <div className={styles.dropdownHeader}>
+                      <img src={user.avatar} alt={user.full_name} className={styles.dropdownAvatar} />
+                      <div className={styles.dropdownUserInfo}>
+                        <div className={styles.dropdownName}>{user.full_name}</div>
+                        <div className={styles.dropdownMeta}>
+                          <span className={styles.dropdownRole}>
+                            {user.role === 'artist' ? 'Họa sĩ xác thực' : 'Nhà sưu tầm'}
+                          </span>
+                          <span className={styles.dropdownKyc}>Cấp L{user.kyc_level || 0}</span>
+                        </div>
+                        <div className={styles.dropdownEmail}>{user.email}</div>
+                      </div>
+                    </div>
+
+                    <div className={styles.dropdownDivider} />
+
+                    <Link
+                      to="/profile"
+                      className={styles.dropdownItem}
+                      id="dropdown-profile-link"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      <User size={15} color="var(--gold-primary)" />
+                      <span>Hồ sơ & Bộ sưu tập</span>
+                    </Link>
+
+                    <div className={styles.dropdownDivider} />
+
+                    <button
+                      type="button"
+                      id="nav-logout-btn"
+                      className={`${styles.dropdownItem} ${styles.dropdownLogout}`}
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        onLogout?.();
+                      }}
+                    >
+                      <LogOut size={15} />
+                      <span>Đăng xuất</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <div style={{ display: 'flex', gap: 8 }}>
                 <button id="nav-register-btn" className="btn btn-secondary btn-sm" onClick={onRegisterClick}>
@@ -122,7 +199,50 @@ const Navbar = ({ user, onLoginClick, onRegisterClick }) => {
                 {link.label}
               </Link>
             ))}
-            {!user && (
+
+            {user ? (
+              <div className={styles.mobileUserSection}>
+                <div className={styles.mobileUserInfo}>
+                  <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
+                  <div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.85rem' }}>
+                      {user.full_name}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)' }}>
+                      {user.role === 'artist' ? 'Họa sĩ xác thực' : 'Nhà sưu tầm (Collector)'}
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  to="/profile"
+                  className={styles.mobileLink}
+                  onClick={() => setMobileOpen(false)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                >
+                  <User size={16} /> Xem hồ sơ & Bộ sưu tập
+                </Link>
+                <button
+                  id="mobile-logout-btn"
+                  className="btn btn-secondary btn-sm"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    width: '100%',
+                    borderColor: 'rgba(239, 68, 68, 0.4)',
+                    color: '#ef4444',
+                    marginTop: 6,
+                  }}
+                  onClick={() => {
+                    setMobileOpen(false);
+                    onLogout?.();
+                  }}
+                >
+                  <LogOut size={16} /> Đăng xuất
+                </button>
+              </div>
+            ) : (
               <button className="btn btn-primary" onClick={() => { onLoginClick(); setMobileOpen(false); }}>
                 Đăng nhập / Đăng ký
               </button>

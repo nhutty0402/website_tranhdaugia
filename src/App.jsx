@@ -60,6 +60,7 @@ const App = () => {
     addToast,
     onLoginClick: () => setLoginOpen(true),
     onRegisterClick: () => setRegisterOpen(true),
+    onLogout: handleLogout,
   };
 
   return (
@@ -68,6 +69,7 @@ const App = () => {
         user={currentUser}
         onLoginClick={() => setLoginOpen(true)}
         onRegisterClick={() => setRegisterOpen(true)}
+        onLogout={handleLogout}
       />
 
       <Routes>
@@ -87,6 +89,7 @@ const App = () => {
           onClose={() => setLoginOpen(false)}
           onLogin={handleLogin}
           onOpenRegister={() => setRegisterOpen(true)}
+          addToast={addToast}
         />
       )}
 
@@ -95,6 +98,7 @@ const App = () => {
         <RegisterModal
           onClose={() => setRegisterOpen(false)}
           onRegister={handleRegister}
+          onOpenLogin={() => setLoginOpen(true)}
         />
       )}
 
