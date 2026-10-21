@@ -1,0 +1,150 @@
+.pageHeader {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-base) 100%);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 48px 0 40px;
+}
+.pageTitle { margin: 8px 0 12px; }
+.pageDesc { font-size: 0.9rem; color: var(--text-secondary); }
+
+.artistsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.artistCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.artistCover {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.coverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5) saturate(0.8);
+  transition: transform 0.5s ease;
+}
+
+.artistCard:hover .coverImg { transform: scale(1.05); }
+
+.coverOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(22,22,25,0.9) 100%);
+}
+
+.artistProfile {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avatarWrap {
+  position: relative;
+  margin-top: -36px;
+  align-self: flex-start;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--gold-primary);
+  box-shadow: 0 0 20px rgba(212,175,55,0.3);
+}
+
+.verifiedBadge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  background: var(--gold-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0D0D0F;
+  border: 2px solid var(--bg-card);
+}
+
+.artistInfo { display: flex; flex-direction: column; gap: 8px; }
+
+.artistName {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.artistMeta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.artistBio {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.worksPreview {
+  display: flex;
+  gap: 8px;
+}
+
+.workThumb {
+  width: 64px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  transition: all 200ms ease;
+}
+
+.workThumb:hover {
+  border-color: var(--border-gold);
+  transform: scale(1.05);
+}
+
+.workThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artistFooter {
+  display: flex;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 768px) {
+  .artistsGrid { grid-template-columns: 1fr; }
+}

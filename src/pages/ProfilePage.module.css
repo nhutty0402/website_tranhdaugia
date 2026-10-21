@@ -1,0 +1,481 @@
+.notLoggedIn {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  padding: 40px;
+}
+.notLoggedIn h2 { color: var(--text-primary); }
+.notLoggedIn p { color: var(--text-muted); }
+
+.profileHeader {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-base) 100%);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 40px 0;
+}
+
+.profileHero {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--gold-primary);
+  box-shadow: 0 0 24px rgba(212,175,55,0.3);
+}
+
+.avatarBadge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--success);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: 2px solid var(--bg-base);
+}
+
+.profileInfo { flex: 1; }
+
+.profileName {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.profileUsername {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 4px 0 16px;
+}
+
+.profileStats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.profileStat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profileStatVal {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.profileStatLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab {
+  padding: 14px 24px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 200ms ease;
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--text-primary); }
+.tabActive { color: var(--gold-primary); border-bottom-color: var(--gold-primary); }
+
+.tabContent { padding-bottom: 40px; }
+.tabTitle {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 24px;
+}
+
+/* Collection */
+.collectionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.collectionCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 300ms ease;
+}
+.collectionCard:hover {
+  border-color: var(--border-gold);
+  box-shadow: var(--shadow-hover);
+}
+
+.collectionImg {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.collectionInfo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.collectionTitle {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.collectionArtist {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.collectionMeta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.collectionFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.collectionPrice {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Escrow */
+.escrowCard {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(243,156,18,0.25);
+  border-radius: 20px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.escrowHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.escrowTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 8px 0 0;
+}
+
+.escrowAmount { text-align: right; }
+
+.priceLabel {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 4px;
+}
+
+.escrowPrice {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.escrowProgress {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.escrowStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  text-align: center;
+}
+
+.stepDot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-overlay);
+  border: 2px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.stepDone {
+  background: rgba(46,204,113,0.15);
+  border-color: rgba(46,204,113,0.4);
+  color: var(--success);
+}
+
+.stepActive {
+  background: rgba(243,156,18,0.15);
+  border-color: rgba(243,156,18,0.4);
+  color: var(--warning);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 rgba(243,156,18,0)} 50%{box-shadow:0 0 12px rgba(243,156,18,0.3)} }
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background: var(--border-subtle);
+  margin-top: 17px;
+  align-self: flex-start;
+}
+
+.stepLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.stepDesc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.escrowActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Certificates */
+.certCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: var(--shadow-glow);
+}
+
+.certHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.certBrand { display: flex; flex-direction: column; }
+
+.certQr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.certArtwork {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  background: rgba(212,175,55,0.05);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 12px;
+}
+
+.certImg {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(212,175,55,0.3);
+}
+
+.certArtTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+
+.certMeta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+.certFields { display: flex; flex-direction: column; gap: 12px; }
+
+.certField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--bg-overlay);
+  border-radius: 8px;
+}
+
+.certLabel {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.certValue {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--gold-primary);
+  word-break: break-all;
+  background: none;
+}
+
+.certProvenance { display: flex; flex-direction: column; gap: 0; }
+
+.provenanceTitle {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.provenanceRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-left: 2px solid var(--border-subtle);
+  padding-left: 20px;
+  position: relative;
+}
+
+.provDot {
+  position: absolute;
+  left: -7px;
+  top: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--border-default);
+  border: 2px solid var(--bg-base);
+}
+
+.provDotActive {
+  background: var(--gold-primary);
+}
+
+.provOwner {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin: 0 0 2px;
+}
+
+.provMeta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.certActions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Settings */
+.settingsForm {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+}
+
+.formGroup { display: flex; flex-direction: column; gap: 6px; }
+
+.formLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 900px) {
+  .collectionGrid { grid-template-columns: repeat(2, 1fr); }
+  .escrowProgress { flex-direction: column; align-items: flex-start; }
+  .stepLine { display: none; }
+}
+
+@media (max-width: 600px) {
+  .profileHero { flex-direction: column; }
+  .collectionGrid { grid-template-columns: 1fr; }
+}

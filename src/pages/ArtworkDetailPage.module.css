@@ -1,0 +1,626 @@
+.breadcrumb {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.backLink:hover { color: var(--text-primary); }
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 48px;
+  padding-top: 40px;
+  align-items: start;
+}
+
+/* Left Column */
+.leftCol { display: flex; flex-direction: column; gap: 0; }
+
+.mainImageWrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  aspect-ratio: 4/3;
+  cursor: zoom-in;
+}
+
+.mainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  transform-origin: center;
+}
+
+.imageControls {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.zoomBtn {
+  background: rgba(13,13,15,0.8) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  font-size: 0.75rem;
+}
+
+.imageBadges {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-top: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab {
+  padding: 14px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 200ms ease;
+  margin-bottom: -1px;
+}
+
+.tab:hover { color: var(--text-primary); }
+
+.tabActive {
+  color: var(--gold-primary);
+  border-bottom-color: var(--gold-primary);
+}
+
+.tabContent {
+  padding: 24px 0;
+}
+
+/* Info Tab */
+.infoTab { display: flex; flex-direction: column; gap: 24px; }
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.infoItem {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.infoKey {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.infoVal {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.curatorStatement {
+  padding: 20px;
+  background: rgba(212,175,55,0.05);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 12px;
+  border-left: 3px solid var(--gold-primary);
+}
+
+.curatorLabel {
+  font-size: 0.7rem;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+.quote {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+.artistBio {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.artistBioHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.artistBioAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(212,175,55,0.3);
+}
+
+.artistBioText {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Room View Tab */
+.roomView { display: flex; flex-direction: column; gap: 20px; }
+
+.roomPreview {
+  border-radius: 12px;
+  overflow: hidden;
+  height: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: background 0.5s ease;
+}
+
+.roomWall {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px 40px;
+}
+
+.roomFrame {
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 0 0 8px rgba(0,0,0,0.3);
+  border: 6px solid #5C4A1E;
+  transition: filter 0.4s ease;
+}
+
+.roomArtwork {
+  width: 200px;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.roomShadow {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 20px;
+  background: rgba(0,0,0,0.3);
+  filter: blur(10px);
+  border-radius: 50%;
+}
+
+.spotlightBeam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255,220,120,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.roomFloor {
+  height: 40px;
+  background: rgba(0,0,0,0.3);
+}
+
+.scaleTag {
+  position: absolute;
+  bottom: 48px;
+  right: 16px;
+  background: rgba(13,13,15,0.8);
+  border: 1px solid var(--border-gold);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  color: var(--gold-primary);
+  backdrop-filter: blur(4px);
+}
+
+.roomControls { display: flex; flex-direction: column; gap: 16px; }
+
+.controlLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 8px;
+}
+
+.controlRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Texture Tab */
+.textureTab { display: flex; flex-direction: column; gap: 20px; }
+
+.textureViewer {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 280px;
+  background: var(--bg-elevated);
+}
+
+.textureImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  transform-origin: top left;
+}
+
+.textureBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(13,13,15,0.85);
+  border: 1px solid var(--border-gold);
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gold-primary);
+  backdrop-filter: blur(4px);
+}
+
+.zoomControls { display: flex; flex-direction: column; gap: 8px; }
+
+.textureNote {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+/* Bid History Tab */
+.bidHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.bidRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  transition: all 200ms ease;
+}
+
+.bidWinning {
+  background: rgba(212,175,55,0.08);
+  border-color: rgba(212,175,55,0.25);
+}
+
+.bidRank {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  min-width: 24px;
+}
+
+.bidInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bidder {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.bidTime {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.bidAmount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.bidPrice {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Right Column */
+.rightCol {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.artistRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+.artistAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(212,175,55,0.3);
+}
+
+.artistLabel {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 2px;
+}
+
+.artistName {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.medium {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.statsRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Auction Box */
+.auctionBox {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auctionUrgent {
+  border-color: rgba(255,71,87,0.4);
+  background: rgba(255,71,87,0.03);
+}
+
+.auctionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auctionTime {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.currentPrice { display: flex; flex-direction: column; gap: 4px; }
+
+.priceLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.priceValue {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  margin: 0;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.bidCount {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.quickBids { display: flex; flex-direction: column; gap: 10px; }
+
+.quickBidGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.quickBidBtn {
+  font-size: 0.8rem;
+  padding: 10px;
+  text-align: center;
+}
+
+.confirmBidBtn {
+  width: 100%;
+  padding: 16px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.escrowNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 10px 14px;
+  background: rgba(212,175,55,0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(212,175,55,0.1);
+}
+
+/* Buy Box */
+.buyBox {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Action buttons */
+.actionBtns {
+  display: flex;
+  gap: 8px;
+}
+
+.wishlisted {
+  background: rgba(212,175,55,0.1) !important;
+  border-color: rgba(212,175,55,0.4) !important;
+  color: var(--gold-primary) !important;
+}
+
+/* Trust Box */
+.trustBox {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .rightCol { position: static; }
+}
+
+@media (max-width: 600px) {
+  .infoGrid { grid-template-columns: 1fr; }
+  .quickBidGrid { grid-template-columns: repeat(2, 1fr); }
+  .actionBtns { flex-wrap: wrap; }
+}
