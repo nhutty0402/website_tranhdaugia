@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Shield, Clock, Zap, Heart, Share2, Eye, ZoomIn,
   ArrowLeft, Award, AlertTriangle, Check, ChevronLeft, ChevronRight,
-  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare
+  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare, ShieldCheck
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY,
@@ -14,6 +14,7 @@ import KYCBanner from '../components/KYCBanner';
 import VerificationBadge from '../components/VerificationBadge';
 import SealedBidModal from '../components/SealedBidModal';
 import LiveBidConfirmModal from '../components/LiveBidConfirmModal';
+import DepositEscrowModal from '../components/DepositEscrowModal';
 import ArtistSessionDashboardModal from '../components/ArtistSessionDashboardModal';
 import AuctionResultOverlay from '../components/AuctionResultOverlay';
 import styles from './ArtworkDetailPage.module.css';
@@ -47,6 +48,11 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
   const [sealedBidModalOpen, setSealedBidModalOpen] = useState(false);
   const [artistDashboardOpen, setArtistDashboardOpen] = useState(false);
   const [resultOverlayOpen, setResultOverlayOpen] = useState(false);
+
+  // Escrow Deposit Verification (Friction with Purpose) state
+  const [depositLocked, setDepositLocked] = useState(false);
+  const [depositModalOpen, setDepositModalOpen] = useState(false);
+  const [escrowPass, setEscrowPass] = useState(null);
 
   const isArtistOwner = currentUser && (currentUser.user_id === artwork.artist_id || currentUser.role === 'artist');
   const isSealedAuction = session?.auction_type === 'sealed';
@@ -125,6 +131,13 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
       return;
     }
     if (!session || session.status !== 'live') return;
+
+    // Check deposit escrow status (Friction with Purpose)
+    if (!depositLocked) {
+      addToast('⚠️ Bạn cần thực hiện Ký quỹ bảo chứng 15% (Escrow) để mở quyền đặt giá!', 'warning', 5000);
+      setDepositModalOpen(true);
+      return;
+    }
 
     setPendingBidIncrement(increment);
     setLiveConfirmOpen(true);
@@ -359,6 +372,9 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   artwork={artwork}
                   addToast={addToast}
                   outbidAlert={outbidAlert}
+                  depositLocked={depositLocked}
+                  escrowPass={escrowPass}
+                  onOpenDeposit={() => setDepositModalOpen(true)}
                 />
               )
             ) : (
@@ -449,6 +465,21 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
           onClose={() => setLiveConfirmOpen(false)}
           onConfirm={handleConfirmLiveBid}
           submitting={placing}
+        />
+      )}
+
+      {/* 2-Step Deposit Verification Modal (Friction with Purpose) */}
+      {depositModalOpen && (
+        <DepositEscrowModal
+          artwork={artwork}
+          session={session}
+          currentUser={currentUser}
+          onClose={() => setDepositModalOpen(false)}
+          onSuccess={(pass) => {
+            setDepositLocked(true);
+            setEscrowPass(pass);
+          }}
+          addToast={addToast}
         />
       )}
     </main>
@@ -628,7 +659,10 @@ const BidHistoryTab = ({ bids, bidListRef, isSealed, isArtist, currentUser }) =>
   </div>
 );
 
-const AuctionBox = ({ session, currentPrice, countdown, urgent, bids, onBid, placing, artwork, addToast, outbidAlert }) => (
+const AuctionBox = ({
+  session, currentPrice, countdown, urgent, bids, onBid, placing,
+  artwork, addToast, outbidAlert, depositLocked, escrowPass, onOpenDeposit
+}) => (
   <div className={`${styles.auctionBox} ${urgent ? styles.auctionUrgent : ''} ${outbidAlert ? styles.outbidFlash : ''}`}>
     <div className={styles.auctionHeader}>
       <span className="badge badge-live">LIVE AUCTION</span>
@@ -648,6 +682,56 @@ const AuctionBox = ({ session, currentPrice, countdown, urgent, bids, onBid, pla
       <p className={styles.priceValue}>{formatPriceFull(currentPrice)}</p>
       <p className={styles.bidCount}>{bids.length} lượt đặt giá</p>
     </div>
+
+    {/* Deposit Escrow Status & Callout (Friction with Purpose) */}
+    {!depositLocked ? (
+      <div className={styles.depositBanner}>
+        <div className={styles.depositBannerHeader}>
+          <span className="badge badge-gold" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Shield size={12} /> YÊU CẦU KÝ QUỸ ĐẶT CỌC 15%
+          </span>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Friction with Purpose</span>
+        </div>
+        <p className={styles.depositBannerDesc}>
+          Ký quỹ tạm khóa <strong>{formatPriceFull(Math.round(currentPrice * 0.15))}</strong> trong ví Escrow (hoàn trả 100% tự động nếu không trúng thầu) để kích hoạt quyền đặt giá.
+        </p>
+        <button
+          id="open-deposit-btn"
+          type="button"
+          className="btn btn-primary btn-sm"
+          style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}
+          onClick={onOpenDeposit}
+        >
+          <Shield size={14} /> Ký quỹ bảo chứng 15% & Mở quyền phòng đấu
+        </button>
+      </div>
+    ) : (
+      <div className={styles.depositUnlockedBanner}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className={styles.unlockedIconBadge}>
+              <ShieldCheck size={18} color="#2ECC71" />
+            </div>
+            <div>
+              <span className="badge badge-verified" style={{ fontSize: '0.7rem' }}>
+                ✦ ĐÃ KHÓA CỌC KÝ QUỸ ESCROW 15%
+              </span>
+              <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)' }}>
+                Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp quyền VIP
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            style={{ fontSize: '0.75rem', color: 'var(--gold-primary)' }}
+            onClick={onOpenDeposit}
+          >
+            Xem thẻ Pass
+          </button>
+        </div>
+      </div>
+    )}
 
     <div className={styles.quickBids}>
       <p className={styles.controlLabel}>Đặt giá nhanh</p>

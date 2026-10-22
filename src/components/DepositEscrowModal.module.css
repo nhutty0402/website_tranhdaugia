@@ -1,0 +1,601 @@
+/* ============================================================
+   ARTISAN HUB – 2-STEP DEPOSIT ESCROW VERIFICATION MODAL
+   Friction with Purpose: 4 Steps Anti-Accidental Click System
+   Palette: Dark Luxury #0A0A0C, Gold #D4AF37, Emerald #2ECC71
+   ============================================================ */
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(14px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 560px;
+  max-height: 94vh;
+  background: #111115;
+  border: 1px solid var(--border-gold, rgba(212, 175, 55, 0.35));
+  border-radius: 20px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.85), 0 0 32px rgba(212, 175, 55, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.header {
+  padding: 22px 28px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.09) 0%, transparent 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 3px 10px;
+  border-radius: 20px;
+  align-self: flex-start;
+}
+
+.title {
+  font-family: var(--font-brand, 'Cinzel', serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #F2EEE8;
+  margin: 4px 0 0;
+}
+
+.closeBtn {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #948E85;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.closeBtn:hover {
+  color: #F2EEE8;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 4-Step Progress Bar */
+.stepperTrack {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 12px 28px;
+  background: #0D0D10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.stepperItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepperBar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+}
+
+.stepperBarActive {
+  background: #D4AF37;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.stepperBarDone {
+  background: #2ECC71;
+}
+
+.stepperLabel {
+  font-size: 0.65rem;
+  color: #948E85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stepperLabelActive {
+  color: #D4AF37;
+  font-weight: 600;
+}
+
+/* Body Container */
+.body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================================================
+   BƯỚC 1: TÓM TẮT NGHĨA VỤ TÀI CHÍNH (FINANCIAL BREAKDOWN)
+   ============================================================ */
+.artworkCardMini {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #18181D;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.artworkThumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  flex-shrink: 0;
+}
+
+.artworkTitle {
+  font-family: var(--font-brand, serif);
+  font-size: 1.05rem;
+  color: #F2EEE8;
+  margin: 0;
+}
+
+.artworkMeta {
+  font-size: 0.78rem;
+  color: #948E85;
+  margin: 2px 0 0;
+}
+
+.financialTable {
+  background: #141418;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.financialRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.financialRow:last-child {
+  border-bottom: none;
+}
+
+.financialTotalRow {
+  background: rgba(212, 175, 55, 0.08);
+  border-top: 1px solid rgba(212, 175, 55, 0.3) !important;
+  padding: 16px 18px;
+}
+
+.totalLabel {
+  font-weight: 700;
+  color: #F2EEE8;
+  font-size: 0.95rem;
+}
+
+.totalAmount {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #D4AF37;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+}
+
+.termNoticeBox {
+  background: rgba(52, 152, 219, 0.08);
+  border: 1px solid rgba(52, 152, 219, 0.25);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #B8C7D9;
+}
+
+/* ============================================================
+   BƯỚC 2: CHỐT CHẶN HÀNH VI CHỐNG BẤM VÔ THỨC (INTERACTION FRICTION)
+   ============================================================ */
+.frictionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 0;
+}
+
+.phraseCard {
+  background: rgba(231, 76, 60, 0.06);
+  border: 1px solid rgba(231, 76, 60, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phraseTitle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #FF6B6B;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.phraseInstruction {
+  font-size: 0.78rem;
+  color: #D1D5DB;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.requiredPhrase {
+  font-family: var(--font-mono, monospace);
+  color: #D4AF37;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.phraseInput {
+  width: 100%;
+  background: #18181D;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #F2EEE8;
+  font-size: 16px;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.phraseInput:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
+}
+
+/* Slider Drag to Confirm */
+.sliderTrack {
+  position: relative;
+  height: 56px;
+  background: #18181D;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.sliderFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.6));
+  border-radius: 28px;
+  transition: width 0.1s ease;
+}
+
+.sliderText {
+  position: relative;
+  z-index: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #B8B0A0;
+  pointer-events: none;
+  letter-spacing: 0.03em;
+}
+
+.sliderThumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #D4AF37;
+  color: #0A0A0C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  transition: transform 0.05s linear;
+}
+
+.sliderThumb:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+
+/* ============================================================
+   BƯỚC 3: XÁC THỰC KÝ QUỸ ĐA YẾU TỐ (BIOMETRICS / MFA PIN)
+   ============================================================ */
+.mfaTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: #18181D;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.mfaTabBtn {
+  min-height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #948E85;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mfaTabBtnActive {
+  background: rgba(212, 175, 55, 0.15);
+  color: #D4AF37;
+  font-weight: 600;
+}
+
+/* Biometric Fingerprint Box */
+.biometricBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  background: #141418;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.scannerCircle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+  border: 2px dashed rgba(212, 175, 55, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.scannerCircle:hover {
+  transform: scale(1.05);
+  border-color: #D4AF37;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.4);
+}
+
+.scanLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #2ECC71;
+  box-shadow: 0 0 10px #2ECC71;
+  animation: scanLaser 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes scanLaser {
+  0% { top: 10%; }
+  100% { top: 90%; }
+}
+
+/* 6-Digit OTP Inputs */
+.otpContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.otpInputRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.otpDigit {
+  width: 48px;
+  height: 54px;
+  background: #18181D;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: var(--font-mono, monospace);
+  color: #D4AF37;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.otpDigit:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+}
+
+.otpHint {
+  font-size: 0.78rem;
+  color: #948E85;
+  text-align: center;
+  margin: 0;
+}
+
+/* ============================================================
+   BƯỚC 4: TRẠNG THÁI KHÓA CỌC & CẤP QUYỀN PHÒNG ĐẤU (SUCCESS PASS)
+   ============================================================ */
+.accessPassCard {
+  background: linear-gradient(145deg, #18181D 0%, #101014 100%);
+  border: 1px solid #D4AF37;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+}
+
+.passHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+.passBrand {
+  font-family: var(--font-brand, serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 0.08em;
+}
+
+.passQrRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.passQrCode {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  background: #FFF;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.passDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.passNumber {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #F2EEE8;
+  margin: 0;
+}
+
+.passHash {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  color: #948E85;
+  word-break: break-all;
+  margin: 0;
+}
+
+.passBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* Footer Navigation */
+.footer {
+  padding: 18px 28px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #111115;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.nextBtn {
+  min-height: 48px;
+  padding: 0 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.cancelBtn {
+  min-height: 48px;
+  padding: 0 18px;
+}
