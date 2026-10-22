@@ -6,6 +6,7 @@ const ToastIcon = ({ type }) => {
     gold: { icon: Trophy, color: '#D4AF37', bg: 'rgba(212,175,55,0.15)' },
     success: { icon: CheckCircle, color: '#2ECC71', bg: 'rgba(46,204,113,0.15)' },
     warning: { icon: AlertTriangle, color: '#F39C12', bg: 'rgba(243,156,18,0.15)' },
+    danger: { icon: AlertTriangle, color: '#FF4757', bg: 'rgba(255,71,87,0.2)' },
     info: { icon: Info, color: '#3498DB', bg: 'rgba(52,152,219,0.15)' },
   };
   const { icon: Icon, color, bg } = config[type] || config.gold;

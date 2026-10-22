@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Package, Award, Clock, Shield, ArrowRight,
   CheckCircle, Download, QrCode, ExternalLink, Lock,
-  PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut
+  PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut, Palette
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, CERTIFICATES,
@@ -12,6 +12,7 @@ import {
 import CreateAuctionModal from '../components/CreateAuctionModal';
 import ArtistSessionDashboardModal from '../components/ArtistSessionDashboardModal';
 import SealedBidModal from '../components/SealedBidModal';
+import UploadArtworkModal from '../components/UploadArtworkModal';
 import styles from './ProfilePage.module.css';
 
 const PROFILE_TABS = [
@@ -27,6 +28,8 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Phiên của tôi');
   const [createAuctionOpen, setCreateAuctionOpen] = useState(false);
+  const [uploadArtworkOpen, setUploadArtworkOpen] = useState(false);
+  const [artworksVersion, setArtworksVersion] = useState(0);
   const [dashboardSession, setDashboardSession] = useState(null);
   const [raiseBidSession, setRaiseBidSession] = useState(null);
 
@@ -87,14 +90,24 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
             {/* Quick Actions */}
             <div className={styles.profileHeroActions}>
               {currentUser.role === 'artist' && (
-                <button
-                  id="profile-create-auction-btn"
-                  className="btn btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                  onClick={() => setCreateAuctionOpen(true)}
-                >
-                  <PlusCircle size={16} /> Tạo phiên đấu giá
-                </button>
+                <>
+                  <button
+                    id="profile-upload-artwork-btn"
+                    className="btn btn-secondary"
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, borderColor: 'var(--border-gold)' }}
+                    onClick={() => setUploadArtworkOpen(true)}
+                  >
+                    <Palette size={16} color="var(--gold-primary)" /> Đăng tác phẩm mới
+                  </button>
+                  <button
+                    id="profile-create-auction-btn"
+                    className="btn btn-primary"
+                    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                    onClick={() => setCreateAuctionOpen(true)}
+                  >
+                    <PlusCircle size={16} /> Tạo phiên đấu giá
+                  </button>
+                </>
               )}
               <button
                 id="profile-logout-hero-btn"
@@ -149,7 +162,9 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
           <ArtistArtworkManagementTab
             currentUser={currentUser}
             onOpenCreate={() => setCreateAuctionOpen(true)}
+            onOpenUpload={() => setUploadArtworkOpen(true)}
             onOpenDashboard={(sess) => setDashboardSession(sess)}
+            artworksVersion={artworksVersion}
             addToast={addToast}
           />
         )}
@@ -164,6 +179,18 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
           />
         )}
       </div>
+
+      {/* Upload Artwork Modal (Task 4) */}
+      {uploadArtworkOpen && (
+        <UploadArtworkModal
+          currentUser={currentUser}
+          onClose={() => setUploadArtworkOpen(false)}
+          onSuccess={(newArtwork) => {
+            setArtworksVersion(v => v + 1);
+          }}
+          addToast={addToast}
+        />
+      )}
 
       {/* Create Auction Modal */}
       {createAuctionOpen && (
@@ -408,7 +435,7 @@ const MyAuctionsTab = ({ currentUser, onRaiseBid, addToast }) => {
 };
 
 /* ===== 8.6 MÀN HÌNH 5 & FLOW 5: Quản lý tác phẩm & Phiên của Họa sĩ ===== */
-const ArtistArtworkManagementTab = ({ currentUser, onOpenCreate, onOpenDashboard, addToast }) => {
+const ArtistArtworkManagementTab = ({ currentUser, onOpenCreate, onOpenUpload, onOpenDashboard, artworksVersion, addToast }) => {
   const artistArtworks = ARTWORKS.filter(a => a.artist_id === currentUser.user_id || currentUser.role === 'artist');
 
   return (
@@ -420,9 +447,24 @@ const ArtistArtworkManagementTab = ({ currentUser, onOpenCreate, onOpenDashboard
             Flow 5: Họa sĩ thiết lập phiên kín (Sealed-bid), giám sát danh sách giá thầu cao→thấp và kết nối Escrow
           </p>
         </div>
-        <button id="btn-tab-create-auction" className="btn btn-primary btn-sm" onClick={onOpenCreate}>
-          <PlusCircle size={14} /> Tạo phiên đấu giá mới
-        </button>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <button
+            id="btn-tab-upload-artwork"
+            className="btn btn-secondary btn-sm"
+            onClick={onOpenUpload}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderColor: 'var(--border-gold)' }}
+          >
+            <Palette size={14} color="var(--gold-primary)" /> Đăng tác phẩm mới
+          </button>
+          <button
+            id="btn-tab-create-auction"
+            className="btn btn-primary btn-sm"
+            onClick={onOpenCreate}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          >
+            <PlusCircle size={14} /> Tạo phiên đấu giá mới
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

@@ -9,6 +9,7 @@ export const USERS = [
     role: 'collector',
     full_name: 'Nguyễn Minh Khôi',
     verification_badge: true,
+    kyc_level: 2,
     avatar: '/artist_avatar.png',
   },
   {
@@ -20,6 +21,7 @@ export const USERS = [
     artist_bio: 'Họa sĩ sơn dầu & lụa, 12 năm kinh nghiệm. Tốt nghiệp Đại học Mỹ thuật Hà Nội. Tác phẩm được triển lãm tại Paris, Singapore và Hà Nội.',
     studio_address: '12 Ngõ Hàng Bông, Hoàn Kiếm, Hà Nội',
     verification_badge: true,
+    kyc_level: 3,
     avatar: '/artist_avatar.png',
   },
   {
@@ -31,6 +33,7 @@ export const USERS = [
     artist_bio: 'Chuyên tranh sơn mài truyền thống kết hợp thẩm mỹ đương đại. 8 năm kinh nghiệm, triển lãm Hội Mỹ thuật Việt Nam.',
     studio_address: '45 Đường Nguyễn Du, Quận 1, TP. HCM',
     verification_badge: true,
+    kyc_level: 3,
     avatar: '/artist_avatar.png',
   },
 ];

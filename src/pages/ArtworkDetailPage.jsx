@@ -13,6 +13,7 @@ import {
 import KYCBanner from '../components/KYCBanner';
 import VerificationBadge from '../components/VerificationBadge';
 import SealedBidModal from '../components/SealedBidModal';
+import LiveBidConfirmModal from '../components/LiveBidConfirmModal';
 import ArtistSessionDashboardModal from '../components/ArtistSessionDashboardModal';
 import AuctionResultOverlay from '../components/AuctionResultOverlay';
 import styles from './ArtworkDetailPage.module.css';
@@ -36,6 +37,12 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
   const [isWishlisted, setIsWishlisted] = useState(wishlisted?.has(artwork.artwork_id));
   const bidListRef = useRef(null);
 
+  // Live Bid Confirm Modal & Outbid simulation state (Tasks 1 & 3)
+  const [liveConfirmOpen, setLiveConfirmOpen] = useState(false);
+  const [pendingBidIncrement, setPendingBidIncrement] = useState(QUICK_BID_STEPS[1]);
+  const [outbidAlert, setOutbidAlert] = useState(false);
+  const outbidTimerRef = useRef(null);
+
   // Flow 5 Sealed Auction Modals state
   const [sealedBidModalOpen, setSealedBidModalOpen] = useState(false);
   const [artistDashboardOpen, setArtistDashboardOpen] = useState(false);
@@ -43,6 +50,13 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
 
   const isArtistOwner = currentUser && (currentUser.user_id === artwork.artist_id || currentUser.role === 'artist');
   const isSealedAuction = session?.auction_type === 'sealed';
+
+  // Clean up outbid simulation timer on unmount
+  useEffect(() => {
+    return () => {
+      if (outbidTimerRef.current) clearTimeout(outbidTimerRef.current);
+    };
+  }, []);
 
   // Check if current user has placed a sealed bid
   const mySealedBid = currentUser ? bids.find(b => b.bidder_id === currentUser.user_id) : null;
@@ -100,13 +114,25 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
     return () => clearInterval(iv);
   }, [session]);
 
-  const handleBid = (increment) => {
-    if (!currentUser) { addToast('Vui lòng đăng nhập để đặt giá thầu!', 'warning'); return; }
+  // Request bid confirmation dialog (Task 1)
+  const handleOpenLiveBidConfirm = (increment) => {
+    if (!currentUser) {
+      addToast('Vui lòng đăng nhập để đặt giá thầu!', 'warning');
+      return;
+    }
     if ((currentUser.kyc_level || 0) < 2) {
-      addToast('⚠️ Cần hoàn tất eKYC (Cấp L2) để đặt giá!', 'warning'); return;
+      addToast('⚠️ Cần hoàn tất eKYC (Cấp L2) để đặt giá!', 'warning');
+      return;
     }
     if (!session || session.status !== 'live') return;
 
+    setPendingBidIncrement(increment);
+    setLiveConfirmOpen(true);
+  };
+
+  // Confirm bid from modal and trigger outbid simulation (Tasks 1 & 3)
+  const handleConfirmLiveBid = () => {
+    const increment = pendingBidIncrement;
     const newPrice = currentPrice + increment;
     setPlacing(true);
 
@@ -124,9 +150,37 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
       };
       setBids(prev => [newBid, ...prev.map(b => ({ ...b, status: 'outbid' }))]);
       setPlacing(false);
-      addToast('🏆 Bạn đang dẫn đầu phiên đấu giá!', 'gold');
+      setLiveConfirmOpen(false);
+      addToast('🏆 Bạn đang dẫn đầu phiên đấu giá!', 'gold', 5000);
       if (bidListRef.current) bidListRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 800);
+
+      // Outbid Simulation (Task 3: random from 15s to 25s)
+      if (outbidTimerRef.current) clearTimeout(outbidTimerRef.current);
+      const delay = Math.floor(Math.random() * 10000) + 15000;
+      outbidTimerRef.current = setTimeout(() => {
+        const botIncrement = 500000;
+        const outbidPrice = newPrice + botIncrement;
+        setCurrentPrice(outbidPrice);
+        const botBid = {
+          bid_id: `b_bot_${Date.now()}`,
+          session_id: session.session_id,
+          bidder_id: 'u_vip_collector',
+          bidder_name: 'Hoàng Long (Collector VIP)',
+          bid_amount: outbidPrice,
+          placed_at: new Date().toISOString(),
+          is_auto_bid: false,
+          status: 'winning',
+        };
+        setBids(prev => [botBid, ...prev.map(b => ({ ...b, status: 'outbid' }))]);
+        addToast(
+          `⚠️ CẢNH BÁO: Mức giá của bạn vừa bị vượt qua! Giá hiện tại là ${formatPriceFull(outbidPrice)}`,
+          'danger',
+          7000
+        );
+        setOutbidAlert(true);
+        setTimeout(() => setOutbidAlert(false), 4000);
+      }, delay);
+    }, 700);
   };
 
   const urgent = countdown && countdown.total < 3600000;
@@ -300,10 +354,11 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   countdown={countdown}
                   urgent={urgent}
                   bids={bids}
-                  onBid={handleBid}
+                  onBid={handleOpenLiveBidConfirm}
                   placing={placing}
                   artwork={artwork}
                   addToast={addToast}
+                  outbidAlert={outbidAlert}
                 />
               )
             ) : (
@@ -381,6 +436,19 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
           onClose={() => setResultOverlayOpen(false)}
           onCreateEscrow={() => handleCreateEscrow(session, artwork, bids[0])}
           onContactArtist={() => addToast(`Đã gửi tin nhắn tới họa sĩ ${artwork.artist_name}`, 'success')}
+        />
+      )}
+
+      {/* Live Bid Confirm Modal (Task 1) */}
+      {liveConfirmOpen && (
+        <LiveBidConfirmModal
+          artwork={artwork}
+          currentPrice={currentPrice}
+          bidIncrement={pendingBidIncrement}
+          newPrice={currentPrice + pendingBidIncrement}
+          onClose={() => setLiveConfirmOpen(false)}
+          onConfirm={handleConfirmLiveBid}
+          submitting={placing}
         />
       )}
     </main>
@@ -560,8 +628,8 @@ const BidHistoryTab = ({ bids, bidListRef, isSealed, isArtist, currentUser }) =>
   </div>
 );
 
-const AuctionBox = ({ session, currentPrice, countdown, urgent, bids, onBid, placing, artwork, addToast }) => (
-  <div className={`${styles.auctionBox} ${urgent ? styles.auctionUrgent : ''}`}>
+const AuctionBox = ({ session, currentPrice, countdown, urgent, bids, onBid, placing, artwork, addToast, outbidAlert }) => (
+  <div className={`${styles.auctionBox} ${urgent ? styles.auctionUrgent : ''} ${outbidAlert ? styles.outbidFlash : ''}`}>
     <div className={styles.auctionHeader}>
       <span className="badge badge-live">LIVE AUCTION</span>
       <div className={styles.auctionTime}>

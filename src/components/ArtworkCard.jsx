@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatPrice, formatCountdown } from '../data/mockData';
 import { Heart, Eye, Zap, Clock, Shield, ArrowRight, Lock } from 'lucide-react';
 import styles from './ArtworkCard.module.css';
 
 const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const endTime = session?.end_time;
   const isSealed = session?.auction_type === 'sealed';
   const isLive = session?.status === 'live' && !isSealed;
@@ -14,12 +15,19 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
     <div className={`card ${styles.card}`} id={`artwork-card-${artwork.artwork_id}`}>
       {/* Image area */}
       <div className={styles.imageWrap}>
+        {!imageLoaded && (
+          <div
+            className={`skeleton ${styles.skeletonPlaceholder}`}
+            aria-hidden="true"
+          />
+        )}
         <Link to={`/artwork/${artwork.artwork_id}`}>
           <img
             src={artwork.image}
             alt={artwork.title}
-            className={styles.image}
+            className={`${styles.image} ${imageLoaded ? styles.imageLoaded : styles.imageHidden}`}
             loading="lazy"
+            onLoad={() => setImageLoaded(true)}
           />
         </Link>
         {/* Overlay on hover */}

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Zap, ArrowRight, Trophy, Users, Lock, PlusCircle, Shield, EyeOff } from 'lucide-react';
+import { Clock, Zap, ArrowRight, Trophy, Users, Lock, PlusCircle, Shield, EyeOff, Palette } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, QUICK_BID_STEPS,
   formatPrice, formatPriceFull, formatCountdown,
 } from '../data/mockData';
 import CreateAuctionModal from '../components/CreateAuctionModal';
+import UploadArtworkModal from '../components/UploadArtworkModal';
 import styles from './AuctionPage.module.css';
 
 const AuctionPage = ({ addToast, currentUser }) => {
   const [sessions, setSessions] = useState(AUCTION_SESSIONS);
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   const livePublicSessions = sessions.filter(s => s.status === 'live' && s.auction_type !== 'sealed');
   const sealedSessions = sessions.filter(s => s.auction_type === 'sealed');
@@ -31,19 +33,31 @@ const AuctionPage = ({ addToast, currentUser }) => {
             <h1 className={styles.pageTitle}>Sàn Đấu Giá Trực Tuyến</h1>
             <p className={styles.pageDesc}>Tham gia đấu giá công khai hoặc nộp hồ sơ đấu giá kín (Sealed-bid) có bảo chứng</p>
           </div>
-          <button
-            id="btn-create-auction-page"
-            className="btn btn-primary"
-            onClick={() => {
-              if (!currentUser) {
-                addToast('Vui lòng đăng nhập với tư cách Họa sĩ để tạo phiên!', 'warning');
-                return;
-              }
-              setCreateModalOpen(true);
-            }}
-          >
-            <PlusCircle size={16} /> Tạo phiên đấu giá mới
-          </button>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            {currentUser?.role === 'artist' && (
+              <button
+                id="btn-upload-artwork-auction-page"
+                className="btn btn-secondary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderColor: 'var(--border-gold)' }}
+                onClick={() => setUploadModalOpen(true)}
+              >
+                <Palette size={16} color="var(--gold-primary)" /> Đăng tác phẩm mới
+              </button>
+            )}
+            <button
+              id="btn-create-auction-page"
+              className="btn btn-primary"
+              onClick={() => {
+                if (!currentUser) {
+                  addToast('Vui lòng đăng nhập với tư cách Họa sĩ để tạo phiên!', 'warning');
+                  return;
+                }
+                setCreateModalOpen(true);
+              }}
+            >
+              <PlusCircle size={16} /> Tạo phiên đấu giá mới
+            </button>
+          </div>
         </div>
       </div>
 
@@ -124,6 +138,17 @@ const AuctionPage = ({ addToast, currentUser }) => {
           currentUser={currentUser}
           onClose={() => setCreateModalOpen(false)}
           onSuccess={handleCreateSuccess}
+        />
+      )}
+
+      {uploadModalOpen && (
+        <UploadArtworkModal
+          currentUser={currentUser}
+          onClose={() => setUploadModalOpen(false)}
+          onSuccess={(newArtwork) => {
+            addToast(`✦ Tác phẩm "${newArtwork.title}" đã được lưu vào hồ sơ tranh của bạn!`, 'gold', 5000);
+          }}
+          addToast={addToast}
         />
       )}
     </main>

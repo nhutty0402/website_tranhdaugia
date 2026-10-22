@@ -477,6 +477,27 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+@keyframes outbidPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    border-color: rgba(255, 71, 87, 0.9);
+  }
+  50% {
+    box-shadow: 0 0 28px 6px rgba(255, 71, 87, 0.45);
+    border-color: #ff4757;
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+    border-color: rgba(212, 175, 55, 0.3);
+  }
+}
+
+.outbidFlash {
+  animation: outbidPulse 1.2s ease-in-out infinite alternate;
+  border-color: #ff4757 !important;
 }
 
 .auctionUrgent {
