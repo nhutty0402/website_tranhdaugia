@@ -38,8 +38,10 @@ const ArtistsPage = ({ addToast }) => {
 
                   <div className={styles.artistInfo}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <h3 className={styles.artistName}>{artist.full_name}</h3>
-                      <span className="badge badge-verified" style={{ fontSize: '0.6rem' }}>Xác thực</span>
+                      <Link to={`/artists/${artist.user_id}`} style={{ textDecoration: 'none' }}>
+                        <h3 className={styles.artistName}>{artist.full_name}</h3>
+                      </Link>
+                      <span className="badge badge-verified" style={{ fontSize: '0.6rem' }}>Xác thực L3</span>
                     </div>
                     <div className={styles.artistMeta}>
                       <span className={styles.metaItem}>
@@ -69,8 +71,8 @@ const ArtistsPage = ({ addToast }) => {
                     >
                       Theo dõi
                     </button>
-                    <Link to="/gallery" className="btn btn-ghost btn-sm">
-                      Xem tác phẩm <ArrowRight size={12} />
+                    <Link to={`/artists/${artist.user_id}`} className="btn btn-primary btn-sm">
+                      Xem hồ sơ Họa sĩ <ArrowRight size={12} />
                     </Link>
                   </div>
                 </div>

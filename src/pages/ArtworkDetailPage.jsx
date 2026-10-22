@@ -288,16 +288,16 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
           {/* ===== RIGHT: Info & Auction ===== */}
           <div className={styles.rightCol}>
             {/* Artist */}
-            <div className={styles.artistRow}>
+            <Link to={`/artists/${artwork.artist_id || 'u2'}`} className={styles.artistRow} style={{ textDecoration: 'none' }}>
               <img src={artist?.avatar || '/artist_avatar.png'} alt={artist?.full_name} className={styles.artistAvatar} />
               <div>
                 <p className={styles.artistLabel}>Họa sĩ</p>
                 <h5 className={styles.artistName}>{artwork.artist_name}</h5>
               </div>
               <span className="badge badge-verified" style={{ marginLeft: 'auto' }}>
-                <Award size={10} /> Xác thực
+                <Award size={10} /> Xác thực L3
               </span>
-            </div>
+            </Link>
 
             {/* Title & meta */}
             <h1 className={styles.title}>{artwork.title}</h1>

@@ -1,0 +1,1202 @@
+/* ============================================================
+   ARTISAN HUB – ARTIST DETAIL PAGE (UCD & DARK LUXURY)
+   Palette: #0A0A0C, #121215, #1A1A20, Gold #D4AF37, Light Gold #F3E5AB
+   ============================================================ */
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: #0A0A0C;
+  color: #F2EEE8;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  padding-bottom: 120px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ---- BREADCRUMB ---- */
+.breadcrumbWrap {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(10, 10, 12, 0.6);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 10;
+}
+
+.breadcrumbNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #948E85;
+}
+
+.breadcrumbLink {
+  color: #B8B0A0;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumbLink:hover {
+  color: #D4AF37;
+}
+
+.breadcrumbSeparator {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.breadcrumbActive {
+  color: #D4AF37;
+  font-weight: 500;
+}
+
+/* ---- HERO SECTION (ABOVE-THE-FOLD TRUST ANCHORS) ---- */
+.heroSection {
+  position: relative;
+  padding: 40px 0 32px;
+  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 70%),
+              linear-gradient(180deg, #101014 0%, #0A0A0C 100%);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  overflow: hidden;
+}
+
+.heroAmbientBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 260px;
+  opacity: 0.18;
+  object-fit: cover;
+  width: 100%;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+  filter: blur(1px);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.heroMainRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.artistIdentity {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex: 1;
+  min-width: 300px;
+}
+
+.avatarWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #D4AF37;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.3);
+}
+
+.avatarBadgeL3 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #121214;
+  border: 2px solid #D4AF37;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #D4AF37;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.onlinePulseDot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 12px;
+  height: 12px;
+  background: #2ECC71;
+  border-radius: 50%;
+  border: 2px solid #0A0A0C;
+  box-shadow: 0 0 8px #2ECC71;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.identityBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.l3Badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(46, 204, 113, 0.12);
+  color: #2ECC71;
+  border: 1px solid rgba(46, 204, 113, 0.35);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.curatorBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(212, 175, 55, 0.12);
+  color: #F3E5AB;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.artistFullName {
+  font-family: var(--font-brand, 'Cinzel', serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #F2EEE8;
+  margin: 2px 0 0;
+  letter-spacing: 0.015em;
+  line-height: 1.2;
+}
+
+.studioAddressRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #948E85;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* SHA-256 Hash 1-Click Copy */
+.hashRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.hashBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px; /* Touch target minimum */
+}
+
+.hashBadge:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.hashLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #948E85;
+  letter-spacing: 0.06em;
+}
+
+.hashCode {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  color: #F3E5AB;
+  background: transparent;
+  border: none;
+}
+
+.copyIconSuccess {
+  color: #2ECC71 !important;
+}
+
+/* Hero Action CTAs */
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.heroCommissionBtn {
+  min-height: 48px;
+  padding: 0 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.heroFollowBtn {
+  min-height: 48px;
+  padding: 0 20px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heroShareBtn {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 3 Above-The-Fold Trust Anchors / Market KPI Cards */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.kpiCard {
+  background: rgba(26, 26, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  border-left: 3px solid #D4AF37;
+  transition: transform 0.25s, border-color 0.25s;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.kpiTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpiLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #948E85;
+  margin: 0;
+}
+
+.kpiIcon {
+  color: #D4AF37;
+}
+
+.kpiVal {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #F2EEE8;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpiSub {
+  font-size: 0.76rem;
+  color: #B8B0A0;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Audio Voice Statement Player */
+.audioStatementCard {
+  background: linear-gradient(90deg, rgba(26, 26, 32, 0.8) 0%, rgba(34, 34, 42, 0.7) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.audioLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.audioPlayBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #D4AF37;
+  color: #0A0A0C;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.audioPlayBtn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
+}
+
+.audioTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.audioTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #F2EEE8;
+  margin: 0;
+}
+
+.audioSubtitle {
+  font-size: 0.72rem;
+  color: #948E85;
+  margin: 0;
+}
+
+.waveformWrap {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 28px;
+  flex: 1;
+  max-width: 320px;
+}
+
+.waveBar {
+  width: 3px;
+  border-radius: 3px;
+  background: rgba(212, 175, 55, 0.4);
+  transition: height 0.2s ease, background 0.2s ease;
+}
+
+.waveBarPlaying {
+  background: #D4AF37;
+  animation: wavePulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes wavePulse {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1.2); }
+}
+
+.audioTime {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  color: #F3E5AB;
+  flex-shrink: 0;
+}
+
+/* ---- TAB NAVIGATION (MINIMAL CURATORIAL) ---- */
+.tabsNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px 0 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabsNav::-webkit-scrollbar {
+  display: none;
+}
+
+.tabBtn {
+  min-height: 44px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #948E85;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tabBtn:hover {
+  color: #F2EEE8;
+}
+
+.tabBtnActive {
+  color: #D4AF37;
+  border-bottom-color: #D4AF37;
+  font-weight: 600;
+}
+
+.tabBadgeCount {
+  font-size: 0.72rem;
+  padding: 2px 7px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #B8B0A0;
+}
+
+.tabBtnActive .tabBadgeCount {
+  background: rgba(212, 175, 55, 0.2);
+  color: #D4AF37;
+}
+
+/* ---- TAB CONTENTS ---- */
+.tabContentArea {
+  padding-top: 32px;
+}
+
+/* Tab 1: Active Auctions Grid */
+.auctionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.auctionCard {
+  background: #141418;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.auctionCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 175, 55, 0.55);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.urgentAuctionCard {
+  border-color: #FF4757 !important;
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.3) !important;
+}
+
+.auctionImgWrap {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #1A1A20;
+}
+
+.auctionImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.auctionCard:hover .auctionImg {
+  transform: scale(1.05);
+}
+
+.auctionBadgeOverlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.auctionBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.auctionTitle {
+  font-family: var(--font-brand, serif);
+  font-size: 1.15rem;
+  color: #F2EEE8;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.auctionMeta {
+  font-size: 0.78rem;
+  color: #948E85;
+  margin: 0;
+}
+
+/* Countdown Clock */
+.countdownClock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  color: #B8B0A0;
+}
+
+.countdownUrgent {
+  background: rgba(255, 71, 87, 0.12) !important;
+  border-color: rgba(255, 71, 87, 0.4) !important;
+  color: #FF4757 !important;
+}
+
+.countdownDigits {
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #D4AF37;
+}
+
+.countdownUrgent .countdownDigits {
+  color: #FF4757;
+}
+
+.auctionPriceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.currentBidLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: #948E85;
+  margin: 0 0 2px;
+}
+
+.currentBidAmount {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #D4AF37;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepHint {
+  font-size: 0.7rem;
+  color: #2ECC71;
+  margin: 0;
+  text-align: right;
+}
+
+.bidCTAButton {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Tab 2: Past Hammer Prices Table */
+.pastHammerTableCard {
+  background: #141418;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tableHeaderRow {
+  display: grid;
+  grid-template-columns: 80px 2fr 1.2fr 1.2fr 1.2fr 1fr;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #948E85;
+  font-weight: 600;
+}
+
+.tableBodyRow {
+  display: grid;
+  grid-template-columns: 80px 2fr 1.2fr 1.2fr 1.2fr 1fr;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  align-items: center;
+  transition: background 0.2s;
+  font-size: 0.85rem;
+}
+
+.tableBodyRow:hover {
+  background: rgba(212, 175, 55, 0.03);
+}
+
+.tableThumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tableTitleMain {
+  font-weight: 600;
+  color: #F2EEE8;
+  margin: 0;
+}
+
+.tableMediumSub {
+  font-size: 0.75rem;
+  color: #948E85;
+  margin: 0;
+}
+
+.hammerPriceVal {
+  font-family: var(--font-display, sans-serif);
+  font-weight: 700;
+  color: #D4AF37;
+  font-size: 0.95rem;
+}
+
+.anonymizedBuyer {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #B8B0A0;
+}
+
+/* Tab 3: Available Collection Cards */
+.collectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.roomViewTriggerBtn {
+  min-height: 38px;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-color: rgba(212, 175, 55, 0.35);
+  color: #F3E5AB;
+}
+
+/* Tab 4: Studio Footage & Process */
+.studioSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.studioStoryGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.studioPhotoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.studioPhoto {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.studioPhoto:hover {
+  transform: scale(1.02);
+  border-color: #D4AF37;
+}
+
+.studioBioBox {
+  background: #141418;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  border-left: 3px solid #D4AF37;
+}
+
+.studioBioTitle {
+  font-family: var(--font-brand, serif);
+  font-size: 1.25rem;
+  color: #D4AF37;
+  margin: 0 0 12px;
+}
+
+.studioBioParagraph {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: #B8B0A0;
+  margin-bottom: 16px;
+}
+
+/* Impasto Texture Zoom Box */
+.textureViewerCard {
+  background: #141418;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.textureWrap {
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: crosshair;
+}
+
+.textureImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* ---- STICKY FLOATING ACTION BAR (MOBILE ERGONOMICS) ---- */
+.stickyBottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(18, 18, 22, 0.94);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.8);
+  z-index: 990;
+  padding: 12px 0;
+  transform: translateY(120%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stickyBottomBarVisible {
+  transform: translateY(0);
+}
+
+.stickyBarContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.stickyBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stickyBarAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #D4AF37;
+}
+
+.stickyBarArtistName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #F2EEE8;
+  margin: 0;
+}
+
+.stickyBarStatus {
+  font-size: 0.72rem;
+  color: #2ECC71;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stickyBarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---- FRICTIONLESS COMMISSION DRAWER ---- */
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.drawerPanel {
+  width: 100%;
+  max-width: 520px;
+  height: 100%;
+  background: #121216;
+  border-left: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: -16px 0 60px rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  animation: slideDrawer 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+@keyframes slideDrawer {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.drawerHeader {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.08) 0%, transparent 100%);
+  position: sticky;
+  top: 0;
+  background-color: #121216;
+  z-index: 5;
+}
+
+.drawerTitle {
+  font-family: var(--font-brand, serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #F2EEE8;
+  margin: 0;
+}
+
+.drawerSubtitle {
+  font-size: 0.78rem;
+  color: #948E85;
+  margin: 4px 0 0;
+}
+
+.drawerCloseBtn {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #948E85;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drawerCloseBtn:hover {
+  color: #F2EEE8;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.drawerBody {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 3-Step Transparent Process Banner */
+.stepBanner {
+  background: rgba(26, 26, 32, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: #B8B0A0;
+}
+
+.stepNum {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.15);
+  color: #D4AF37;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+}
+
+.stepArrow {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Commission Form */
+.commissionForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #B8B0A0;
+}
+
+.formInput, .formSelect, .formTextarea {
+  width: 100%;
+  background: #18181D;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #F2EEE8;
+  font-size: 16px; /* Prevents auto-zoom on iOS */
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.formInput:focus, .formSelect:focus, .formTextarea:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+
+.formInputError {
+  border-color: #E74C3C !important;
+}
+
+.fieldErrorText {
+  font-size: 0.74rem;
+  color: #E74C3C;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.submitCommissionBtn {
+  min-height: 48px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ---- ROOM VIEW QUICK LOOK MODAL ---- */
+.quickLookBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.quickLookModal {
+  width: 100%;
+  max-width: 640px;
+  background: #141418;
+  border: 1px solid #D4AF37;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+}
+
+.quickLookHeader {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quickLookPreview {
+  height: 320px;
+  background: #1c1c22;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.quickLookArtwork {
+  max-width: 240px;
+  max-height: 200px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+  border: 8px solid #3d2f14;
+}
+
+/* ---- RESPONSIVE MEDIA QUERIES ---- */
+@media (max-width: 1024px) {
+  .tableHeaderRow, .tableBodyRow {
+    grid-template-columns: 70px 2fr 1.2fr 1.2fr 1fr;
+  }
+  .tableHeaderRow > div:nth-child(5),
+  .tableBodyRow > div:nth-child(5) {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 24px 0 24px;
+  }
+
+  .artistIdentity {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .identityBadgeRow {
+    justify-content: center;
+  }
+
+  .studioAddressRow {
+    justify-content: center;
+  }
+
+  .hashRow {
+    justify-content: center;
+  }
+
+  .heroActions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .heroCommissionBtn {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .audioStatementCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .waveformWrap {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .studioStoryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tableHeaderRow {
+    display: none;
+  }
+
+  .tableBodyRow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .tableThumb {
+    width: 100%;
+    height: 180px;
+  }
+
+  .drawerPanel {
+    max-width: 100%;
+  }
+}

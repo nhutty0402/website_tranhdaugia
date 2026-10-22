@@ -88,7 +88,7 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
         <Link to={`/artwork/${artwork.artwork_id}`} style={{ textDecoration: 'none' }}>
           <h3 className={styles.title}>{artwork.title}</h3>
         </Link>
-        <Link to={`/artists`} className={styles.artist}>{artwork.artist_name}</Link>
+        <Link to={`/artists/${artwork.artist_id || 'u2'}`} className={styles.artist}>{artwork.artist_name}</Link>
 
         <div className={styles.tags}>
           {artwork.tags.slice(0, 2).map(tag => (

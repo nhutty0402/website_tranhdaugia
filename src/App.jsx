@@ -12,6 +12,7 @@ import GalleryPage from './pages/GalleryPage';
 import ArtworkDetailPage from './pages/ArtworkDetailPage';
 import AuctionPage from './pages/AuctionPage';
 import ArtistsPage from './pages/ArtistsPage';
+import ArtistDetailPage from './pages/ArtistDetailPage';
 import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
@@ -79,6 +80,8 @@ const App = () => {
         <Route path="/auction" element={<AuctionPage {...sharedProps} />} />
         <Route path="/auction/:sessionId" element={<AuctionPage {...sharedProps} />} />
         <Route path="/artists" element={<ArtistsPage {...sharedProps} />} />
+        <Route path="/artists/:id" element={<ArtistDetailPage {...sharedProps} />} />
+        <Route path="/artist/:id" element={<ArtistDetailPage {...sharedProps} />} />
         <Route path="/profile" element={<ProfilePage {...sharedProps} />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
