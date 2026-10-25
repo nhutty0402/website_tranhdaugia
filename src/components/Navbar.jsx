@@ -1,16 +1,43 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  Palette, Search, Bell, User, Menu, X, ChevronDown, LogOut,
+  Search, Bell, User, Menu, X, ChevronDown, LogOut,
+  Compass, Gavel, Sparkles, Building, PlusCircle
 } from 'lucide-react';
 import VerificationBadge from './VerificationBadge';
+import Logo from './Logo';
 import styles from './Navbar.module.css';
 
 const NAV_LINKS = [
-  { label: 'Khám phá', path: '/gallery' },
-  { label: 'Đấu giá', path: '/auction' },
-  { label: 'Họa sĩ', path: '/artists' },
-  { label: 'Về chúng tôi', path: '/about' },
+  { 
+    no: 'I',
+    label: 'Khám phá', 
+    subLabel: 'Gallery & Triển lãm',
+    path: '/gallery',
+    icon: Compass,
+  },
+  { 
+    no: 'II',
+    label: 'Đấu giá', 
+    subLabel: 'Trực tiếp & Đấu kín',
+    path: '/auction',
+    icon: Gavel,
+    isLive: true,
+  },
+  { 
+    no: 'III',
+    label: 'Họa sĩ', 
+    subLabel: 'Danh mục nghệ nhận',
+    path: '/artists',
+    icon: Sparkles,
+  },
+  { 
+    no: 'IV',
+    label: 'Về chúng tôi', 
+    subLabel: 'Bảo chứng & Di sản',
+    path: '/about',
+    icon: Building,
+  },
 ];
 
 const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
@@ -42,28 +69,40 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
       <nav className={styles.navbar}>
         <div className={styles.inner}>
           {/* Logo */}
-          <Link to="/" className={styles.logo}>
-            <div className={styles.logoIcon}>
-              <Palette size={20} color="#D4AF37" />
-            </div>
-            <div className={styles.logoText}>
-              <span className={styles.logoMain}>ARTISAN</span>
-              <span className={styles.logoSub}>HUB</span>
-            </div>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Logo size="md" />
           </Link>
 
           {/* Desktop Nav */}
           <ul className={styles.navLinks}>
-            {NAV_LINKS.map(link => (
-              <li key={link.path}>
-                <Link
-                  to={link.path}
-                  className={`${styles.navLink} ${location.pathname === link.path ? styles.active : ''}`}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {NAV_LINKS.map(link => {
+              const isActive = location.pathname === link.path;
+              const IconComp = link.icon;
+              return (
+                <li key={link.path} className={styles.navItem}>
+                  <Link
+                    to={link.path}
+                    className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+                  >
+                    <span className={styles.navRoman}>{link.no}</span>
+                    <span className={styles.navTextGroup}>
+                      <span className={styles.navLabel}>
+                        <IconComp size={14} className={styles.navItemIcon} />
+                        {link.label}
+                        {link.isLive && (
+                          <span className={styles.liveBadge}>
+                            <span className={styles.livePulse} />
+                            LIVE
+                          </span>
+                        )}
+                      </span>
+                      <span className={styles.navSubLabel}>{link.subLabel}</span>
+                    </span>
+                    <span className={styles.activeGlowLine} />
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Right Actions */}
@@ -150,12 +189,21 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
                 )}
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button id="nav-register-btn" className="btn btn-secondary btn-sm" onClick={onRegisterClick}>
+              <div className={styles.authGroup}>
+                <button
+                  id="nav-register-btn"
+                  className={styles.btnArtSecondary}
+                  onClick={onRegisterClick}
+                >
                   Đăng ký
                 </button>
-                <button id="nav-login-btn" className="btn btn-primary btn-sm" onClick={onLoginClick}>
-                  Đăng nhập
+                <button
+                  id="nav-login-btn"
+                  className={styles.btnArtPrimary}
+                  onClick={onLoginClick}
+                >
+                  <span className={styles.btnArtText}>Đăng nhập</span>
+                  <span className={styles.btnArtGleam} />
                 </button>
               </div>
             )}
@@ -189,16 +237,36 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
         {/* Mobile nav */}
         {mobileOpen && (
           <div className={styles.mobileMenu}>
-            {NAV_LINKS.map(link => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={styles.mobileLink}
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map(link => {
+              const IconComp = link.icon;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`${styles.mobileLink} ${location.pathname === link.path ? styles.mobileActive : ''}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <IconComp size={18} color="var(--gold-primary)" />
+                    <div>
+                      <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        {link.label}
+                        {link.isLive && (
+                          <span className={styles.liveBadge} style={{ transform: 'scale(0.85)' }}>
+                            <span className={styles.livePulse} />
+                            LIVE
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{link.subLabel}</div>
+                    </div>
+                  </div>
+                  <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.8rem', color: 'rgba(212,175,55,0.6)' }}>
+                    {link.no}
+                  </span>
+                </Link>
+              );
+            })}
 
             {user ? (
               <div className={styles.mobileUserSection}>
@@ -251,7 +319,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
         )}
       </nav>
       {/* Spacer */}
-      <div style={{ height: 72 }} />
+      <div style={{ height: 76 }} />
     </>
   );
 };

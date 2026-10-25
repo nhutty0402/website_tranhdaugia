@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import ArtworkCard from '../components/ArtworkCard';
 import { ARTWORKS, AUCTION_SESSIONS, formatPrice, formatCountdown } from '../data/mockData';
+import Logo from '../components/Logo';
 import styles from './HomePage.module.css';
 
 const FEATURES = [
@@ -265,37 +266,6 @@ const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
           </div>
         </div>
       </section>
-
-      {/* ===== FOOTER ===== */}
-      <footer className={styles.footer}>
-        <div className="container">
-          <div className={styles.footerTop}>
-            <div className={styles.footerBrand}>
-              <h3 className="gold-text" style={{ fontFamily: 'Cinzel, serif', letterSpacing: '0.15em' }}>ARTISAN HUB</h3>
-              <p>Nền tảng triển lãm số & đấu giá tranh nghệ thuật độc bản. Kết nối họa sĩ và nhà sưu tầm trong một không gian số sang trọng, an toàn và minh bạch.</p>
-            </div>
-            <div className={styles.footerLinks}>
-              {[
-                { title: 'Nền tảng', links: ['Khám phá', 'Đấu giá', 'Họa sĩ', 'Bộ sưu tập'] },
-                { title: 'Hỗ trợ', links: ['Hướng dẫn', 'Chính sách', 'Liên hệ', 'FAQ'] },
-                { title: 'Pháp lý', links: ['Điều khoản', 'Bảo mật', 'Chứng nhận', 'Quy trình'] },
-              ].map(col => (
-                <div key={col.title} className={styles.footerCol}>
-                  <h5 className={styles.footerColTitle}>{col.title}</h5>
-                  {col.links.map(l => (
-                    <a key={l} href="#" className={styles.footerLink}>{l}</a>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-          <hr className="divider" />
-          <div className={styles.footerBottom}>
-            <p>© 2024 Artisan Hub. Mọi quyền được bảo lưu.</p>
-            <p>Đồ án môn Thiết kế Giao diện Người dùng Đồ họa</p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 };

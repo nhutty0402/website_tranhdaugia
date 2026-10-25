@@ -6,6 +6,7 @@ import {
   BadgeCheck, Info, ArrowLeft, CheckCircle2,
 } from 'lucide-react';
 import styles from './RegisterModal.module.css';
+import Logo from './Logo';
 
 /* ─────────────────────────────────────────────
    CONSTANTS
@@ -308,6 +309,87 @@ const StepAccount = ({ data, setData, onNext, onBack }) => {
         <p className={styles.stepDesc}>Cấp L0 – Thông tin cơ bản để bắt đầu hành trình nghệ thuật của bạn.</p>
         <div className={styles.levelBadge} style={{ '--lvl-color': '#D4AF37' }}>
           <BadgeCheck size={12} /> Cấp L0 – Truy cập cơ bản
+        </div>
+      </div>
+
+      {/* Quick-Fill Sample Registration Profiles */}
+      <div style={{
+        background: 'rgba(212, 175, 55, 0.08)',
+        border: '1px solid rgba(212, 175, 55, 0.25)',
+        borderRadius: 12,
+        padding: '12px 14px',
+        marginBottom: 16,
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 8,
+          fontSize: '0.72rem',
+          color: 'var(--gold-primary)',
+          fontWeight: 700,
+          letterSpacing: '0.04em'
+        }}>
+          <span>⚡ ĐIỀN NHANH HỒ SƠ MẪU ĐĂNG KÝ:</span>
+          <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>Click để tự động nhập</span>
+        </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 6,
+        }}>
+          {[
+            {
+              name: 'Trần Thị Ánh Dương',
+              email: 'duong.artist@example.com',
+              roleTag: 'Họa sĩ',
+            },
+            {
+              name: 'Nguyễn Minh Khôi',
+              email: 'khoi.collector@example.com',
+              roleTag: 'Nhà sưu tầm',
+            },
+            {
+              name: 'Phan Hoàng Yến Trang',
+              email: 'yentrang.vip@example.com',
+              roleTag: 'Quỹ Nghệ thuật',
+            },
+          ].map(sample => (
+            <button
+              key={sample.email}
+              type="button"
+              onClick={() => {
+                setData(d => ({
+                  ...d,
+                  fullName: sample.name,
+                  email: sample.email,
+                  password: 'Password@2026',
+                  confirm: 'Password@2026',
+                }));
+                setAgreed(true);
+                setErrors({});
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                padding: '6px 8px',
+                background: data.email === sample.email ? 'rgba(212, 175, 55, 0.25)' : 'rgba(255, 255, 255, 0.04)',
+                border: data.email === sample.email ? '1px solid var(--gold-primary)' : '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: 8,
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 200ms ease',
+              }}
+            >
+              <span style={{ fontSize: '0.76rem', fontWeight: 600, color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
+                {sample.name}
+              </span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--gold-primary)', marginTop: 2 }}>
+                {sample.roleTag}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -959,9 +1041,8 @@ const RegisterModal = ({ onClose, onRegister, onOpenLogin }) => {
 };
 
 const Link_Logo = () => (
-  <div className={styles.logo}>
-    <div className={styles.logoIcon}><Palette size={20} color="#D4AF37" /></div>
-    <span className={styles.logoText}>ARTISAN HUB</span>
+  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+    <Logo size="lg" />
   </div>
 );
 

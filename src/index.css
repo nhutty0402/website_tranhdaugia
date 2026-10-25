@@ -20,18 +20,18 @@
   --bg-overlay: #22222A;
   --bg-card: #161619;
 
-  /* Gold Accent System */
-  --gold-primary: #D4AF37;
-  --gold-light: #E8C547;
-  --gold-dim: #A08A28;
-  --gold-muted: rgba(212, 175, 55, 0.15);
-  --gold-glow: rgba(212, 175, 55, 0.25);
+  /* Champagne & Fine Art Gold System (Dịu mắt, thanh lịch, chuẩn bảo tàng) */
+  --gold-primary: #C5A059;
+  --gold-light: #DFBA73;
+  --gold-dim: #9E7D3B;
+  --gold-muted: rgba(197, 160, 89, 0.12);
+  --gold-glow: rgba(197, 160, 89, 0.18);
 
-  /* Text */
-  --text-primary: #F2EEE8;
-  --text-secondary: #B8B0A0;
-  --text-muted: #948E85;
-  --text-disabled: #3D3830;
+  /* Text - Độ tương phản dịu mắt, nền nã */
+  --text-primary: #EDE8E1;
+  --text-secondary: #9E9AA0;
+  --text-muted: #6E6A72;
+  --text-disabled: #403D44;
 
   /* Status Colors */
   --success: #2ECC71;

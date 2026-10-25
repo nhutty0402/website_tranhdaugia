@@ -1,0 +1,184 @@
+.logoContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  user-select: none;
+  cursor: pointer;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logoContainer:hover {
+  transform: translateY(-1px);
+}
+
+/* Biểu tượng Icon Wrapper */
+.iconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 300ms ease;
+}
+
+.svgSymbol {
+  display: block;
+  transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.frameRect {
+  transition: all 300ms ease;
+}
+
+.logoContainer:hover .svgSymbol {
+  transform: scale(1.04);
+}
+
+.logoContainer:hover .frameRect {
+  stroke: rgba(255, 230, 150, 0.95);
+  fill: rgba(212, 175, 55, 0.35);
+}
+
+/* Ánh hào quang ẩn phía sau logo khi hover */
+.auraLight {
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, rgba(212, 175, 55, 0) 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+  z-index: -1;
+}
+
+.logoContainer:hover .auraLight {
+  opacity: 1;
+}
+
+/* Chi tiết Chữ Tên Thương Hiệu */
+.brandDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+}
+
+.brandTitleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.brandNamePrimary {
+  font-family: var(--font-brand, 'Cinzel', 'Playfair Display', serif);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg, #FFF9D2 0%, #E6C265 40%, #B8860B 80%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+  transition: filter 250ms ease;
+}
+
+.brandNameAccent {
+  font-family: 'Plus Jakarta Sans', var(--font-body), sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: #FFFFFF;
+  opacity: 0.95;
+  position: relative;
+  font-size: 0.78em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
+  margin-left: 2px;
+}
+
+.logoContainer:hover .brandNamePrimary {
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+}
+
+.brandTagline {
+  font-family: 'Plus Jakarta Sans', var(--font-body), sans-serif;
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: rgba(212, 175, 55, 0.85);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  padding-left: 1px;
+}
+
+/* ==========================================================================
+   KÍCH THƯỚC (SIZES)
+   ========================================================================== */
+
+/* Size: Small (Modal headers, dense nav) */
+.sm .iconWrapper {
+  width: 30px;
+  height: 30px;
+}
+.sm .svgSymbol {
+  width: 30px;
+  height: 30px;
+}
+.sm .brandNamePrimary {
+  font-size: 0.95rem;
+}
+.sm .brandTagline {
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+}
+
+/* Size: Medium (Navbar desktop) - Mặc định */
+.md .iconWrapper {
+  width: 40px;
+  height: 40px;
+}
+.md .svgSymbol {
+  width: 40px;
+  height: 40px;
+}
+.md .brandNamePrimary {
+  font-size: 1.15rem;
+}
+.md .brandTagline {
+  font-size: 0.58rem;
+}
+
+/* Size: Large (Footer, Login/Register Modals) */
+.lg .iconWrapper {
+  width: 46px;
+  height: 46px;
+}
+.lg .svgSymbol {
+  width: 46px;
+  height: 46px;
+}
+.lg .brandNamePrimary {
+  font-size: 1.35rem;
+}
+.lg .brandTagline {
+  font-size: 0.65rem;
+}
+
+/* Size: Hero (Trang chủ hoặc trang giới thiệu) */
+.hero .iconWrapper {
+  width: 58px;
+  height: 58px;
+}
+.hero .svgSymbol {
+  width: 58px;
+  height: 58px;
+}
+.hero .brandNamePrimary {
+  font-size: 1.8rem;
+}
+.hero .brandTagline {
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+}

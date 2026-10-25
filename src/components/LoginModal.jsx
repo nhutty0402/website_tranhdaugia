@@ -4,6 +4,7 @@ import {
   ArrowLeft, CheckCircle2, RefreshCw, KeyRound, Check
 } from 'lucide-react';
 import { USERS } from '../data/mockData';
+import Logo from './Logo';
 import styles from './LoginModal.module.css';
 
 /**
@@ -207,9 +208,8 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
           </button>
 
           {/* Logo */}
-          <div className={styles.logo}>
-            <div className={styles.logoIcon}><Palette size={22} color="#D4AF37" /></div>
-            <span className={styles.logoText}>ARTISAN HUB</span>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+            <Logo size="lg" />
           </div>
 
           {/* =========================================================
@@ -352,9 +352,68 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                     <><span className={styles.spinner} /> Đang đăng nhập...</>
                   ) : 'Đăng nhập'}
                 </button>
+                {/* Quick-select Demo Profiles */}
+                <div style={{ marginTop: 14 }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: 8,
+                    fontSize: '0.72rem',
+                    color: 'var(--text-muted)'
+                  }}>
+                    <span style={{ fontWeight: 600, color: 'var(--gold-primary)' }}>⚡ CHỌN NHANH HỒ SƠ ĐĂNG KÝ MẪU:</span>
+                    <span>Click để tự điền</span>
+                  </div>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: 6
+                  }}>
+                    {USERS.map(u => (
+                      <button
+                        key={u.user_id}
+                        type="button"
+                        onClick={() => {
+                          setEmail(u.email);
+                          setPassword('password123');
+                          setEmailError('');
+                          setPasswordError('');
+                          setGeneralError('');
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '6px 8px',
+                          background: email === u.email ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.03)',
+                          border: email === u.email ? '1px solid rgba(212,175,55,0.5)' : '1px solid rgba(255,255,255,0.07)',
+                          borderRadius: 8,
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          transition: 'all 200ms ease',
+                        }}
+                      >
+                        <img
+                          src={u.avatar}
+                          alt={u.full_name}
+                          style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                        <div style={{ overflow: 'hidden' }}>
+                          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#FFF', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                            {u.full_name.split(' ').slice(-2).join(' ')}
+                          </div>
+                          <div style={{ fontSize: '0.65rem', color: u.role === 'artist' ? 'var(--gold-primary)' : 'var(--text-muted)' }}>
+                            {u.badge_label || u.role}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </form>
 
-              <div className={styles.divider}>
+              <div className={styles.divider} style={{ margin: '16px 0 12px' }}>
                 <span>hoặc</span>
               </div>
 

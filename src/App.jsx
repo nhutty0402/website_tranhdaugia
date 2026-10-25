@@ -14,6 +14,11 @@ import AuctionPage from './pages/AuctionPage';
 import ArtistsPage from './pages/ArtistsPage';
 import ArtistDetailPage from './pages/ArtistDetailPage';
 import ProfilePage from './pages/ProfilePage';
+import AboutPage from './pages/AboutPage';
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
+import BackToTop from './components/BackToTop';
+import CommunityChatDrawer from './components/CommunityChatDrawer';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -66,6 +71,9 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      {/* Auto Reset Scroll on route change */}
+      <ScrollToTop />
+
       <Navbar
         user={currentUser}
         onLoginClick={() => setLoginOpen(true)}
@@ -85,6 +93,9 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage {...sharedProps} />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
+
+      {/* Global Luxury Art Footer */}
+      <Footer />
 
       {/* Login Modal */}
       {loginOpen && (
@@ -107,49 +118,17 @@ const App = () => {
 
       {/* Toast notifications */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+
+      {/* Community Salon Chat between Artists & Collectors */}
+      <CommunityChatDrawer
+        currentUser={currentUser}
+        onLoginClick={() => setLoginOpen(true)}
+      />
+
+      {/* Floating Back to Top Button */}
+      <BackToTop />
     </BrowserRouter>
   );
 };
-
-// Simple About page
-const AboutPage = () => (
-  <main style={{ minHeight: '100vh', background: 'var(--bg-base)', paddingBottom: 80 }}>
-    <div style={{ background: 'linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-base) 100%)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '48px 0 40px' }}>
-      <div className="container">
-        <span className="section-label">Về chúng tôi</span>
-        <h1 style={{ margin: '8px 0 12px' }}>Artisan Hub</h1>
-      </div>
-    </div>
-    <div className="container-sm" style={{ paddingTop: 48 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-        {[
-          {
-            title: 'Sứ mệnh của chúng tôi',
-            content: 'Artisan Hub được tạo ra để giải quyết 3 rào cản lớn nhất của thị trường tranh độc bản trực tuyến: niềm tin về tính xác thực, trải nghiệm thị giác chân thực và cơ chế giao dịch an toàn.',
-          },
-          {
-            title: 'Cơ chế bảo vệ 3 lớp',
-            content: 'Mỗi tác phẩm trên Artisan Hub đều trải qua quy trình xác thực nghiêm ngặt: họa sĩ chụp tranh kèm mã ngẫu nhiên, tiền được khóa trong ví ký quỹ 72 giờ, và mọi giao dịch đều được bảo chứng bằng chứng chỉ số SHA-256.',
-          },
-          {
-            title: 'Đồ án môn học',
-            content: 'Dự án này được phát triển như một đồ án môn Thiết kế Giao diện Người dùng Đồ họa, với đầy đủ User Research, Design System, High-Fidelity UI và Prototype theo quy trình UCD.',
-          },
-        ].map(({ title, content }) => (
-          <div key={title} style={{
-            background: 'var(--bg-elevated)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 16,
-            padding: 32,
-            borderLeft: '3px solid var(--gold-primary)',
-          }}>
-            <h3 style={{ color: 'var(--text-primary)', marginBottom: 12 }}>{title}</h3>
-            <p style={{ lineHeight: 1.75, color: 'var(--text-secondary)' }}>{content}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </main>
-);
 
 export default App;

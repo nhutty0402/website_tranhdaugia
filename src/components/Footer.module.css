@@ -1,0 +1,171 @@
+.footerRoot {
+  background: #09090C;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+}
+
+/* Thanh huy hiệu bảo chứng 1 dòng ngang gọn gàng */
+.trustStrip {
+  background: rgba(255, 255, 255, 0.015);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 14px 0;
+}
+
+.trustRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.02em;
+}
+
+/* Thân Footer */
+.mainFooter {
+  padding: 40px 0 24px;
+}
+
+.footerFlex {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+/* Khối thương hiệu trái */
+.brandBox {
+  max-width: 360px;
+}
+
+.brandText {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 14px 0 12px;
+}
+
+.contactCompact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: rgba(212, 175, 55, 0.85);
+}
+
+.contactDot {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Nhóm liên kết phải */
+.linksGroup {
+  display: flex;
+  gap: 56px;
+}
+
+.linkCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.colHeader {
+  font-family: var(--font-brand, 'Cinzel', serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #FFF;
+  letter-spacing: 0.08em;
+  margin: 0 0 14px;
+  text-transform: uppercase;
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linkItem {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 200ms ease;
+  display: inline-block;
+}
+
+.linkItem:hover {
+  color: #D4AF37;
+  transform: translateX(3px);
+}
+
+/* Vạch phân cách mảnh */
+.thinDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 28px 0 18px;
+}
+
+/* Dòng bản quyền */
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.copyright strong {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bottomTags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.bottomDot {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .footerFlex {
+    flex-direction: column;
+    gap: 32px;
+  }
+  .linksGroup {
+    gap: 36px;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 580px) {
+  .trustRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .linksGroup {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .bottomRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

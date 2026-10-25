@@ -1,10 +1,39 @@
 .pageHeader {
-  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-base) 100%);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 48px 0 40px;
+  position: relative;
+  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 255, 255, 0.05) 0%, rgba(13, 13, 15, 0.98) 75%, var(--bg-base) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 56px 0 42px;
+  overflow: hidden;
 }
-.pageTitle { margin: 8px 0 12px; }
-.pageDesc { font-size: 0.9rem; color: var(--text-secondary); }
+
+.pageHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.3), transparent);
+}
+
+.pageTitle {
+  font-family: var(--font-brand, 'Cinzel', serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #FFF;
+  margin: 8px 0 14px;
+  background: linear-gradient(180deg, #FFFFFF 30%, rgba(255, 255, 255, 0.75) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pageDesc {
+  font-size: 0.98rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  line-height: 1.6;
+}
 
 .artistsGrid {
   display: grid;

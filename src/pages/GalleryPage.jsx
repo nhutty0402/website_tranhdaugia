@@ -33,11 +33,11 @@ const GalleryPage = ({ wishlisted, onWishlist }) => {
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
       {/* Page Header */}
       <div className={styles.pageHeader}>
-        <div className="container">
-          <span className="section-label">Triển lãm số</span>
+        <div className={`container ${styles.headerInner}`}>
+          <span className={styles.sectionLabel}>TRIỂN LÃM SỐ HOÀNG GIA</span>
           <h1 className={styles.pageTitle}>Khám phá Tác phẩm</h1>
           <p className={styles.pageDesc}>
-            {ARTWORKS.length} tác phẩm độc bản được xác thực, từ các họa sĩ hàng đầu Việt Nam.
+            {ARTWORKS.length} kiệt tác hội họa độc bản được thẩm định & bảo chứng chứng thư số SHA-256 từ các danh họa hàng đầu.
           </p>
         </div>
       </div>
