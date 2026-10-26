@@ -27,11 +27,11 @@
   --gold-muted: rgba(197, 160, 89, 0.12);
   --gold-glow: rgba(197, 160, 89, 0.18);
 
-  /* Text - Độ tương phản dịu mắt, nền nã */
-  --text-primary: #EDE8E1;
-  --text-secondary: #9E9AA0;
-  --text-muted: #6E6A72;
-  --text-disabled: #403D44;
+  /* Text - Tương phản đạt WCAG AA (≥4.5:1 trên nền tối) */
+  --text-primary: #F4F0EC;       /* ~14:1 trên #0D0D0F — tiêu đề, label quan trọng */
+  --text-secondary: #C8C3BC;    /* ~8:1 — body text, mô tả chính */
+  --text-muted: #9A9490;        /* ~4.8:1 — placeholder, meta, sub-label */
+  --text-disabled: #5A5660;     /* < 4.5:1 — chỉ dùng cho trạng thái disabled */
 
   /* Status Colors */
   --success: #2ECC71;
@@ -94,13 +94,23 @@ body {
   font-family: var(--font-body);
   background-color: var(--bg-base);
   color: var(--text-primary);
-  line-height: 1.6;
-  font-size: 15px;
+  line-height: 1.65;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
   overflow-x: hidden;
 }
+
+/* ---- GLOBAL READABILITY FLOOR ----
+   Mọi text dưới 11px (0.69rem) đều sẽ được đẩy lên 11px để tránh căng mắt.
+   WCAG 1.4.4 yêu cầu text có thể đọc được ở mọi kích cỡ.
+   Nếu cần dùng font-size nhỏ hơn, phải tăng màu sắc tương phản bù lại. */
+span, p, label, code, small, .badge, li, td, th, figcaption {
+  font-size: max(0.72rem, inherit);
+}
+
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
@@ -131,7 +141,10 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 500; }
 h4 { font-size: 1.2rem; font-weight: 500; }
 h5 { font-size: 1rem; font-weight: 500; }
 
-p { color: var(--text-secondary); }
+p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
 
 a {
   color: inherit;

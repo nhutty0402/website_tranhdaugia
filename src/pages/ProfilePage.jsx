@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Package, Award, Clock, Shield, ArrowRight,
   CheckCircle, Download, QrCode, ExternalLink, Lock,
-  PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut, Palette
+  PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut, Palette,
+  ShieldAlert, CheckCircle2, RotateCcw, Settings as SettingsIcon, UserCog
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, CERTIFICATES,
@@ -13,6 +14,8 @@ import CreateAuctionModal from '../components/CreateAuctionModal';
 import ArtistSessionDashboardModal from '../components/ArtistSessionDashboardModal';
 import SealedBidModal from '../components/SealedBidModal';
 import UploadArtworkModal from '../components/UploadArtworkModal';
+import ConfirmDeliveryModal from '../components/ConfirmDeliveryModal';
+import ReportIssueModal from '../components/ReportIssueModal';
 import styles from './ProfilePage.module.css';
 
 const PROFILE_TABS = [
@@ -168,7 +171,12 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
             addToast={addToast}
           />
         )}
-        {activeTab === 'Đơn hàng & Ký quỹ' && <EscrowTab addToast={addToast} />}
+        {activeTab === 'Đơn hàng & Ký quỹ' && (
+          <EscrowTab
+            addToast={addToast}
+            onViewCertificates={() => setActiveTab('Chứng chỉ số')}
+          />
+        )}
         {activeTab === 'Chứng chỉ số' && <CertificatesTab addToast={addToast} />}
         {activeTab === 'Cài đặt' && (
           <SettingsTab
@@ -572,9 +580,34 @@ const ArtistArtworkManagementTab = ({ currentUser, onOpenCreate, onOpenUpload, o
   );
 };
 
-const EscrowTab = ({ addToast }) => {
+const EscrowTab = ({ addToast, onViewCertificates }) => {
   const order = ESCROW_ORDERS[0];
   const artwork = ARTWORKS.find(a => a.artwork_id === 'aw2');
+
+  // Slip-prevention states
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [escrowState, setEscrowState] = useState('locked'); // 'locked' | 'released' | 'disputed'
+  const [disputeInfo, setDisputeInfo] = useState(null);
+
+  const handleReleaseSuccess = () => {
+    setEscrowState('released');
+    setShowConfirmModal(false);
+    addToast('✦ Đã xác nhận nghiệm thu! Tiền ký quỹ 35.000.000 đ đã giải ngân về ví Họa sĩ.', 'success', 6000);
+  };
+
+  const handleDisputeSubmit = (reportData) => {
+    setDisputeInfo(reportData);
+    setEscrowState('disputed');
+    setShowReportModal(false);
+    addToast('⚠️ Đã tạm dừng Escrow & chuyển hồ sơ sang Ban giám định L3 xem xét.', 'warning', 6000);
+  };
+
+  const handleCancelDispute = () => {
+    setEscrowState('locked');
+    setDisputeInfo(null);
+    addToast('Đã khôi phục quy trình nghiệm thu 72h bình thường.', 'info');
+  };
 
   return (
     <div className={styles.tabContent}>
@@ -583,9 +616,21 @@ const EscrowTab = ({ addToast }) => {
       <div className={styles.escrowCard}>
         <div className={styles.escrowHeader}>
           <div>
-            <span className="badge" style={{ background: 'rgba(243,156,18,0.15)', color: '#F39C12', border: '1px solid rgba(243,156,18,0.3)' }}>
-              <Clock size={10} /> Đang ký quỹ
-            </span>
+            {escrowState === 'locked' && (
+              <span className="badge" style={{ background: 'rgba(243,156,18,0.15)', color: '#F39C12', border: '1px solid rgba(243,156,18,0.3)' }}>
+                <Clock size={10} /> Đang ký quỹ 72h
+              </span>
+            )}
+            {escrowState === 'released' && (
+              <span className="badge" style={{ background: 'rgba(46,204,113,0.15)', color: '#2ecc71', border: '1px solid rgba(46,204,113,0.3)' }}>
+                <CheckCircle2 size={10} /> Đã giải ngân hoàn tất
+              </span>
+            )}
+            {escrowState === 'disputed' && (
+              <span className="badge" style={{ background: 'rgba(231,76,60,0.15)', color: '#e74c3c', border: '1px solid rgba(231,76,60,0.3)' }}>
+                <ShieldAlert size={10} /> Tạm dừng ký quỹ · Đang khiếu nại
+              </span>
+            )}
             <h3 className={styles.escrowTitle}>#{order.escrow_id.toUpperCase()}</h3>
           </div>
           <div className={styles.escrowAmount}>
@@ -594,7 +639,9 @@ const EscrowTab = ({ addToast }) => {
           </div>
         </div>
 
+        {/* 4-Step Progress */}
         <div className={styles.escrowProgress}>
+          {/* Step 1 */}
           <div className={styles.escrowStep}>
             <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
             <div>
@@ -603,40 +650,142 @@ const EscrowTab = ({ addToast }) => {
             </div>
           </div>
           <div className={styles.stepLine} />
+
+          {/* Step 2 */}
           <div className={styles.escrowStep}>
             <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
             <div>
               <p className={styles.stepLabel}>Vận chuyển</p>
-              <p className={styles.stepDesc}>Kiện gỗ chuyên dụng đang trên đường</p>
+              <p className={styles.stepDesc}>Kiện gỗ đã giao tới người mua</p>
             </div>
           </div>
           <div className={styles.stepLine} />
+
+          {/* Step 3 */}
           <div className={styles.escrowStep}>
-            <div className={`${styles.stepDot} ${styles.stepActive}`}><Clock size={14} /></div>
+            {escrowState === 'released' ? (
+              <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
+            ) : escrowState === 'disputed' ? (
+              <div className={`${styles.stepDot} ${styles.stepDisputed}`}><AlertCircle size={14} /></div>
+            ) : (
+              <div className={`${styles.stepDot} ${styles.stepActive}`}><Clock size={14} /></div>
+            )}
             <div>
               <p className={styles.stepLabel}>Nghiệm thu 72h</p>
-              <p className={styles.stepDesc}>Còn 48 giờ để xác nhận nhận hàng</p>
+              <p className={styles.stepDesc}>
+                {escrowState === 'released'
+                  ? 'Đã nghiệm thu hài lòng'
+                  : escrowState === 'disputed'
+                  ? 'Đang tạm dừng thẩm định'
+                  : 'Còn 48 giờ để xem xét tranh'}
+              </p>
             </div>
           </div>
           <div className={styles.stepLine} />
+
+          {/* Step 4 */}
           <div className={styles.escrowStep}>
-            <div className={styles.stepDot}><Shield size={14} /></div>
+            {escrowState === 'released' ? (
+              <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
+            ) : escrowState === 'disputed' ? (
+              <div className={`${styles.stepDot} ${styles.stepDisputed}`}><ShieldAlert size={14} /></div>
+            ) : (
+              <div className={styles.stepDot}><Shield size={14} /></div>
+            )}
             <div>
               <p className={styles.stepLabel}>Giải ngân</p>
-              <p className={styles.stepDesc}>Chưa hoàn tất</p>
+              <p className={styles.stepDesc}>
+                {escrowState === 'released'
+                  ? 'Đã chuyển tiền cho Họa sĩ'
+                  : escrowState === 'disputed'
+                  ? 'Tạm khóa bảo lưu tiền'
+                  : 'Chưa giải ngân'}
+              </p>
             </div>
           </div>
         </div>
 
+        {/* Action / Feedback Area */}
         <div className={styles.escrowActions}>
-          <button className="btn btn-primary" onClick={() => addToast('Đã xác nhận nhận hàng! Tiền sẽ được giải ngân.', 'success')}>
-            <CheckCircle size={16} /> Xác nhận đã nhận hàng
-          </button>
-          <button className="btn btn-danger" onClick={() => addToast('Đã gửi yêu cầu tranh chấp đến ban thẩm định.', 'warning')}>
-            Báo cáo vấn đề
-          </button>
+          {escrowState === 'locked' && (
+            <>
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowConfirmModal(true)}
+              >
+                <CheckCircle size={16} /> Xác nhận đã nhận hàng
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => setShowReportModal(true)}
+              >
+                Báo cáo vấn đề
+              </button>
+            </>
+          )}
+
+          {escrowState === 'released' && (
+            <div className={styles.escrowSuccessBox}>
+              <div>
+                <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--success)' }}>
+                  ✦ Hợp đồng Escrow đã hoàn tất giải ngân
+                </p>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  Số tiền <strong>{formatPriceFull(order.amount_locked)}</strong> đã chuyển về tài khoản của Họa sĩ {artwork?.artist_name}. Quyền sở hữu độc bản và Thẻ chứng nhận số SHA-256 đã kích hoạt toàn quyền cho bạn.
+                </p>
+              </div>
+              {onViewCertificates && (
+                <button
+                  className="btn btn-secondary"
+                  onClick={onViewCertificates}
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  Xem Thẻ chứng nhận số →
+                </button>
+              )}
+            </div>
+          )}
+
+          {escrowState === 'disputed' && (
+            <div className={styles.escrowDisputeBox}>
+              <div>
+                <p style={{ margin: '0 0 4px', fontWeight: 600, color: '#e74c3c' }}>
+                  ⚠️ Đơn hàng đang trong trạng thái xem xét khiếu nại (#DISP-8924)
+                </p>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.8)' }}>
+                  Khoản ký quỹ <strong>{formatPriceFull(order.amount_locked)}</strong> được bảo lưu an toàn. Ban thẩm định L3 sẽ liên hệ bạn và Họa sĩ trong 24 giờ.
+                </p>
+              </div>
+              <button
+                className="btn btn-ghost"
+                onClick={handleCancelDispute}
+                style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <RotateCcw size={14} /> Hủy khiếu nại
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Slip-Prevention Modals */}
+      {showConfirmModal && (
+        <ConfirmDeliveryModal
+          order={order}
+          artwork={artwork}
+          onClose={() => setShowConfirmModal(false)}
+          onConfirmRelease={handleReleaseSuccess}
+        />
+      )}
+
+      {showReportModal && (
+        <ReportIssueModal
+          order={order}
+          artwork={artwork}
+          onClose={() => setShowReportModal(false)}
+          onSubmitReport={handleDisputeSubmit}
+        />
+      )}
     </div>
   );
 };
@@ -655,11 +804,11 @@ const CertificatesTab = ({ addToast }) => {
             <span style={{ fontFamily: 'Cinzel, serif', color: 'var(--gold-primary)', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.1em' }}>
               ARTISAN HUB
             </span>
-            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', margin: '2px 0 0' }}>Digital Certificate of Authenticity</p>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '4px 0 0', letterSpacing: '0.03em' }}>Digital Certificate of Authenticity</p>
           </div>
           <div className={styles.certQr}>
             <QrCode size={48} color="var(--gold-primary)" />
-            <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textAlign: 'center' }}>{cert.qr_verify_code}</p>
+            <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '4px' }}>{cert.qr_verify_code}</p>
           </div>
         </div>
 
@@ -714,42 +863,65 @@ const CertificatesTab = ({ addToast }) => {
 const SettingsTab = ({ user, addToast, onLogout, navigate }) => (
   <div className={styles.tabContent}>
     <h2 className={styles.tabTitle}>Cài đặt tài khoản</h2>
-    <div className={styles.settingsForm}>
-      {[
-        { label: 'Họ và tên', value: user.full_name, id: 'settings-name' },
-        { label: 'Email', value: user.email, id: 'settings-email' },
-        { label: 'Username', value: user.username, id: 'settings-username' },
-      ].map(({ label, value, id }) => (
-        <div key={id} className={styles.formGroup}>
-          <label className={styles.formLabel}>{label}</label>
-          <input id={id} className="input" defaultValue={value} />
-        </div>
-      ))}
-      <button className="btn btn-primary" onClick={() => addToast('Đã cập nhật thông tin!', 'success')}>
-        Lưu thay đổi
-      </button>
-    </div>
 
-    {/* Danger Zone / Logout */}
-    <div className={styles.dangerZone}>
-      <h3 className={styles.dangerTitle}>
-        <LogOut size={18} /> Quản lý phiên đăng nhập
-      </h3>
-      <p className={styles.dangerDesc}>
-        Đăng xuất khỏi phiên làm việc hiện tại trên thiết bị này. Dữ liệu bộ sưu tập, hồ sơ đấu giá kín và đơn hàng ký quỹ của bạn vẫn được lưu trữ an toàn trên Artisan Hub.
-      </p>
-      <div>
-        <button
-          id="settings-logout-btn"
-          className="btn btn-danger"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-          onClick={() => {
-            onLogout?.();
-            navigate('/');
-          }}
-        >
-          <LogOut size={16} /> Đăng xuất tài khoản
-        </button>
+    <div className={styles.settingsWrapper}>
+      {/* Profile Info Form */}
+      <div className={styles.settingsForm}>
+        {/* Form Header */}
+        <div className={styles.settingsFormHeader}>
+          <div className={styles.settingsFormIcon}>
+            <UserCog size={20} />
+          </div>
+          <div>
+            <p className={styles.settingsFormTitle}>Thông tin cá nhân</p>
+            <p className={styles.settingsFormSubtitle}>Cập nhật thông tin hồ sơ được hiển thị trên nền tảng Artisan Hub</p>
+          </div>
+        </div>
+
+        {/* Fields */}
+        {[
+          { label: 'Họ và tên', value: user.full_name, id: 'settings-name', type: 'text' },
+          { label: 'Email', value: user.email, id: 'settings-email', type: 'email' },
+          { label: 'Username', value: user.username, id: 'settings-username', type: 'text' },
+        ].map(({ label, value, id, type }) => (
+          <div key={id} className={styles.formGroup}>
+            <label htmlFor={id} className={styles.formLabel}>{label}</label>
+            <input id={id} type={type} className="input" defaultValue={value} />
+          </div>
+        ))}
+
+        {/* Save row */}
+        <div className={styles.settingsSaveRow}>
+          <button
+            className="btn btn-primary"
+            onClick={() => addToast('Đã cập nhật thông tin tài khoản thành công!', 'success')}
+          >
+            <CheckCircle size={15} /> Lưu thay đổi
+          </button>
+        </div>
+      </div>
+
+      {/* Danger Zone / Logout */}
+      <div className={styles.dangerZone}>
+        <h3 className={styles.dangerTitle}>
+          <LogOut size={18} /> Quản lý phiên đăng nhập
+        </h3>
+        <p className={styles.dangerDesc}>
+          Đăng xuất khỏi phiên làm việc hiện tại trên thiết bị này. Dữ liệu bộ sưu tập, hồ sơ đấu giá kín và đơn hàng ký quỹ của bạn vẫn được lưu trữ an toàn trên Artisan Hub.
+        </p>
+        <div>
+          <button
+            id="settings-logout-btn"
+            className="btn btn-danger"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            onClick={() => {
+              onLogout?.();
+              navigate('/');
+            }}
+          >
+            <LogOut size={16} /> Đăng xuất tài khoản
+          </button>
+        </div>
       </div>
     </div>
   </div>
