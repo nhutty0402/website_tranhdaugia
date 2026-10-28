@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatPrice, formatCountdown } from '../data/mockData';
-import { Heart, Eye, Zap, Clock, Shield, ArrowRight, Lock } from 'lucide-react';
+import { Heart, Eye, Clock, Shield, ArrowRight, Lock } from 'lucide-react';
 import styles from './ArtworkCard.module.css';
 
 const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
@@ -12,7 +12,12 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
   const isUpcoming = session?.status === 'upcoming';
 
   return (
-    <div className={`card ${styles.card}`} id={`artwork-card-${artwork.artwork_id}`}>
+    <Link
+      to={`/artwork/${artwork.artwork_id}`}
+      className={`card ${styles.card}`}
+      id={`artwork-card-${artwork.artwork_id}`}
+      style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
+    >
       {/* Image area */}
       <div className={styles.imageWrap}>
         {!imageLoaded && (
@@ -21,30 +26,18 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
             aria-hidden="true"
           />
         )}
-        <Link to={`/artwork/${artwork.artwork_id}`}>
-          <img
+        <img
             src={artwork.image}
             alt={artwork.title}
             className={`${styles.image} ${imageLoaded ? styles.imageLoaded : styles.imageHidden}`}
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
           />
-        </Link>
         {/* Overlay on hover */}
         <div className={styles.overlay}>
-          <Link to={`/artwork/${artwork.artwork_id}`} className="btn btn-primary btn-sm">
+          <span className="btn btn-primary btn-sm">
             Xem chi tiết <ArrowRight size={14} />
-          </Link>
-          {isLive && (
-            <Link to={`/auction/${session?.session_id}`} className="btn btn-secondary btn-sm">
-              <Zap size={14} /> Vào phòng đấu giá
-            </Link>
-          )}
-          {isSealed && (
-            <Link to={`/artwork/${artwork.artwork_id}`} className="btn btn-secondary btn-sm">
-              <Lock size={14} /> Đặt giá kín
-            </Link>
-          )}
+          </span>
         </div>
 
         {/* Top badges */}
@@ -69,7 +62,7 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
         <button
           id={`wishlist-${artwork.artwork_id}`}
           className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlisted : ''}`}
-          onClick={() => onWishlist?.(artwork.artwork_id)}
+          onClick={(e) => { e.preventDefault(); onWishlist?.(artwork.artwork_id); }}
           aria-label="Thêm vào yêu thích"
         >
           <Heart size={16} fill={wishlisted ? '#D4AF37' : 'none'} />
@@ -85,10 +78,11 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
           </div>
         </div>
 
-        <Link to={`/artwork/${artwork.artwork_id}`} style={{ textDecoration: 'none' }}>
-          <h3 className={styles.title}>{artwork.title}</h3>
-        </Link>
-        <Link to={`/artists/${artwork.artist_id || 'u2'}`} className={styles.artist}>{artwork.artist_name}</Link>
+        <h3 className={styles.title}>{artwork.title}</h3>
+        <span
+          className={styles.artist}
+          onClick={(e) => e.preventDefault()}
+        >{artwork.artist_name}</span>
 
         <div className={styles.tags}>
           {artwork.tags.slice(0, 2).map(tag => (
@@ -115,7 +109,7 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
         {/* Countdown for live & sealed auctions */}
         {(isLive || isSealed) && endTime && <AuctionCountdown endTime={endTime} />}
       </div>
-    </div>
+    </Link>
   );
 };
 

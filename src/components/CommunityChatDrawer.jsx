@@ -253,8 +253,8 @@ const CommunityChatDrawer = ({ currentUser, onLoginClick }) => {
           <Sparkles size={16} className={styles.sparkleIcon} />
         </div>
         <div className={styles.triggerTextGroup}>
-          <span className={styles.triggerMainTitle}>TƯ VẤN & ĐÀM ĐẠO</span>
-          <span className={styles.triggerSubTitle}>Họa sĩ · Nhà sưu tầm · Curator</span>
+          <span className={styles.triggerMainTitle}>TƯ VẤN NGHỆ THUẬT</span>
+          <span className={styles.triggerSubTitle}>Họa sĩ · Giám tuyển · Sưu tầm</span>
         </div>
         {unreadCount > 0 && <span className={styles.unreadCountPill}>{unreadCount}</span>}
       </button>
@@ -270,7 +270,7 @@ const CommunityChatDrawer = ({ currentUser, onLoginClick }) => {
               </div>
               <div>
                 <h3 className={styles.headerMainName}>DIỄN ĐÀN NGHỆ THUẬT & TƯ VẤN</h3>
-                <p className={styles.headerTagline}>KHÔNG GIAN HỘI TỤ GIỚI TINH HOA HỘI HỌA ĐỘC BẢN</p>
+                {/* <p className={styles.headerTagline}>KHÔNG GIAN HỘI TỤ GIỚI TINH HOA HỘI HỌA ĐỘC BẢN</p> */}
               </div>
             </div>
             <button
@@ -302,16 +302,7 @@ const CommunityChatDrawer = ({ currentUser, onLoginClick }) => {
             })}
           </div>
 
-          {/* Banner Thông Tin Kênh Hiện Tại */}
-          <div className={styles.channelInfoBanner}>
-            <div className={styles.channelInfoIcon}>
-              <activeChannelInfo.icon size={15} color="var(--gold-primary)" />
-            </div>
-            <div className={styles.channelInfoText}>
-              <div className={styles.channelBannerTitle}>{activeChannelInfo.title}</div>
-              <div className={styles.channelBannerDesc}>{activeChannelInfo.subtitle}</div>
-            </div>
-          </div>
+
 
           {/* Khu Vực Tin Nhắn */}
           <div className={styles.messagesScrollArea}>

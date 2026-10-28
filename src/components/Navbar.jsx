@@ -11,26 +11,26 @@ import styles from './Navbar.module.css';
 const NAV_LINKS = [
   { 
     label: 'Khám phá', 
-    subLabel: 'GALLERY & TRIỂN LÃM',
+    // subLabel: 'GALLERY & TRIỂN LÃM',
     path: '/gallery',
     icon: Compass,
   },
   { 
     label: 'Đấu giá', 
-    subLabel: 'TRỰC TIẾP & ĐẤU KÍN',
+    // subLabel: 'TRỰC TIẾP & ĐẤU KÍN',
     path: '/auction',
     icon: Gavel,
     isLive: true,
   },
   { 
     label: 'Họa sĩ', 
-    subLabel: 'DANH MỤC NGHỆ THUẬT',
+    // subLabel: 'DANH MỤC NGHỆ THUẬT',
     path: '/artists',
     icon: Palette,
   },
   { 
     label: 'Về chúng tôi', 
-    subLabel: 'BẢO CHỨNG & DI SẢN',
+    // subLabel: 'BẢO CHỨNG & DI SẢN',
     path: '/about',
     icon: Landmark,
   },

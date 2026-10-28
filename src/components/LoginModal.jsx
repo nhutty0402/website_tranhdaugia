@@ -229,7 +229,7 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
               )}
 
               {/* Quick Demo Switcher */}
-              <div style={{ background: 'rgba(212, 175, 55, 0.08)', padding: '10px 12px', borderRadius: 10, border: '1px solid var(--border-gold)' }}>
+              {/* <div style={{ background: 'rgba(212, 175, 55, 0.08)', padding: '10px 12px', borderRadius: 10, border: '1px solid var(--border-gold)' }}>
                 <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
                   ⚡ Đăng nhập nhanh kiểm thử:
                 </span>
@@ -263,7 +263,7 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                     💼 Collector Khôi
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               <form onSubmit={handleLoginSubmit} className={styles.form} noValidate>
                 {/* Email Input */}
@@ -353,7 +353,7 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                   ) : 'Đăng nhập'}
                 </button>
                 {/* Quick-select Demo Profiles */}
-                <div style={{ marginTop: 14 }}>
+                {/* <div style={{ marginTop: 14 }}>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -410,7 +410,7 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                       </button>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </form>
 
               <div className={styles.divider} style={{ margin: '16px 0 12px' }}>
@@ -430,10 +430,10 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                 </button>
               </p>
 
-              <div className={styles.trustNote}>
+              {/* <div className={styles.trustNote}>
                 <Award size={12} color="var(--gold-primary)" />
                 <span>Nền tảng được bảo chứng bởi cơ chế 3 lớp. Giao dịch ký quỹ an toàn tuyệt đối.</span>
-              </div>
+              </div> */}
             </>
           )}
 

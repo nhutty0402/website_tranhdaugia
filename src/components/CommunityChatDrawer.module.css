@@ -3,19 +3,19 @@
   position: fixed;
   bottom: 32px;
   right: 92px;
-  height: 48px;
-  padding: 0 16px 0 12px;
-  border-radius: 24px;
-  background: rgba(14, 14, 18, 0.94);
-  border: 1px solid rgba(212, 175, 55, 0.45);
+  height: 52px;
+  padding: 0 18px 0 14px;
+  border-radius: 26px;
+  background: rgba(14, 14, 18, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.5);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
   z-index: 99;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 22px rgba(212, 175, 55, 0.22);
   transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -24,14 +24,15 @@
 }
 
 .triggerIconBox {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0.08) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .sparkleIcon {
@@ -42,35 +43,39 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  line-height: 1.15;
+  gap: 2px;
+  line-height: 1.25;
 }
 
 .triggerMainTitle {
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: #FFF;
-  letter-spacing: 0.05em;
+  color: #FFFFFF;
+  letter-spacing: 0.03em;
 }
 
 .triggerSubTitle {
-  font-size: 0.62rem;
-  color: rgba(212, 175, 55, 0.85);
-  letter-spacing: 0.04em;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.76rem;
+  color: #DFC07A;
+  letter-spacing: 0.01em;
+  font-weight: 500;
 }
 
 .unreadCountPill {
   background: #FF5A5F;
-  color: #FFF;
-  font-size: 0.65rem;
+  color: #FFFFFF;
+  font-size: 0.74rem;
   font-weight: 800;
-  padding: 1px 7px;
-  border-radius: 10px;
+  padding: 2px 8px;
+  border-radius: 12px;
   box-shadow: 0 0 10px rgba(255, 90, 95, 0.7);
+  margin-left: 2px;
 }
 
 .forumTriggerBtn:hover {
-  background: linear-gradient(135deg, rgba(25, 25, 32, 0.98) 0%, rgba(14, 14, 18, 0.98) 100%);
+  background: linear-gradient(135deg, rgba(25, 25, 34, 0.98) 0%, rgba(14, 14, 20, 0.98) 100%);
   border-color: rgba(255, 230, 150, 0.85);
   transform: translateY(-2px);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.8), 0 0 28px rgba(212, 175, 55, 0.35);
@@ -81,11 +86,11 @@
   position: fixed;
   bottom: 32px;
   right: 32px;
-  width: 440px;
-  height: 640px;
+  width: 460px;
+  height: 660px;
   max-height: calc(100vh - 72px);
-  background: #0C0C10;
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: #0E0E14;
+  border: 1px solid rgba(212, 175, 55, 0.4);
   border-radius: 20px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 40px rgba(212, 175, 55, 0.15);
   backdrop-filter: blur(28px);
@@ -104,8 +109,8 @@
 
 /* Header */
 .drawerHeader {
-  padding: 16px 20px;
-  background: linear-gradient(180deg, rgba(24, 24, 30, 0.95) 0%, rgba(14, 14, 18, 0.95) 100%);
+  padding: 18px 22px;
+  background: linear-gradient(180deg, rgba(26, 26, 34, 0.98) 0%, rgba(16, 16, 22, 0.98) 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
@@ -115,48 +120,54 @@
 .headerTitleWrap {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .headerCrest {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(212, 175, 55, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .headerMainName {
-  font-family: var(--font-brand, 'Playfair Display', serif);
-  font-size: 0.95rem;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #FFF;
+  letter-spacing: 0.02em;
+  color: #FFFFFF;
   margin: 0;
+  line-height: 1.3;
 }
 
 .headerTagline {
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  color: var(--gold-primary);
-  margin: 2px 0 0;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--gold-light, #DFC07A);
+  margin: 3px 0 0;
+  line-height: 1.3;
 }
 
 .closeDrawerBtn {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-muted);
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 200ms ease;
+  flex-shrink: 0;
 }
 
 .closeDrawerBtn:hover {
@@ -169,22 +180,22 @@
 .channelTabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 4px;
-  gap: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px;
+  gap: 8px;
 }
 
 .tabBtn {
-  padding: 8px 6px;
-  border-radius: 8px;
+  padding: 11px 8px;
+  border-radius: 10px;
   background: transparent;
   border: 1px solid transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  color: var(--text-muted);
+  gap: 6px;
+  color: var(--text-secondary, #C8C3BC);
   cursor: pointer;
   transition: all 200ms ease;
 }
@@ -195,48 +206,52 @@
 }
 
 .tabName {
-  font-size: 0.7rem;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.84rem;
   font-weight: 600;
   text-align: center;
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
 .tabBtn:hover {
   color: #FFF;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .tabActive {
-  background: rgba(212, 175, 55, 0.12) !important;
-  border-color: rgba(212, 175, 55, 0.35) !important;
+  background: rgba(212, 175, 55, 0.16) !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
   color: #FFF !important;
-  box-shadow: inset 0 1px 0 rgba(255, 240, 180, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 180, 0.25);
 }
 
 .tabActive .tabIcon {
-  color: var(--gold-primary);
+  color: var(--gold-light, #DFC07A);
   transform: translateY(-1px);
 }
 
 .tabActive .tabName {
   color: #FFF2B2;
+  font-weight: 700;
 }
 
 /* Banner Thông Tin Kênh Hiện Tại */
 .channelInfoBanner {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(20, 20, 25, 0.4) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.12) 0%, rgba(26, 26, 34, 0.6) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .channelInfoIcon {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(212, 175, 55, 0.15);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.18);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,103 +264,146 @@
 }
 
 .channelBannerTitle {
-  font-family: var(--font-brand, 'Playfair Display', serif);
-  font-size: 0.76rem;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.88rem;
   font-weight: 700;
-  color: #FFF;
+  color: #FFFFFF;
   letter-spacing: 0.02em;
+  line-height: 1.35;
 }
 
 .channelBannerDesc {
-  font-size: 0.65rem;
-  color: var(--text-muted);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--text-secondary, #D4CFCA);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 2px;
 }
 
 /* Khu Vực Tin Nhắn Cuộn */
 .messagesScrollArea {
   flex: 1;
-  padding: 16px;
+  padding: 18px 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   background: radial-gradient(circle at 50% 10%, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.25) transparent;
+}
+
+.messagesScrollArea::-webkit-scrollbar {
+  width: 3px;
+}
+
+.messagesScrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messagesScrollArea::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 3px;
+}
+
+.messagesScrollArea::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
 }
 
 .messageRow {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: flex-start;
 }
 
 .userAvatar {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 .bubbleContainer {
   flex: 1;
+  max-width: 88%;
 }
 
 .metaRow {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
 }
 
 .senderName {
-  font-size: 0.78rem;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.9rem;
   font-weight: 700;
-  color: #FFF;
+  color: #FFFFFF;
+  letter-spacing: 0.01em;
 }
 
 .roleBadge {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.06);
-  padding: 1px 6px;
-  border-radius: 4px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary, #D4CFCA);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
 }
 
 .curatorBadge {
   color: #FFF2B2;
-  background: rgba(212, 175, 55, 0.2);
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.22);
+  border: 1px solid rgba(212, 175, 55, 0.45);
 }
 
 .artistBadge {
-  color: #38BDF8;
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #7DD3FC;
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.4);
 }
 
 .timeStamp {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.45);
   margin-left: auto;
 }
 
 .bubbleBox {
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
-  padding: 9px 13px;
-  font-size: 0.82rem;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: #F4F0EC;
+  word-break: break-word;
+}
+
+.bubbleBox p {
+  margin: 0;
 }
 
 .selfRow {
   flex-direction: row-reverse;
+}
+
+.selfRow .bubbleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .selfRow .metaRow {
@@ -353,73 +411,92 @@
 }
 
 .selfRow .bubbleBox {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.22) 0%, rgba(212, 175, 55, 0.08) 100%);
-  border-color: rgba(212, 175, 55, 0.4);
-  color: #FFF;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.26) 0%, rgba(212, 175, 55, 0.12) 100%);
+  border-color: rgba(212, 175, 55, 0.45);
+  color: #FFFFFF;
 }
 
 /* Gợi Ý Câu Hỏi Thẩm Định Nhanh */
 .quickPromptSection {
-  padding: 8px 14px;
-  background: rgba(12, 12, 16, 0.85);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 7px 14px 8px;
+  background: rgba(14, 14, 18, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .quickPromptHeader {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.68rem;
+  gap: 5px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.71rem;
   font-weight: 600;
-  color: var(--gold-primary);
+  color: var(--gold-light, #DFC07A);
   margin-bottom: 6px;
 }
 
 .quickPromptList {
   display: flex;
-  gap: 6px;
+  gap: 7px;
   overflow-x: auto;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+}
+
+.quickPromptList::-webkit-scrollbar {
+  height: 2px;
+}
+
+.quickPromptList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quickPromptList::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.35);
+  border-radius: 2px;
 }
 
 .promptChip {
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #D4D0CB;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.75rem;
   white-space: nowrap;
   cursor: pointer;
   transition: all 180ms ease;
+  line-height: 1.35;
 }
 
 .promptChip:hover {
-  background: rgba(212, 175, 55, 0.15);
-  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.5);
   color: #FFF;
 }
 
 /* Ô Nhập Tin Nhắn Ở Đáy */
 .inputDock {
-  padding: 12px 16px;
-  background: rgba(8, 8, 11, 0.98);
+  padding: 14px 18px;
+  background: rgba(10, 10, 14, 0.98);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .inputForm {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
-  padding: 4px 6px 4px 16px;
-  transition: border-color 200ms ease;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 26px;
+  padding: 5px 8px 5px 18px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .inputForm:focus-within {
-  border-color: var(--gold-primary);
+  border-color: var(--gold-primary, #C5A059);
   box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .textInput {
@@ -427,18 +504,20 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #FFF;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
+  color: #FFFFFF;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .textInput::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.86rem;
 }
 
 .sendActionBtn {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: linear-gradient(135deg, #FFF0B3 0%, #D4AF37 100%);
   border: none;
@@ -448,6 +527,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all 200ms ease;
+  flex-shrink: 0;
 }
 
 .sendActionBtn:disabled {
@@ -464,9 +544,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  font-size: 0.76rem;
-  color: var(--text-muted);
+  gap: 14px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.85rem;
+  color: var(--text-secondary, #D4CFCA);
 }
 
 @media (max-width: 520px) {
