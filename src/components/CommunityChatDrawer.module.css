@@ -1,164 +1,272 @@
-/* Nút Nổi Kích Hoạt Diễn Đàn & Tư Vấn (Curator Forum Trigger) */
-.forumTriggerBtn {
+/* ==========================================================================
+   ARTISAN SALON & CURATOR LOUNGE – DESIGN SYSTEM
+   Phong Cách Đàm Đạo Bảo Tàng Thượng Lưu (Luxury Art Salon)
+   Đạt Chuẩn Tương Phản WCAG AA (≥ 4.5:1) & Ergonomics Hiện Đại
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. NÚT KÍCH HOẠT NỔI (Floating Capsule Trigger)
+   -------------------------------------------------------------------------- */
+.salonTriggerPill {
   position: fixed;
-  bottom: 32px;
+  bottom: 30px;
   right: 92px;
-  height: 52px;
-  padding: 0 18px 0 14px;
-  border-radius: 26px;
-  background: rgba(14, 14, 18, 0.95);
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  height: 54px;
+  padding: 0 16px 0 10px;
+  border-radius: 28px;
+  background: rgba(16, 16, 22, 0.92);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   align-items: center;
   gap: 12px;
   cursor: pointer;
   z-index: 99;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 22px rgba(212, 175, 55, 0.22);
-  transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 0 24px rgba(197, 160, 89, 0.22);
+  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.forumTriggerHidden {
-  display: none;
+.triggerHidden {
+  display: none !important;
 }
 
-.triggerIconBox {
+.avatarStack {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-right: 6px;
+}
+
+.stackAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.1) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  object-fit: cover;
+  border: 2px solid #14141A;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-.sparkleIcon {
-  color: #FFF2B2;
+.stackAvatar:not(:first-child) {
+  margin-left: -12px;
 }
 
-.triggerTextGroup {
+.onlinePulseDot {
+  position: absolute;
+  bottom: -1px;
+  right: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2ECC71;
+  border: 1.5px solid #14141A;
+  box-shadow: 0 0 8px #2ECC71;
+  animation: pulseLight 2s infinite ease-in-out;
+}
+
+@keyframes pulseLight {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.18); }
+}
+
+.triggerCopy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  text-align: left;
   gap: 2px;
-  line-height: 1.25;
 }
 
-.triggerMainTitle {
+.triggerHeadlineRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.triggerTitle {
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: 0.03em;
-}
-
-.triggerSubTitle {
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.76rem;
-  color: #DFC07A;
-  letter-spacing: 0.01em;
-  font-weight: 500;
-}
-
-.unreadCountPill {
-  background: #FF5A5F;
-  color: #FFFFFF;
-  font-size: 0.74rem;
+  font-size: 0.88rem;
   font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(255, 90, 95, 0.7);
+  color: #FFFFFF;
+  letter-spacing: 0.04em;
+}
+
+.liveTag {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #FF5A5F;
+  background: rgba(255, 90, 95, 0.15);
+  border: 1px solid rgba(255, 90, 95, 0.4);
+  padding: 1px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.triggerSubtitle {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.73rem;
+  color: var(--gold-light, #DFBA73);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.unreadBadgePill {
+  background: linear-gradient(135deg, #FF5A5F 0%, #D63031 100%);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(255, 90, 95, 0.6);
   margin-left: 2px;
 }
 
-.forumTriggerBtn:hover {
-  background: linear-gradient(135deg, rgba(25, 25, 34, 0.98) 0%, rgba(14, 14, 20, 0.98) 100%);
-  border-color: rgba(255, 230, 150, 0.85);
+.salonTriggerPill:hover {
+  background: linear-gradient(135deg, rgba(26, 26, 36, 0.98) 0%, rgba(16, 16, 22, 0.98) 100%);
+  border-color: rgba(255, 230, 150, 0.8);
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.8), 0 0 28px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.85), 0 0 28px rgba(197, 160, 89, 0.35);
 }
 
-/* Khung Diễn Đàn Chính (Curator Drawer) */
-.forumDrawer {
+/* --------------------------------------------------------------------------
+   2. KHUNG SALON CHÍNH (Drawer Window)
+   -------------------------------------------------------------------------- */
+.salonDrawer {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
-  width: 460px;
-  height: 660px;
-  max-height: calc(100vh - 72px);
+  bottom: 28px;
+  right: 28px;
+  width: 480px;
+  height: 680px;
+  max-height: calc(100vh - 60px);
   background: #0E0E14;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  border-radius: 20px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 40px rgba(212, 175, 55, 0.15);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  background-image: 
+    radial-gradient(circle at 100% 0%, rgba(197, 160, 89, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.05) 0%, transparent 40%);
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  border-radius: 22px;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.9), 0 0 45px rgba(197, 160, 89, 0.16);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
   display: flex;
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
-  animation: modalSlideUp 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: salonSlideIn 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes modalSlideUp {
-  0% { opacity: 0; transform: translateY(24px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes salonSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* Header */
-.drawerHeader {
-  padding: 18px 22px;
-  background: linear-gradient(180deg, rgba(26, 26, 34, 0.98) 0%, rgba(16, 16, 22, 0.98) 100%);
+/* --------------------------------------------------------------------------
+   3. HEADER SALON (Crest & Status)
+   -------------------------------------------------------------------------- */
+.salonHeader {
+  padding: 16px 20px;
+  background: linear-gradient(180deg, rgba(26, 26, 36, 0.98) 0%, rgba(16, 16, 22, 0.98) 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.headerTitleWrap {
+.headerBrand {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-.headerCrest {
+.crestWrap {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: rgba(212, 175, 55, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.22) 0%, rgba(197, 160, 89, 0.06) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   flex-shrink: 0;
 }
 
-.headerMainName {
-  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #FFFFFF;
-  margin: 0;
-  line-height: 1.3;
+.crestIcon {
+  color: var(--gold-light, #DFBA73);
 }
 
-.headerTagline {
+.crestGlow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: radial-gradient(circle, rgba(197, 160, 89, 0.3) 0%, transparent 70%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.brandTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brandName {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.luxuryPill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #DFC07A;
+  background: rgba(197, 160, 89, 0.15);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+
+.statusIndicatorRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.onlineDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2ECC71;
+  box-shadow: 0 0 8px #2ECC71;
+}
+
+.statusText {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
   font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--gold-light, #DFC07A);
-  margin: 3px 0 0;
-  line-height: 1.3;
+  color: var(--text-secondary, #C8C3BC);
+  font-weight: 500;
 }
 
 .closeDrawerBtn {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-muted);
+  color: var(--text-muted, #9A9490);
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -166,340 +274,670 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: all 180ms ease;
   flex-shrink: 0;
 }
 
 .closeDrawerBtn:hover {
-  color: #FFF;
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.4);
+  color: #FFFFFF;
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: rotate(90deg);
 }
 
-/* 3 Tab Kênh Chuyên Biệt */
-.channelTabs {
+/* --------------------------------------------------------------------------
+   4. TAB KÊNH CHUYÊN ĐỀ (Thematic Channel Bar)
+   -------------------------------------------------------------------------- */
+.channelTabBar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: rgba(0, 0, 0, 0.45);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 8px;
+  background: rgba(10, 10, 14, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 8px 12px;
   gap: 8px;
 }
 
-.tabBtn {
-  padding: 11px 8px;
-  border-radius: 10px;
+.channelTabItem {
   background: transparent;
   border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 8px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  color: var(--text-secondary, #C8C3BC);
+  gap: 5px;
   cursor: pointer;
   transition: all 200ms ease;
 }
 
-.tabIcon {
-  color: inherit;
-  transition: transform 200ms ease;
-}
-
-.tabName {
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.84rem;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  letter-spacing: 0.01em;
-}
-
-.tabBtn:hover {
-  color: #FFF;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.tabActive {
-  background: rgba(212, 175, 55, 0.16) !important;
-  border-color: rgba(212, 175, 55, 0.45) !important;
-  color: #FFF !important;
-  box-shadow: inset 0 1px 0 rgba(255, 240, 180, 0.25);
-}
-
-.tabActive .tabIcon {
-  color: var(--gold-light, #DFC07A);
-  transform: translateY(-1px);
-}
-
-.tabActive .tabName {
-  color: #FFF2B2;
-  font-weight: 700;
-}
-
-/* Banner Thông Tin Kênh Hiện Tại */
-.channelInfoBanner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.12) 0%, rgba(26, 26, 34, 0.6) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.channelInfoIcon {
-  width: 32px;
-  height: 32px;
+.tabIconCircle {
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
-  background: rgba(212, 175, 55, 0.18);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-muted, #9A9490);
+  transition: all 200ms ease;
+}
+
+.tabLabelGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.tabMainName {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary, #C8C3BC);
+  transition: color 200ms ease;
+}
+
+.tabBadgeDesc {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+.channelTabItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.channelTabItem:hover .tabIconCircle {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.channelTabItem:hover .tabMainName {
+  color: #FFFFFF;
+}
+
+.tabActive {
+  background: rgba(197, 160, 89, 0.14) !important;
+  border-color: rgba(197, 160, 89, 0.45) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.tabActive .tabIconCircle {
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.35) 0%, rgba(197, 160, 89, 0.15) 100%);
+  color: #FFF2B2;
+}
+
+.tabActive .tabMainName {
+  color: #FFF2B2;
+  font-weight: 800;
+}
+
+.tabActive .tabBadgeDesc {
+  color: var(--gold-light, #DFBA73);
+}
+
+/* --------------------------------------------------------------------------
+   5. THẺ TÓM TẮT & NGỮ CẢNH PHÒNG (Room Briefing Card)
+   -------------------------------------------------------------------------- */
+.roomBriefingCard {
+  margin: 8px 16px 0;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, rgba(26, 26, 36, 0.6) 0%, rgba(16, 16, 22, 0.7) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
 }
 
-.channelInfoText {
-  flex: 1;
-  overflow: hidden;
+.briefingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.channelBannerTitle {
+.briefingTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.briefingTitle {
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: 0.02em;
-  line-height: 1.35;
+  margin: 0;
+  letter-spacing: 0.01em;
 }
 
-.channelBannerDesc {
+.toggleBriefingBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #9A9490);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 150ms ease;
+}
+
+.toggleBriefingBtn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.briefingBody {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.briefingText {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
+  color: var(--text-secondary, #C8C3BC);
   line-height: 1.45;
-  color: var(--text-secondary, #D4CFCA);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
+  margin: 0 0 6px;
 }
 
-/* Khu Vực Tin Nhắn Cuộn */
-.messagesScrollArea {
+.highlightPillsRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.highlightChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--gold-light, #DFBA73);
+  background: rgba(197, 160, 89, 0.1);
+  border: 1px solid rgba(197, 160, 89, 0.22);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.highlightChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--gold-light, #DFBA73);
+  background: rgba(197, 160, 89, 0.12);
+  border: 1px solid rgba(197, 160, 89, 0.28);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   6. KHU VỰC CUỘN TIN NHẮN (Message Stream)
+   -------------------------------------------------------------------------- */
+.chatScrollArea {
   flex: 1;
-  padding: 18px 20px;
+  padding: 16px 18px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  background: radial-gradient(circle at 50% 10%, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+  gap: 20px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.25) transparent;
+  scrollbar-color: rgba(197, 160, 89, 0.3) transparent;
 }
 
-.messagesScrollArea::-webkit-scrollbar {
-  width: 3px;
+.chatScrollArea::-webkit-scrollbar {
+  width: 4px;
 }
 
-.messagesScrollArea::-webkit-scrollbar-track {
+.chatScrollArea::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.messagesScrollArea::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.3);
-  border-radius: 3px;
+.chatScrollArea::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.35);
+  border-radius: 4px;
 }
 
-.messagesScrollArea::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.5);
+.chatScrollArea::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 160, 89, 0.6);
 }
 
-.messageRow {
+/* Cụm Tin Nhắn (Cluster) */
+.messageCluster {
   display: flex;
   gap: 12px;
   align-items: flex-start;
 }
 
-.userAvatar {
-  width: 40px;
-  height: 40px;
+.avatarWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.msgAvatar {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(212, 175, 55, 0.45);
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  border: 1.5px solid rgba(197, 160, 89, 0.4);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
 }
 
-.bubbleContainer {
+.verifiedCheck {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  color: #2ECC71;
+  background: #101016;
+  border-radius: 50%;
+  padding: 1px;
+}
+
+.messageContentBlock {
   flex: 1;
-  max-width: 88%;
+  max-width: 86%;
 }
 
-.metaRow {
+.senderMetaRow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 7px;
+  margin-bottom: 5px;
   flex-wrap: wrap;
 }
 
-.senderName {
+.senderFullName {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 0.01em;
 }
 
-.roleBadge {
+.roleTag {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-secondary, #D4CFCA);
-  background: rgba(255, 255, 255, 0.08);
-  padding: 2px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
   border-radius: 6px;
   letter-spacing: 0.02em;
 }
 
-.curatorBadge {
+.curatorTag {
   color: #FFF2B2;
-  background: rgba(212, 175, 55, 0.22);
-  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: rgba(197, 160, 89, 0.22);
+  border: 1px solid rgba(197, 160, 89, 0.5);
 }
 
-.artistBadge {
+.artistTag {
   color: #7DD3FC;
   background: rgba(56, 189, 248, 0.18);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  border: 1px solid rgba(56, 189, 248, 0.45);
 }
 
-.timeStamp {
+.collectorTag {
+  color: #E9D5FF;
+  background: rgba(192, 132, 252, 0.18);
+  border: 1px solid rgba(192, 132, 252, 0.45);
+}
+
+.guestTag {
+  color: #D4CFCA;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.timeTag {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.74rem;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
   margin-left: auto;
 }
 
-.bubbleBox {
+/* Bong Bóng Tin Nhắn */
+.luxuryBubble {
   background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px 16px 16px 4px;
   padding: 12px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: all 180ms ease;
+}
+
+.bubbleText {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.93rem;
-  line-height: 1.65;
+  font-size: 0.92rem;
+  line-height: 1.6;
   color: #F4F0EC;
+  margin: 0;
   word-break: break-word;
 }
 
-.bubbleBox p {
-  margin: 0;
-}
-
-.selfRow {
+/* Tin Nhắn Bản Thân (Self Message) */
+.selfCluster {
   flex-direction: row-reverse;
 }
 
-.selfRow .bubbleContainer {
+.selfCluster .messageContentBlock {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.selfRow .metaRow {
+.selfCluster .senderMetaRow {
   flex-direction: row-reverse;
 }
 
-.selfRow .bubbleBox {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.26) 0%, rgba(212, 175, 55, 0.12) 100%);
-  border-color: rgba(212, 175, 55, 0.45);
+.selfCluster .luxuryBubble {
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.28) 0%, rgba(197, 160, 89, 0.12) 100%);
+  border-color: rgba(197, 160, 89, 0.5);
+  border-radius: 16px 16px 4px 16px;
+  box-shadow: 0 4px 20px rgba(197, 160, 89, 0.15);
+}
+
+.selfCluster .bubbleText {
   color: #FFFFFF;
 }
 
-/* Gợi Ý Câu Hỏi Thẩm Định Nhanh */
-.quickPromptSection {
-  padding: 7px 14px 8px;
-  background: rgba(14, 14, 18, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+/* --------------------------------------------------------------------------
+   7. THANH THẢ CẢM XÚC NGHỆ THUẬT (Reactions Bar)
+   -------------------------------------------------------------------------- */
+.reactionsBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
 }
 
-.quickPromptHeader {
+.reactionChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  color: var(--text-secondary, #C8C3BC);
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.reactionCount {
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+
+.reactionChip:hover {
+  background: rgba(197, 160, 89, 0.18);
+  border-color: rgba(197, 160, 89, 0.45);
+  transform: translateY(-1px);
+}
+
+.reactionActive {
+  background: rgba(197, 160, 89, 0.25) !important;
+  border-color: rgba(197, 160, 89, 0.6) !important;
+  color: #FFF2B2 !important;
+}
+
+.reactionPickerWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.addReactionTrigger {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted, #9A9490);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 160ms ease;
+  padding: 0;
+}
+
+.addReactionTrigger:hover {
+  background: rgba(197, 160, 89, 0.22);
+  border-color: rgba(197, 160, 89, 0.55);
+  color: #FFF2B2;
+  transform: scale(1.1);
+}
+
+.reactionFlyout {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 0;
+  display: none;
+  align-items: center;
+  gap: 3px;
+  background: #181822;
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  padding: 3px 6px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 14px rgba(197, 160, 89, 0.15);
+  z-index: 20;
+  animation: flyoutPop 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes flyoutPop {
+  from { opacity: 0; transform: translateY(4px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.reactionPickerWrap:hover .reactionFlyout,
+.reactionPickerWrap:focus-within .reactionFlyout {
+  display: flex;
+}
+
+.miniReactionBtn {
+  background: transparent;
+  border: none;
+  font-size: 0.82rem;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: transform 140ms ease;
+}
+
+.miniReactionBtn:hover {
+  transform: scale(1.35);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   8. HIỆU ỨNG GÕ PHÍM TRỰC TIẾP (Wave Typing Indicator)
+   -------------------------------------------------------------------------- */
+.typingCluster {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.typingAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(197, 160, 89, 0.45);
+}
+
+.typingBubble {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  border-radius: 14px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.typingAuthorRow {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.typingAuthor {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.71rem;
-  font-weight: 600;
-  color: var(--gold-light, #DFC07A);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold-light, #DFBA73);
+}
+
+.typingHint {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.waveDots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.waveDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-light, #DFBA73);
+  animation: waveAnimation 1.3s infinite ease-in-out;
+}
+
+.waveDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.waveDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes waveAnimation {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. GỢI Ý CÂU HỎI THẨM ĐỊNH (Inspiration Flow Chips)
+   -------------------------------------------------------------------------- */
+.inspirationSection {
+  padding: 8px 16px 10px;
+  background: rgba(14, 14, 18, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.inspirationHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold-light, #DFBA73);
   margin-bottom: 6px;
 }
 
-.quickPromptList {
+.inspirationChipList {
   display: flex;
-  gap: 7px;
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: 3px;
+  padding-bottom: 4px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+  scrollbar-color: rgba(197, 160, 89, 0.3) transparent;
 }
 
-.quickPromptList::-webkit-scrollbar {
+.inspirationChipList::-webkit-scrollbar {
   height: 2px;
 }
 
-.quickPromptList::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.quickPromptList::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.35);
+.inspirationChipList::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.4);
   border-radius: 2px;
 }
 
-.promptChip {
-  padding: 5px 11px;
-  border-radius: 12px;
+.quickPromptChip {
+  padding: 6px 12px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #D4D0CB;
+  color: #D4CFCA;
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   white-space: nowrap;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: all 180ms ease;
   line-height: 1.35;
 }
 
-.promptChip:hover {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: rgba(212, 175, 55, 0.5);
-  color: #FFF;
+.promptSpark {
+  color: var(--gold-primary, #C5A059);
+  font-size: 0.7rem;
 }
 
-/* Ô Nhập Tin Nhắn Ở Đáy */
-.inputDock {
-  padding: 14px 18px;
+.quickPromptChip:hover {
+  background: rgba(197, 160, 89, 0.18);
+  border-color: rgba(197, 160, 89, 0.55);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   10. KHU VỰC NHẬP TIN NHẮN (Input Dock)
+   -------------------------------------------------------------------------- */
+.dockContainer {
+  padding: 12px 18px 16px;
   background: rgba(10, 10, 14, 0.98);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.inputForm {
+.chatForm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputShell {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 26px;
-  padding: 5px 8px 5px 18px;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  padding: 4px 6px 4px 18px;
+  transition: all 200ms ease;
 }
 
-.inputForm:focus-within {
+.inputShell:focus-within {
   border-color: var(--gold-primary, #C5A059);
-  box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
-  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 16px rgba(197, 160, 89, 0.28);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.textInput {
+.mainInput {
   flex: 1;
   background: transparent;
   border: none;
@@ -510,18 +948,18 @@
   line-height: 1.5;
 }
 
-.textInput::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+.mainInput::placeholder {
+  color: rgba(255, 255, 255, 0.4);
   font-size: 0.86rem;
 }
 
-.sendActionBtn {
+.sendGoldBtn {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FFF0B3 0%, #D4AF37 100%);
+  background: linear-gradient(135deg, #FFF0B3 0%, #C5A059 100%);
   border: none;
-  color: #0A0A0C;
+  color: #0E0E14;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -530,40 +968,126 @@
   flex-shrink: 0;
 }
 
-.sendActionBtn:disabled {
-  opacity: 0.35;
+.sendGoldBtn:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
-.sendActionBtn:not(:disabled):hover {
+.sendGoldBtn:not(:disabled):hover {
   transform: scale(1.08);
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 16px rgba(197, 160, 89, 0.6);
 }
 
-.authGate {
+.guestStatusRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.85rem;
-  color: var(--text-secondary, #D4CFCA);
+  font-size: 0.72rem;
+  color: var(--gold-light, #DFBA73);
+  padding: 0 4px;
 }
 
-@media (max-width: 520px) {
-  .forumDrawer {
-    right: 10px;
-    bottom: 10px;
-    width: calc(100vw - 20px);
-    height: 540px;
+.switchLoginLink {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.switchLoginLink:hover {
+  color: var(--gold-light, #DFBA73);
+}
+
+/* Auth Lounge Thân Thiện (Welcoming Guest Lounge) */
+.welcomeAuthLounge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.authTextSide {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.authTitle {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.authSubtitle {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.74rem;
+  color: var(--text-secondary, #C8C3BC);
+}
+
+.authActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.guestTryBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  color: var(--gold-light, #DFBA73);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 180ms ease;
+  white-space: nowrap;
+}
+
+.guestTryBtn:hover {
+  background: rgba(197, 160, 89, 0.16);
+  border-color: rgba(197, 160, 89, 0.7);
+  color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   11. THÍCH ỨNG THIẾT BỊ DI ĐỘNG (Responsive Design)
+   -------------------------------------------------------------------------- */
+@media (max-width: 560px) {
+  .salonDrawer {
+    right: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+    height: calc(100vh - 20px);
+    border-radius: 18px;
   }
-  .forumTriggerBtn {
-    right: 76px;
+
+  .salonTriggerPill {
+    right: 20px;
     bottom: 20px;
-    height: 42px;
-    padding: 0 12px;
+    height: 48px;
+    padding: 0 12px 0 8px;
   }
-  .triggerSubTitle {
+
+  .triggerSubtitle {
     display: none;
+  }
+
+  .welcomeAuthLounge {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .authActionGroup {
+    width: 100%;
+    justify-content: flex-end;
   }
 }

@@ -121,7 +121,7 @@ const App = () => {
       {/* Toast notifications */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
-      {/* Community Salon Chat between Artists & Collectors */}
+      {/* Advisory & Appraisal Consultation Drawer */}
       <CommunityChatDrawer
         currentUser={currentUser}
         onLoginClick={() => setLoginOpen(true)}
