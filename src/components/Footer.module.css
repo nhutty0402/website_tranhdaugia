@@ -78,7 +78,7 @@
 }
 
 .colHeader {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 0.82rem;
   font-weight: 700;
   color: #FFF;

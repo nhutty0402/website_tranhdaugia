@@ -801,7 +801,7 @@ const CertificatesTab = ({ addToast }) => {
       <div className={styles.certCard}>
         <div className={styles.certHeader}>
           <div className={styles.certBrand}>
-            <span style={{ fontFamily: 'Cinzel, serif', color: 'var(--gold-primary)', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.1em' }}>
+            <span style={{ fontFamily: 'var(--font-brand)', color: 'var(--gold-primary)', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.1em' }}>
               ARTISAN HUB
             </span>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '4px 0 0', letterSpacing: '0.03em' }}>Digital Certificate of Authenticity</p>

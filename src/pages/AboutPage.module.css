@@ -35,7 +35,7 @@
 
 .heroBadge {
   display: inline-block;
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.26em;
@@ -48,7 +48,7 @@
 }
 
 .heroTitle {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 3.2rem;
   font-weight: 700;
   line-height: 1.25;
@@ -86,7 +86,7 @@
 
 .subHeading {
   display: block;
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -95,7 +95,7 @@
 }
 
 .sectionHeader h2 {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 2.2rem;
   font-weight: 700;
   color: #FFF;
@@ -150,7 +150,7 @@
 }
 
 .missionCard h3 {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 1.15rem;
   font-weight: 700;
   color: #FFF;
@@ -199,7 +199,7 @@
 }
 
 .pillarStep {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 1.4rem;
   font-weight: 800;
   color: var(--gold-primary);
@@ -218,7 +218,7 @@
 }
 
 .pillarTitle {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 0.98rem;
   font-weight: 700;
   color: #FFF;
@@ -299,7 +299,7 @@
 }
 
 .curatorName {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 1.15rem;
   font-weight: 700;
   color: #FFF;
@@ -343,7 +343,7 @@
 }
 
 .timelineYear {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--gold-primary);
@@ -410,7 +410,7 @@
 }
 
 .ctaBox h2 {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 1.85rem;
   font-weight: 700;
   color: #FFF;

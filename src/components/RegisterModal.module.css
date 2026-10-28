@@ -34,7 +34,7 @@
 }
 
 .logoText {
-  font-family: var(--font-brand, 'Cinzel', serif);
+  font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--gold-primary);
