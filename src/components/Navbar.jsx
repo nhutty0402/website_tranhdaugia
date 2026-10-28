@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Search, Bell, User, Menu, X, ChevronDown, LogOut,
-  Compass, Gavel, Sparkles, Building, PlusCircle
+  Compass, Gavel, Palette, Landmark
 } from 'lucide-react';
 import VerificationBadge from './VerificationBadge';
 import Logo from './Logo';
@@ -10,33 +10,29 @@ import styles from './Navbar.module.css';
 
 const NAV_LINKS = [
   { 
-    no: 'I',
     label: 'Khám phá', 
-    subLabel: 'Gallery & Triển lãm',
+    subLabel: 'GALLERY & TRIỂN LÃM',
     path: '/gallery',
     icon: Compass,
   },
   { 
-    no: 'II',
     label: 'Đấu giá', 
-    subLabel: 'Trực tiếp & Đấu kín',
+    subLabel: 'TRỰC TIẾP & ĐẤU KÍN',
     path: '/auction',
     icon: Gavel,
     isLive: true,
   },
   { 
-    no: 'III',
     label: 'Họa sĩ', 
-    subLabel: 'Danh mục nghệ nhận',
+    subLabel: 'DANH MỤC NGHỆ THUẬT',
     path: '/artists',
-    icon: Sparkles,
+    icon: Palette,
   },
   { 
-    no: 'IV',
     label: 'Về chúng tôi', 
-    subLabel: 'Bảo chứng & Di sản',
+    subLabel: 'BẢO CHỨNG & DI SẢN',
     path: '/about',
-    icon: Building,
+    icon: Landmark,
   },
 ];
 
@@ -66,59 +62,66 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
 
   return (
     <>
-      <nav className={styles.navbar}>
+      <header className={styles.navbar}>
         <div className={styles.inner}>
-          {/* Logo */}
-          <Link to="/" style={{ textDecoration: 'none' }}>
+          {/* Logo "ARTISAN HUB" */}
+          <Link to="/" className={styles.logoLink} aria-label="Artisan Hub Trang chủ">
             <Logo size="md" />
           </Link>
 
-          {/* Desktop Nav */}
-          <ul className={styles.navLinks}>
-            {NAV_LINKS.map(link => {
-              const isActive = location.pathname === link.path;
-              const IconComp = link.icon;
-              return (
-                <li key={link.path} className={styles.navItem}>
-                  <Link
-                    to={link.path}
-                    className={`${styles.navLink} ${isActive ? styles.active : ''}`}
-                  >
-                    <span className={styles.navRoman}>{link.no}</span>
-                    <span className={styles.navTextGroup}>
-                      <span className={styles.navLabel}>
-                        <IconComp size={14} className={styles.navItemIcon} />
-                        {link.label}
-                        {link.isLive && (
-                          <span className={styles.liveBadge}>
-                            <span className={styles.livePulse} />
-                            LIVE
-                          </span>
-                        )}
-                      </span>
-                      <span className={styles.navSubLabel}>{link.subLabel}</span>
-                    </span>
-                    <span className={styles.activeGlowLine} />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          {/* Center Navigation Menu */}
+          <nav className={styles.navContainer} aria-label="Menu chính">
+            <ul className={styles.navLinks}>
+              {NAV_LINKS.map(link => {
+                const isActive = location.pathname === link.path;
+                const IconComp = link.icon;
+                return (
+                  <li key={link.path} className={styles.navItem}>
+                    <Link
+                      to={link.path}
+                      className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+                    >
+                      <div className={styles.navIconWrapper}>
+                        <IconComp size={16} strokeWidth={1.5} className={styles.navItemIcon} />
+                      </div>
+                      <div className={styles.navTextCol}>
+                        <div className={styles.navLabelRow}>
+                          <span className={styles.navLabel}>{link.label}</span>
+                          {link.isLive && (
+                            <span className={styles.liveBadge}>
+                              <span className={styles.livePulse} />
+                              LIVE
+                            </span>
+                          )}
+                        </div>
+                        <span className={styles.navSubLabel}>{link.subLabel}</span>
+                      </div>
+                      <span className={styles.activeGlowLine} />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-          {/* Right Actions */}
+          {/* Right Utility Buttons */}
           <div className={styles.actions}>
             <button
               id="nav-search-btn"
-              className={`btn btn-icon btn-ghost ${styles.iconBtn}`}
+              className={styles.iconBtn}
               onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Tìm kiếm"
+              aria-label="Tìm kiếm tác phẩm"
             >
-              <Search size={18} />
+              <Search size={18} strokeWidth={1.4} />
             </button>
 
-            <button id="nav-bell-btn" className={`btn btn-icon btn-ghost ${styles.iconBtn}`} aria-label="Thông báo">
-              <div style={{ position: 'relative' }}>
-                <Bell size={18} />
+            <button
+              id="nav-bell-btn"
+              className={styles.iconBtn}
+              aria-label="Thông báo"
+            >
+              <div className={styles.bellWrapper}>
+                <Bell size={18} strokeWidth={1.4} />
                 <span className={styles.notifDot} />
               </div>
             </button>
@@ -138,6 +141,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
                   <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
                   <ChevronDown
                     size={14}
+                    strokeWidth={1.5}
                     className={`${styles.chevron} ${userMenuOpen ? styles.chevronRotated : ''}`}
                   />
                 </button>
@@ -192,28 +196,27 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
               <div className={styles.authGroup}>
                 <button
                   id="nav-register-btn"
-                  className={styles.btnArtSecondary}
+                  className={styles.btnRegister}
                   onClick={onRegisterClick}
                 >
                   Đăng ký
                 </button>
                 <button
                   id="nav-login-btn"
-                  className={styles.btnArtPrimary}
+                  className={styles.btnLogin}
                   onClick={onLoginClick}
                 >
-                  <span className={styles.btnArtText}>Đăng nhập</span>
-                  <span className={styles.btnArtGleam} />
+                  Đăng nhập
                 </button>
               </div>
             )}
 
             <button
-              className={`btn btn-icon btn-ghost ${styles.menuBtn}`}
+              className={styles.menuBtn}
               onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Menu"
+              aria-label="Mở menu di động"
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
             </button>
           </div>
         </div>
@@ -246,10 +249,10 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
                   className={`${styles.mobileLink} ${location.pathname === link.path ? styles.mobileActive : ''}`}
                   onClick={() => setMobileOpen(false)}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <IconComp size={18} color="var(--gold-primary)" />
+                  <div className={styles.mobileLinkLeft}>
+                    <IconComp size={18} strokeWidth={1.5} color="var(--gold-primary)" />
                     <div>
-                      <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div className={styles.mobileLinkLabel}>
                         {link.label}
                         {link.isLive && (
                           <span className={styles.liveBadge} style={{ transform: 'scale(0.85)' }}>
@@ -258,12 +261,9 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
                           </span>
                         )}
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{link.subLabel}</div>
+                      <div className={styles.mobileLinkSub}>{link.subLabel}</div>
                     </div>
                   </div>
-                  <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.8rem', color: 'rgba(212,175,55,0.6)' }}>
-                    {link.no}
-                  </span>
                 </Link>
               );
             })}
@@ -311,13 +311,26 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
                 </button>
               </div>
             ) : (
-              <button className="btn btn-primary" onClick={() => { onLoginClick(); setMobileOpen(false); }}>
-                Đăng nhập / Đăng ký
-              </button>
+              <div className={styles.mobileAuthRow}>
+                <button 
+                  className={styles.btnRegister} 
+                  style={{ width: '100%', textAlign: 'center', padding: '10px' }}
+                  onClick={() => { onRegisterClick(); setMobileOpen(false); }}
+                >
+                  Đăng ký
+                </button>
+                <button 
+                  className={styles.btnLogin} 
+                  style={{ width: '100%', textAlign: 'center' }}
+                  onClick={() => { onLoginClick(); setMobileOpen(false); }}
+                >
+                  Đăng nhập
+                </button>
+              </div>
             )}
           </div>
         )}
-      </nav>
+      </header>
       {/* Spacer */}
       <div style={{ height: 76 }} />
     </>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Shield, Clock, Zap, Heart, Share2, Eye, ZoomIn,
   ArrowLeft, Award, AlertTriangle, Check, ChevronLeft, ChevronRight,
@@ -23,6 +23,7 @@ const TAB_ITEMS = ['Thông tin', 'Room View', 'Vệt cọ', 'Lịch sử đặt 
 
 const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const artwork = ARTWORKS.find(a => a.artwork_id === id) || ARTWORKS[0];
   const [session, setSession] = useState(AUCTION_SESSIONS.find(s => s.artwork_id === artwork.artwork_id));
   const artist = USERS.find(u => u.user_id === artwork.artist_id);
@@ -375,10 +376,12 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   depositLocked={depositLocked}
                   escrowPass={escrowPass}
                   onOpenDeposit={() => setDepositModalOpen(true)}
+                  navigate={navigate}
+                  currentUser={currentUser}
                 />
               )
             ) : (
-              <BuyBox artwork={artwork} addToast={addToast} />
+              <BuyBox artwork={artwork} addToast={addToast} navigate={navigate} />
             )}
 
             {/* Action buttons */}
@@ -661,114 +664,147 @@ const BidHistoryTab = ({ bids, bidListRef, isSealed, isArtist, currentUser }) =>
 
 const AuctionBox = ({
   session, currentPrice, countdown, urgent, bids, onBid, placing,
-  artwork, addToast, outbidAlert, depositLocked, escrowPass, onOpenDeposit
-}) => (
-  <div className={`${styles.auctionBox} ${urgent ? styles.auctionUrgent : ''} ${outbidAlert ? styles.outbidFlash : ''}`}>
-    <div className={styles.auctionHeader}>
-      <span className="badge badge-live">LIVE AUCTION</span>
-      <div className={styles.auctionTime}>
-        <Clock size={14} color={urgent ? 'var(--live)' : 'var(--gold-primary)'} />
-        {countdown && (
-          <span style={{ color: urgent ? 'var(--live)' : 'var(--gold-primary)', fontFamily: 'var(--font-mono, monospace)', fontVariantNumeric: 'tabular-nums', fontWeight: 700 }}>
-            {String(countdown.hours).padStart(2, '0')}:{String(countdown.minutes).padStart(2, '0')}:{String(countdown.seconds).padStart(2, '0')}
-          </span>
-        )}
-        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>còn lại</span>
-      </div>
-    </div>
+  artwork, addToast, outbidAlert, depositLocked, escrowPass, onOpenDeposit,
+  navigate, currentUser
+}) => {
+  const isLiveEnded = session.status !== 'live' || (countdown && countdown.total <= 0);
+  const isUserWinning = currentUser && bids.length > 0 && bids[0]?.bidder_id === currentUser.user_id;
 
-    <div className={styles.currentPrice}>
-      <p className={styles.priceLabel}>Giá cao nhất hiện tại</p>
-      <p className={styles.priceValue}>{formatPriceFull(currentPrice)}</p>
-      <p className={styles.bidCount}>{bids.length} lượt đặt giá</p>
-    </div>
-
-    {/* Deposit Escrow Status & Callout (Friction with Purpose) */}
-    {!depositLocked ? (
-      <div className={styles.depositBanner}>
-        <div className={styles.depositBannerHeader}>
-          <span className="badge badge-gold" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <Shield size={12} /> YÊU CẦU KÝ QUỸ ĐẶT CỌC 15%
-          </span>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Friction with Purpose</span>
+  return (
+    <div className={`${styles.auctionBox} ${urgent ? styles.auctionUrgent : ''} ${outbidAlert ? styles.outbidFlash : ''}`}>
+      <div className={styles.auctionHeader}>
+        <span className="badge badge-live">LIVE AUCTION</span>
+        <div className={styles.auctionTime}>
+          <Clock size={14} color={urgent ? 'var(--live)' : 'var(--gold-primary)'} />
+          {countdown && (
+            <span style={{ color: urgent ? 'var(--live)' : 'var(--gold-primary)', fontFamily: 'var(--font-mono, monospace)', fontVariantNumeric: 'tabular-nums', fontWeight: 700 }}>
+              {String(countdown.hours).padStart(2, '0')}:{String(countdown.minutes).padStart(2, '0')}:{String(countdown.seconds).padStart(2, '0')}
+            </span>
+          )}
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>còn lại</span>
         </div>
-        <p className={styles.depositBannerDesc}>
-          Ký quỹ tạm khóa <strong>{formatPriceFull(Math.round(currentPrice * 0.15))}</strong> trong ví Escrow (hoàn trả 100% tự động nếu không trúng thầu) để kích hoạt quyền đặt giá.
-        </p>
-        <button
-          id="open-deposit-btn"
-          type="button"
-          className="btn btn-primary btn-sm"
-          style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}
-          onClick={onOpenDeposit}
-        >
-          <Shield size={14} /> Ký quỹ bảo chứng 15% & Mở quyền phòng đấu
-        </button>
       </div>
-    ) : (
-      <div className={styles.depositUnlockedBanner}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div className={styles.unlockedIconBadge}>
-              <ShieldCheck size={18} color="#2ECC71" />
-            </div>
-            <div>
-              <span className="badge badge-verified" style={{ fontSize: '0.7rem' }}>
-                ✦ ĐÃ KHÓA CỌC KÝ QUỸ ESCROW 15%
-              </span>
-              <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)' }}>
-                Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp quyền VIP
-              </p>
-            </div>
+
+      <div className={styles.currentPrice}>
+        <p className={styles.priceLabel}>Giá cao nhất hiện tại</p>
+        <p className={styles.priceValue}>{formatPriceFull(currentPrice)}</p>
+        <p className={styles.bidCount}>{bids.length} lượt đặt giá</p>
+      </div>
+
+      {/* Deposit Escrow Status & Callout (Friction with Purpose) */}
+      {!depositLocked ? (
+        <div className={styles.depositBanner}>
+          <div className={styles.depositBannerHeader}>
+            <span className="badge badge-gold" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Shield size={12} /> YÊU CẦU KÝ QUỸ ĐẶT CỌC 15%
+            </span>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Friction with Purpose</span>
           </div>
+          <p className={styles.depositBannerDesc}>
+            Ký quỹ tạm khóa <strong>{formatPriceFull(Math.round(currentPrice * 0.15))}</strong> trong ví Escrow (hoàn trả 100% tự động nếu không trúng thầu) để kích hoạt quyền đặt giá.
+          </p>
           <button
+            id="open-deposit-btn"
             type="button"
-            className="btn btn-ghost btn-sm"
-            style={{ fontSize: '0.75rem', color: 'var(--gold-primary)' }}
+            className="btn btn-primary btn-sm"
+            style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}
             onClick={onOpenDeposit}
           >
-            Xem thẻ Pass
+            <Shield size={14} /> Ký quỹ bảo chứng 15% & Mở quyền phòng đấu
           </button>
         </div>
-      </div>
-    )}
-
-    <div className={styles.quickBids}>
-      <p className={styles.controlLabel}>Đặt giá nhanh</p>
-      <div className={styles.quickBidGrid}>
-        {QUICK_BID_STEPS.map(step => (
-          <button
-            key={step}
-            id={`quick-bid-${step}`}
-            className={`btn btn-secondary ${styles.quickBidBtn}`}
-            onClick={() => onBid(step)}
-            disabled={placing || session.status !== 'live'}
-          >
-            +{formatPrice(step)}
-          </button>
-        ))}
-      </div>
-    </div>
-
-    <button
-      id="confirm-bid-btn"
-      className={`btn btn-primary ${styles.confirmBidBtn}`}
-      onClick={() => onBid(QUICK_BID_STEPS[1])}
-      disabled={placing || session.status !== 'live'}
-    >
-      {placing ? (
-        <><span className={styles.spinner} /> Đang xử lý...</>
       ) : (
-        <><Zap size={16} /> Xác nhận đặt giá +{formatPrice(QUICK_BID_STEPS[1])}</>
+        <div className={styles.depositUnlockedBanner}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className={styles.unlockedIconBadge}>
+                <ShieldCheck size={18} color="#2ECC71" />
+              </div>
+              <div>
+                <span className="badge badge-verified" style={{ fontSize: '0.7rem' }}>
+                  ✦ ĐÃ KHÓA CỌC KÝ QUỸ ESCROW 15%
+                </span>
+                <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)' }}>
+                  Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp quyền VIP
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              style={{ fontSize: '0.75rem', color: 'var(--gold-primary)' }}
+              onClick={onOpenDeposit}
+            >
+              Xem thẻ Pass
+            </button>
+          </div>
+        </div>
       )}
-    </button>
 
-    <div className={styles.escrowNote}>
-      <Shield size={12} color="var(--gold-primary)" />
-      <span>Tiền được giữ trong Ví ký quỹ 72h sau khi nhận hàng</span>
+      <div className={styles.quickBids}>
+        <p className={styles.controlLabel}>Đặt giá nhanh</p>
+        <div className={styles.quickBidGrid}>
+          {QUICK_BID_STEPS.map(step => (
+            <button
+              key={step}
+              id={`quick-bid-${step}`}
+              className={`btn btn-secondary ${styles.quickBidBtn}`}
+              onClick={() => onBid(step)}
+              disabled={placing || session.status !== 'live'}
+            >
+              +{formatPrice(step)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button
+        id="confirm-bid-btn"
+        className={`btn btn-primary ${styles.confirmBidBtn}`}
+        onClick={() => onBid(QUICK_BID_STEPS[1])}
+        disabled={placing || session.status !== 'live'}
+      >
+        {placing ? (
+          <><span className={styles.spinner} /> Đang xử lý...</>
+        ) : (
+          <><Zap size={16} /> Xác nhận đặt giá +{formatPrice(QUICK_BID_STEPS[1])}</>
+        )}
+      </button>
+
+      {/* Checkout CTA when user is the current winner */}
+      {isUserWinning && navigate && (
+        <button
+          id="checkout-winner-btn"
+          type="button"
+          onClick={() => navigate(`/checkout/${artwork.artwork_id}`)}
+          style={{
+            width: '100%',
+            padding: '12px',
+            background: 'linear-gradient(135deg, #2ECC71 0%, #27AE60 100%)',
+            border: 'none',
+            borderRadius: 'var(--radius-md)',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            boxShadow: '0 4px 16px rgba(46,204,113,0.35)',
+          }}
+        >
+          💳 Bạn đang dẫn đầu – Thanh toán ngay
+        </button>
+      )}
+
+      <div className={styles.escrowNote}>
+        <Shield size={12} color="var(--gold-primary)" />
+        <span>Tiền được giữ trong Ví ký quỹ 72h sau khi nhận hàng</span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const SealedAuctionBox = ({
   session,
@@ -947,15 +983,22 @@ const SealedAuctionBox = ({
   );
 };
 
-const BuyBox = ({ artwork, addToast }) => (
+const BuyBox = ({ artwork, addToast, navigate }) => (
   <div className={styles.buyBox}>
     <div className={styles.currentPrice}>
       <p className={styles.priceLabel}>Giá khởi điểm</p>
       <p className={styles.priceValue}>{formatPriceFull(artwork.current_price)}</p>
     </div>
-    <button id="buy-now-btn" className={`btn btn-primary ${styles.confirmBidBtn}`}
-      onClick={() => addToast('Vui lòng đăng nhập để mua tác phẩm!', 'info')}>
-      Mua ngay
+    <button
+      id="buy-now-btn"
+      className={`btn btn-primary ${styles.confirmBidBtn}`}
+      style={{ width: '100%', padding: '14px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+      onClick={() => {
+        if (navigate) navigate(`/checkout/${artwork.artwork_id}`);
+        else addToast('Vui lòng đăng nhập để mua tác phẩm!', 'info');
+      }}
+    >
+      💳 Thanh toán ngay
     </button>
   </div>
 );

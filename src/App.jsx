@@ -15,6 +15,7 @@ import ArtistsPage from './pages/ArtistsPage';
 import ArtistDetailPage from './pages/ArtistDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import AboutPage from './pages/AboutPage';
+import CheckoutPage from './pages/CheckoutPage';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import BackToTop from './components/BackToTop';
@@ -92,6 +93,7 @@ const App = () => {
         <Route path="/artist/:id" element={<ArtistDetailPage {...sharedProps} />} />
         <Route path="/profile" element={<ProfilePage {...sharedProps} />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/checkout/:artworkId" element={<CheckoutPage {...sharedProps} />} />
       </Routes>
 
       {/* Global Luxury Art Footer */}
