@@ -36,27 +36,15 @@ const NAV_LINKS = [
   },
 ];
 
-const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, addToast }) => {
+const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark', onToggleTheme }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [isLightMode, setIsLightMode] = useState(false);
+  const isLight = theme === 'light';
   const userMenuRef = useRef(null);
 
-  const handleThemeToggle = () => {
-    const nextMode = !isLightMode;
-    setIsLightMode(nextMode);
-    if (addToast) {
-      addToast(
-        nextMode
-          ? '✦ Đã chọn Chế độ Sáng (Light Mode). Tính năng đổi màu toàn diện sẽ được áp dụng khi hoàn thiện!'
-          : '✦ Đã quay lại Chế độ Tối (Dark Luxury Gallery).',
-        'gold',
-        4000
-      );
-    }
-  };
+
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -145,12 +133,12 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, addToast }) => 
             <button
               id="theme-toggle-btn"
               type="button"
-              className={`${styles.iconBtn} ${styles.themeBtn} ${isLightMode ? styles.themeBtnActive : ''}`}
-              onClick={handleThemeToggle}
-              aria-label={isLightMode ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
-              title={isLightMode ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
+              className={`${styles.iconBtn} ${styles.themeBtn} ${isLight ? styles.themeBtnActive : ''}`}
+              onClick={onToggleTheme}
+              aria-label={isLight ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
+              title={isLight ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
             >
-              {isLightMode ? (
+              {isLight ? (
                 <Sun size={18} strokeWidth={1.6} className={styles.sunIcon} />
               ) : (
                 <Moon size={18} strokeWidth={1.6} className={styles.moonIcon} />

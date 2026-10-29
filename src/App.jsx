@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import Navbar from './components/Navbar';
@@ -26,7 +26,27 @@ const App = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [wishlisted, setWishlisted] = useState(new Set());
+  const [theme, setTheme] = useState(() => localStorage.getItem('artisan_theme') || 'dark');
   const { toasts, addToast, removeToast } = useToast();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('artisan_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      addToast(
+        next === 'light'
+          ? '✦ Đã chuyển sang Giao diện Sáng (Museum Day Mode)!'
+          : '✦ Đã chuyển sang Giao diện Tối (Dark Luxury Gallery)!',
+        'gold',
+        3000
+      );
+      return next;
+    });
+  };
 
   const handleWishlist = (artworkId) => {
     setWishlisted(prev => {
@@ -81,6 +101,8 @@ const App = () => {
         onRegisterClick={() => setRegisterOpen(true)}
         onLogout={handleLogout}
         addToast={addToast}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <Routes>
