@@ -8,7 +8,9 @@
   padding: 28px;
   animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 90vh;
+  box-sizing: border-box;
 }
 
 @keyframes modalIn {
@@ -29,12 +31,15 @@
   margin-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 16px;
+  gap: 12px;
 }
 
 .headerTitleWrap {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .badgeShield {
@@ -59,11 +64,14 @@
   color: var(--text-primary);
   margin: 0;
   font-family: var(--font-heading);
+  line-height: 1.3;
+  word-break: break-word;
 }
 
 .closeBtn {
   color: var(--text-muted);
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .closeBtn:hover {
@@ -88,6 +96,8 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  min-width: 0;
+  flex: 1;
 }
 
 .artImg {
@@ -96,6 +106,12 @@
   border-radius: 8px;
   object-fit: cover;
   border: 1px solid var(--border-gold);
+  flex-shrink: 0;
+}
+
+.artInfo {
+  min-width: 0;
+  flex: 1;
 }
 
 .artTitle {
@@ -103,6 +119,9 @@
   font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .artArtist {
@@ -126,6 +145,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  flex-shrink: 0;
 }
 
 .amountLabel {
@@ -138,6 +158,7 @@
   font-weight: 700;
   color: var(--gold-primary);
   font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
 }
 
 /* Warning Box */
@@ -156,6 +177,11 @@
   color: #e67e22;
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+.warningContent {
+  flex: 1;
+  min-width: 0;
 }
 
 .warningTitle {
@@ -216,10 +242,12 @@
   margin-top: 2px;
   accent-color: var(--gold-primary);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .checkContent {
   flex: 1;
+  min-width: 0;
 }
 
 .checkHead {
@@ -230,6 +258,7 @@
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 2px;
+  line-height: 1.35;
 }
 
 .iconGold {
@@ -263,10 +292,18 @@
   gap: 8px;
 }
 
+.btnCancel {
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   TABLET RESPONSIVE (max-width: 600px)
+   ========================================================================== */
 @media (max-width: 600px) {
   .orderSummary {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 12px;
   }
   .payoutAmountBox {
     align-items: flex-start;
@@ -277,5 +314,172 @@
   }
   .footerActions button {
     width: 100%;
+  }
+}
+
+/* ==========================================================================
+   MOBILE 390PX OPTIMIZATION (max-width: 440px / 390px)
+   Touch-friendly, compact, no vertical clipping
+   ========================================================================== */
+@media (max-width: 440px) {
+  .modalCard {
+    padding: 16px 14px !important;
+    width: 96% !important;
+    max-width: 400px;
+    border-radius: 16px !important;
+    max-height: 92dvh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+
+  .badgeShield {
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    gap: 5px;
+  }
+
+  .title {
+    font-size: 1.15rem !important;
+    line-height: 1.3;
+  }
+
+  .closeBtn {
+    min-width: 34px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -4px;
+    margin-right: -4px;
+  }
+
+  /* Order Summary 390px */
+  .orderSummary {
+    padding: 10px 12px !important;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .artPreview {
+    gap: 10px;
+  }
+
+  .artImg {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 6px;
+  }
+
+  .artTitle {
+    font-size: 0.88rem;
+  }
+
+  .artArtist {
+    font-size: 0.74rem;
+  }
+
+  .artOrderCode {
+    font-size: 0.68rem;
+  }
+
+  .payoutAmountBox {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+
+  .amountLabel {
+    font-size: 0.7rem;
+  }
+
+  .amountValue {
+    font-size: 1.12rem !important;
+  }
+
+  /* Warning Box 390px */
+  .warningBox {
+    padding: 10px 12px;
+    gap: 8px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+  }
+
+  .warningTitle {
+    font-size: 0.78rem;
+    margin-bottom: 2px;
+  }
+
+  .warningDesc {
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
+  /* Checklist 390px */
+  .checklistSection {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .checklistTitle {
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+  }
+
+  .checkItem {
+    padding: 10px 12px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .checkItem input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin-top: 1px;
+  }
+
+  .checkHead {
+    font-size: 0.78rem;
+    gap: 6px;
+    line-height: 1.35;
+  }
+
+  .checkSub {
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  /* Footer Actions 390px */
+  .footerActions {
+    flex-direction: column-reverse;
+    gap: 8px;
+    padding-top: 12px;
+    width: 100%;
+  }
+
+  .submitBtn {
+    width: 100% !important;
+    min-width: unset !important;
+    min-height: 46px !important;
+    font-size: 0.85rem !important;
+    justify-content: center !important;
+  }
+
+  .btnCancel {
+    width: 100% !important;
+    min-height: 38px !important;
+    font-size: 0.76rem !important;
+    justify-content: center !important;
+    text-align: center;
+    padding: 8px 12px !important;
   }
 }

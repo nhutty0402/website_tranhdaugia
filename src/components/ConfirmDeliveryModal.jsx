@@ -53,7 +53,8 @@ const ConfirmDeliveryModal = ({
         <div className={styles.header}>
           <div className={styles.headerTitleWrap}>
             <div className={styles.badgeShield}>
-              <ShieldCheck size={14} /> Chốt chặn an toàn Escrow 72h
+              <ShieldCheck size={13} style={{ flexShrink: 0 }} />
+              <span>Chốt chặn an toàn Escrow 72h</span>
             </div>
             <h2 id="confirm-delivery-title" className={styles.title}>
               Xác nhận Nghiệm thu & Giải ngân
@@ -73,7 +74,7 @@ const ConfirmDeliveryModal = ({
         <div className={styles.orderSummary}>
           <div className={styles.artPreview}>
             <img src={artwork?.image || '/artwork_2.png'} alt={artwork?.title} className={styles.artImg} />
-            <div>
+            <div className={styles.artInfo}>
               <p className={styles.artTitle}>{artwork?.title || 'Sen Hồ Tây'}</p>
               <p className={styles.artArtist}>Họa sĩ: <strong>{artwork?.artist_name || 'Nguyễn Phúc An'}</strong></p>
               <p className={styles.artOrderCode}>Mã ký quỹ: #{order?.escrow_id?.toUpperCase() || 'ESC1'}</p>
@@ -87,8 +88,8 @@ const ConfirmDeliveryModal = ({
 
         {/* Warning Callout */}
         <div className={styles.warningBox}>
-          <AlertTriangle size={20} className={styles.warningIcon} />
-          <div>
+          <AlertTriangle size={18} className={styles.warningIcon} />
+          <div className={styles.warningContent}>
             <p className={styles.warningTitle}>Hành động tài chính có hiệu lực tức thì</p>
             <p className={styles.warningDesc}>
               Sau khi bạn xác nhận, toàn bộ <strong>{formatPriceFull(order?.amount_locked || 35000000)}</strong> trong ví ký quỹ sẽ được chuyển thẳng về tài khoản Họa sĩ và <strong>không thể thu hồi hoặc hoàn tác</strong>.
@@ -112,7 +113,7 @@ const ConfirmDeliveryModal = ({
             <div className={styles.checkContent}>
               <div className={styles.checkHead}>
                 <Box size={14} className={styles.iconGold} />
-                <span>1. Đã mở kiện gỗ & kiểm tra tác phẩm nguyên vẹn</span>
+                <span>1. Đã mở kiện gỗ & kiểm tra tranh nguyên vẹn</span>
               </div>
               <p className={styles.checkSub}>Khung tranh, bề mặt sơn mài/dầu không trầy xước, nứt vỡ trong quá trình vận chuyển.</p>
             </div>
@@ -144,7 +145,7 @@ const ConfirmDeliveryModal = ({
             <div className={styles.checkContent}>
               <div className={styles.checkHead}>
                 <Lock size={14} className={styles.iconGold} />
-                <span>3. Đồng ý kết thúc thời gian 72h nghiệm thu và giải ngân</span>
+                <span>3. Đồng ý kết thúc thời gian 72h nghiệm thu</span>
               </div>
               <p className={styles.checkSub}>Tôi hiểu quyền khiếu nại tranh chấp sẽ chấm dứt sau khi hoàn tất bước này.</p>
             </div>
@@ -155,7 +156,7 @@ const ConfirmDeliveryModal = ({
         <div className={styles.footerActions}>
           <button
             type="button"
-            className="btn btn-ghost"
+            className={`btn btn-ghost ${styles.btnCancel}`}
             onClick={onClose}
             disabled={submitting}
           >

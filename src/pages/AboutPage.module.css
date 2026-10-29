@@ -8,7 +8,7 @@
 /* Hero Section */
 .heroSection {
   position: relative;
-  padding: 100px 0 80px;
+  padding: 48px 0 56px;
   background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212, 175, 55, 0.16) 0%, rgba(13, 13, 15, 0.98) 75%, var(--bg-base) 100%);
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   text-align: center;
@@ -452,3 +452,62 @@
     grid-template-columns: 60px 30px 1fr;
   }
 }
+
+
+/* Responsive 390px Mobile AboutPage */
+@media (max-width: 480px) {
+  .heroSection {
+    padding: 24px 0 28px;
+  }
+  .heroTitle {
+    font-size: clamp(1.65rem, 7vw, 2.1rem);
+    margin-bottom: 16px;
+  }
+  .heroLead {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .sectionHeader {
+    margin-bottom: 28px;
+  }
+  .sectionHeader h2 {
+    font-size: 1.5rem;
+  }
+  .sectionLead {
+    font-size: 0.85rem;
+  }
+  .missionSection {
+    padding: 48px 0;
+  }
+  .missionCard {
+    padding: 20px 16px;
+  }
+  .timelineItem {
+    grid-template-columns: 46px 20px 1fr;
+    gap: 4px;
+  }
+  .ctaSection {
+    padding: 48px 0 64px;
+  }
+  .ctaBox {
+    padding: 24px 16px;
+    border-radius: 18px;
+  }
+  .ctaBox h2 {
+    font-size: 1.45rem;
+  }
+  .ctaBox p {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .ctaButtons {
+    width: 100%;
+  }
+  .ctaButtons button,
+  .ctaButtons a {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+

@@ -1,3 +1,177 @@
+/* =========================================================
+   LUXURY ARTISAN BACKDROP (Tách biệt hoàn toàn với trang web)
+   ========================================================= */
+.loginOverlay {
+  background: rgba(6, 7, 10, 0.94) !important;
+  backdrop-filter: blur(28px) saturate(140%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(140%) contrast(105%) !important;
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bgBackdropDecor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Chùm sáng Spotlight bảo tàng từ đỉnh chiếu xuống trung tâm */
+.spotlightTop {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  max-width: 140vw;
+  height: 680px;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgba(197, 160, 89, 0.24) 0%,
+    rgba(197, 160, 89, 0.08) 45%,
+    rgba(6, 7, 10, 0) 75%
+  );
+  filter: blur(24px);
+  animation: spotlightPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes spotlightPulse {
+  0% { opacity: 0.85; transform: translateX(-50%) scale(0.98); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1.03); }
+}
+
+/* Vầng sáng vàng ấm hai bên mạn */
+.ambientOrbLeft {
+  position: absolute;
+  top: 25%;
+  left: -80px;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197, 160, 89, 0.12) 0%, rgba(197, 160, 89, 0) 70%);
+  filter: blur(65px);
+}
+
+.ambientOrbRight {
+  position: absolute;
+  bottom: 15%;
+  right: -80px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(218, 165, 32, 0.09) 0%, rgba(197, 160, 89, 0) 70%);
+  filter: blur(75px);
+}
+
+/* Lưới họa tiết hình học nghệ thuật cao cấp chìm ở nền */
+.decorGrid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(197, 160, 89, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(197, 160, 89, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 50%, #000 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 50%, #000 30%, transparent 85%);
+  opacity: 0.85;
+}
+
+/* Watermark thương hiệu chìm sang trọng ở đỉnh nền */
+.bgHeaderBranding {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(197, 160, 89, 0.55);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bgShieldIcon {
+  color: rgba(197, 160, 89, 0.7);
+}
+
+/* Dải thông điệp bảo chứng chìm ở chân nền */
+.bgFooterTrust {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dotSeparator {
+  color: rgba(197, 160, 89, 0.4);
+}
+
+@media (max-width: 640px) {
+  .bgHeaderBranding,
+  .bgFooterTrust {
+    display: none;
+  }
+}
+
+/* Hộp Modal Đăng Nhập Nổi Bật Trên Nền Bảo Tàng */
+/* =========================================================
+   GHI CHÚ THANH CUỘN (SCROLLBAR & OVERFLOW)
+   - Ẩn thanh cuộn để giữ modal liền mạch, sang trọng, không bị vạch cuộn cắt ngang
+   - Vẫn hỗ trợ cuộn mượt bằng con lăn chuột hoặc vuốt cảm ứng trên màn hình nhỏ
+   - Nếu bạn muốn TẮT HẲN CUỘN: bỏ comment dòng `overflow-y: hidden !important;`
+   - Nếu bạn muốn HIỆN LẠI THANH CUỘN: comment lại 2 thuộc tính `scrollbar-width` và `::-webkit-scrollbar`
+   ========================================================= */
+.loginModalCard {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(180deg, #15171e 0%, #0e1015 100%) !important;
+  border: 1px solid rgba(197, 160, 89, 0.45) !important;
+  box-shadow: 
+    0 30px 90px -10px rgba(0, 0, 0, 0.95),
+    0 0 50px rgba(197, 160, 89, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+
+  /* GHI CHÚ: Ẩn thanh cuộn trên Firefox và IE/Edge */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+
+  /* Tùy chọn: Nếu muốn khóa hoàn toàn cuộn, mở comment dòng dưới: */
+  /* overflow-y: hidden !important; */
+}
+
+/* GHI CHÚ: Ẩn vệt thanh cuộn trên Chrome / Safari / Edge (Webkit) */
+.loginModalCard::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Khung hiển thị riêng cho trang /login (html.to.design capture đầy đủ chiều cao, không bị giới hạn 90vh) */
+.loginPageCard {
+  max-height: none !important;
+  overflow: visible !important;
+  animation: none !important;
+  margin: 0 auto;
+}
+
 .modalInner {
   padding: 40px;
   position: relative;
@@ -431,5 +605,42 @@
 
   .subtitle {
     font-size: 0.8rem;
+  }
+}
+
+/* Responsive 390px Mobile Login Modal */
+@media (max-width: 420px) {
+  .modalInner {
+    padding: 18px 12px !important;
+    gap: 12px !important;
+  }
+  .title {
+    font-size: 1.12rem !important;
+  }
+  .subtitle {
+    font-size: 0.75rem !important;
+  }
+  .demoSwitcher {
+    padding: 8px 8px !important;
+  }
+  .demoGrid {
+    gap: 4px !important;
+  }
+  .demoCard {
+    padding: 6px 2px !important;
+  }
+  .demoRole {
+    font-size: 0.6rem !important;
+  }
+  .demoName {
+    font-size: 0.65rem !important;
+  }
+  .otpRow {
+    gap: 3px !important;
+  }
+  .otpBox {
+    max-width: 40px !important;
+    height: 40px !important;
+    font-size: 1.05rem !important;
   }
 }

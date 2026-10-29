@@ -136,3 +136,16 @@
     display: none;
   }
 }
+
+/* Responsive 390px Mobile Stacking */
+@media (max-width: 640px) {
+  .container {
+    bottom: 78px !important;
+    right: 16px !important;
+  }
+  .button {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 11px !important;
+  }
+}

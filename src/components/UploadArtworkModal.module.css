@@ -285,3 +285,44 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Responsive 390px Mobile Upload Artwork Modal */
+@media (max-width: 480px) {
+  .modalCard {
+    width: 96%;
+    max-height: 94dvh;
+    border-radius: 18px;
+  }
+  .header {
+    padding: 14px 16px 12px;
+  }
+  .headerTitle {
+    font-size: 1.15rem;
+  }
+  .formBody {
+    padding: 14px 14px;
+    gap: 14px;
+  }
+  .uploadBox {
+    min-height: 120px;
+    padding: 12px;
+  }
+  .previewImg {
+    height: 140px;
+  }
+  .commitmentBox {
+    padding: 10px 12px;
+  }
+  .footer {
+    padding: 12px 14px 16px;
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .footer button {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+

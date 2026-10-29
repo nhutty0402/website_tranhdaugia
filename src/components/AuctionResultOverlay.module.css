@@ -158,3 +158,57 @@
   gap: 12px;
   margin-top: 10px;
 }
+
+/* Responsive 768px & 390px AuctionResultOverlay */
+@media (max-width: 768px) {
+  .resultModal {
+    max-width: 480px;
+    padding: 28px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .resultModal {
+    width: 95%;
+    padding: 20px 14px;
+    border-radius: 16px;
+  }
+  .iconCircleWinner {
+    width: 60px;
+    height: 60px;
+  }
+  .titleWinner {
+    font-size: 1.2rem;
+  }
+  .titleLoser {
+    font-size: 1.1rem;
+  }
+  .subtitle {
+    font-size: 0.78rem;
+  }
+  .artSnippet {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .artThumb {
+    width: 46px;
+    height: 46px;
+  }
+  .artName {
+    font-size: 0.9rem;
+  }
+  .escrowGuide {
+    padding: 10px 12px;
+    font-size: 0.75rem;
+  }
+  .actionRow {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .actionRow button, .actionRow a {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+}

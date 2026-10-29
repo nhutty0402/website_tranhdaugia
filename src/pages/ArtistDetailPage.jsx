@@ -585,7 +585,7 @@ const ArtistDetailPage = ({ addToast, currentUser }) => {
       </div>
 
       {/* ===== STICKY FLOATING ACTION BAR (FITTS'S LAW MOBILE ERGONOMICS) ===== */}
-      <aside
+      {/* <aside
         className={`${styles.stickyBottomBar} ${stickyVisible ? styles.stickyBottomBarVisible : ''}`}
         aria-label="Thanh hành động nhanh"
       >
@@ -630,7 +630,7 @@ const ArtistDetailPage = ({ addToast, currentUser }) => {
             </div>
           </div>
         </div>
-      </aside>
+      </aside> */}
 
       {/* ===== FRICTIONLESS COMMISSION DRAWER ===== */}
       {commissionOpen && (

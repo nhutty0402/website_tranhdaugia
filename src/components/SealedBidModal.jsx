@@ -148,10 +148,10 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
             </div>
 
             <div className={styles.footerActions}>
-              <button type="button" className="btn btn-ghost" onClick={onClose}>
+              <button type="button" className={`btn btn-ghost ${styles.btnCancel}`} onClick={onClose}>
                 Hủy bỏ
               </button>
-              <button id="btn-proceed-commitment" type="submit" className="btn btn-primary">
+              <button id="btn-proceed-commitment" type="submit" className={`btn btn-primary ${styles.btnSubmit}`}>
                 Tiếp tục cam kết <ArrowRight size={16} />
               </button>
             </div>
@@ -208,7 +208,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
             <div className={styles.footerActions}>
               <button
                 type="button"
-                className="btn btn-ghost"
+                className={`btn btn-ghost ${styles.btnCancel}`}
                 onClick={() => setStep(1)}
                 disabled={submitting}
               >
@@ -217,7 +217,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
               <button
                 id="btn-submit-sealed-bid"
                 type="button"
-                className="btn btn-primary"
+                className={`btn btn-primary ${styles.btnSubmit}`}
                 disabled={!agreementChecked || submitting}
                 onClick={handleConfirmSubmission}
               >

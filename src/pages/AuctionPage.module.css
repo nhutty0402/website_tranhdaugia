@@ -2,7 +2,7 @@
   position: relative;
   background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 90, 95, 0.05) 0%, rgba(13, 13, 15, 0.98) 75%, var(--bg-base) 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 56px 0 42px;
+  padding: 40px 0 32px;
   overflow: hidden;
 }
 
@@ -315,3 +315,77 @@
   .sessionsGrid { grid-template-columns: 1fr; }
   .quickBids { grid-template-columns: repeat(2, 1fr); }
 }
+
+@media (max-width: 600px) {
+  .pageHeader { padding: 24px 0 20px !important; }
+}
+
+
+/* Responsive 390px Mobile AuctionPage */
+@media (max-width: 480px) {
+  .pageHeader {
+    padding: 18px 0 16px !important;
+  }
+  .pageTitle {
+    font-size: clamp(1.6rem, 7vw, 2.1rem);
+    margin-bottom: 8px;
+  }
+  .pageDesc {
+    font-size: 0.85rem;
+  }
+  .cardBody {
+    padding: 16px 14px;
+    gap: 12px;
+  }
+  .cardImage {
+    height: 180px;
+  }
+  .artTitle {
+    font-size: 1.05rem;
+  }
+  .countdown {
+    padding: 10px 12px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .countdownBlocks {
+    gap: 6px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .countdownBlock {
+    min-width: 38px;
+    padding: 4px 6px;
+  }
+  .countdownNum {
+    font-size: 1.15rem;
+  }
+  .priceRow {
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .priceValue {
+    font-size: 1.35rem;
+  }
+  .quickBids {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .quickBid {
+    font-size: 0.72rem;
+    padding: 8px 6px;
+    min-height: 40px;
+  }
+  .upcomingImage {
+    height: 160px;
+  }
+  .upcomingTimer {
+    font-size: 1.8rem;
+  }
+  .upcomingInfo {
+    padding: 16px 14px;
+  }
+}
+

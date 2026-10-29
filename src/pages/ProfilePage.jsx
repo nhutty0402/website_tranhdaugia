@@ -130,7 +130,7 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
                   </button>
                 </>
               )}
-              <button
+              {/* <button
                 id="profile-logout-hero-btn"
                 className="btn btn-secondary"
                 style={{
@@ -146,7 +146,7 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
                 }}
               >
                 <LogOut size={16} /> Đăng xuất
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -366,8 +366,14 @@ const MyAuctionsTab = ({ currentUser, onRaiseBid, addToast }) => {
             }
           } else {
             if (isSealed) {
-              statusBadge = <span className="badge badge-gold"><Lock size={11} /> ĐÃ GỬI HỒ SƠ KÍN</span>;
-            } else if (myBid.status === 'winning') {
+statusBadge = (
+  <span
+    className="badge badge-gold"
+    style={{ fontSize: "10px", padding: "8px 8px", gap: "4px" }}
+  >
+    <Lock size={8} /> ĐÃ GỬI HỒ SƠ KÍN
+  </span>
+);            } else if (myBid.status === 'winning') {
               statusBadge = <span className="badge badge-live">DẪN ĐẦU</span>;
             } else {
               statusBadge = <span className="badge badge-secondary">ĐÃ BỊ VƯỢT</span>;
@@ -379,22 +385,14 @@ const MyAuctionsTab = ({ currentUser, onRaiseBid, addToast }) => {
               key={session.session_id}
               className={styles.myAuctionItem}
               style={{
-                background: 'var(--bg-elevated)',
-                border: isSealed ? '1px solid var(--border-gold)' : '1px solid var(--border-subtle)',
-                borderRadius: 14,
-                padding: '18px 20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: 16,
+                border: isSealed ? '1px solid var(--border-gold)' : undefined,
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div className={styles.myAuctionArtwork}>
                 <img
                   src={artwork.image}
                   alt={artwork.title}
-                  style={{ width: 72, height: 72, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)' }}
+                  className={styles.myAuctionArtworkImg}
                 />
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -414,20 +412,20 @@ const MyAuctionsTab = ({ currentUser, onRaiseBid, addToast }) => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+              <div className={styles.myAuctionRight}>
+                <div className={styles.myAuctionBidBlock}>
+                  <span className={styles.myAuctionBidLabel}>
                     {isSealed ? 'Giá kín bạn đặt' : 'Mức giá đã đặt'}
                   </span>
-                  <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>
+                  <p className={styles.myAuctionBidAmount}>
                     {formatPriceFull(myBid.bid_amount)}
                   </p>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                  <span className={styles.myAuctionBidSub}>
                     {isSealed ? 'Mã hóa bí mật một chiều' : 'Lượt đặt gần nhất'}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div className={styles.myAuctionActions}>
                   {/* Flow 4: Nút "Tăng giá" nếu phiên kín đang diễn ra */}
                   {isSealed && !isEnded && (
                     <button
@@ -633,7 +631,7 @@ const EscrowTab = ({ addToast, onViewCertificates }) => {
 
       <div className={styles.escrowCard}>
         <div className={styles.escrowHeader}>
-          <div>
+          <div className={styles.escrowMeta}>
             {escrowState === 'locked' && (
               <span className="badge" style={{ background: 'rgba(243,156,18,0.15)', color: '#F39C12', border: '1px solid rgba(243,156,18,0.3)' }}>
                 <Clock size={10} /> Đang ký quỹ 72h
@@ -662,7 +660,7 @@ const EscrowTab = ({ addToast, onViewCertificates }) => {
           {/* Step 1 */}
           <div className={styles.escrowStep}>
             <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
-            <div>
+            <div className={styles.stepInfo}>
               <p className={styles.stepLabel}>Thanh toán</p>
               <p className={styles.stepDesc}>Đã thanh toán thành công</p>
             </div>
@@ -672,7 +670,7 @@ const EscrowTab = ({ addToast, onViewCertificates }) => {
           {/* Step 2 */}
           <div className={styles.escrowStep}>
             <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
-            <div>
+            <div className={styles.stepInfo}>
               <p className={styles.stepLabel}>Vận chuyển</p>
               <p className={styles.stepDesc}>Kiện gỗ đã giao tới người mua</p>
             </div>
@@ -688,7 +686,7 @@ const EscrowTab = ({ addToast, onViewCertificates }) => {
             ) : (
               <div className={`${styles.stepDot} ${styles.stepActive}`}><Clock size={14} /></div>
             )}
-            <div>
+            <div className={styles.stepInfo}>
               <p className={styles.stepLabel}>Nghiệm thu 72h</p>
               <p className={styles.stepDesc}>
                 {escrowState === 'released'
@@ -710,7 +708,7 @@ const EscrowTab = ({ addToast, onViewCertificates }) => {
             ) : (
               <div className={styles.stepDot}><Shield size={14} /></div>
             )}
-            <div>
+            <div className={styles.stepInfo}>
               <p className={styles.stepLabel}>Giải ngân</p>
               <p className={styles.stepDesc}>
                 {escrowState === 'released'

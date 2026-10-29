@@ -472,6 +472,11 @@
 }
 
 /* Phone row */
+.phoneRow input {
+  flex: 1;
+  min-width: 0;
+}
+
 .phoneRow {
   display: flex;
   align-items: stretch;
@@ -900,7 +905,7 @@
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
   .registerModal {
-    max-height: 92dvh;
+    max-height: 94dvh;
     border-radius: 20px;
   }
   .modalHeader { padding: 16px 16px 0; }
@@ -912,4 +917,285 @@
   .uploadItemWide { grid-column: span 1; }
   .stepTitle { font-size: 1.2rem; }
   .stepDesc { font-size: 0.82rem; }
+}
+
+.registerPageCard {
+  max-height: none !important;
+  overflow: visible !important;
+  animation: none !important;
+  margin: 0 auto;
+}
+
+/* Responsive 390px Mobile Register Modal (iPhone 12/13/14) */
+@media (max-width: 480px) {
+  .registerModal {
+    max-height: 94dvh !important;
+    border-radius: 16px !important;
+  }
+  .modalHeader {
+    padding: 12px 14px 0 !important;
+  }
+  .stepperWrap {
+    padding: 8px 14px 0 !important;
+    overflow-x: visible !important;
+  }
+  .mobileStepProgress {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 2px 8px !important;
+  }
+  .mobileStepCounter {
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: var(--gold-primary) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+  .mobileStepCurrent {
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+  }
+  .stepper {
+    min-width: 0 !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .stepItem {
+    gap: 0 !important;
+  }
+  .stepDot {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.55rem !important;
+  }
+  .stepLabel {
+    display: none !important;
+  }
+  .stepLine {
+    min-width: 6px !important;
+    margin: 0 2px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .stepContent {
+    padding: 14px 14px 18px !important;
+    gap: 12px !important;
+  }
+  .stepTitle {
+    font-size: 1.15rem !important;
+    line-height: 1.3 !important;
+  }
+  .stepDesc {
+    font-size: 0.76rem !important;
+    line-height: 1.5 !important;
+  }
+  .levelBadge {
+    font-size: 0.65rem !important;
+    padding: 3px 10px !important;
+  }
+
+  /* Role Selection */
+  .roleGrid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .roleCard {
+    padding: 12px 12px !important;
+    gap: 8px !important;
+  }
+  .roleIcon {
+    width: 42px !important;
+    height: 42px !important;
+  }
+  .roleLabel {
+    font-size: 0.98rem !important;
+  }
+  .roleSublabel {
+    font-size: 0.74rem !important;
+  }
+  .rolePerks {
+    gap: 4px !important;
+  }
+  .rolePerks li {
+    font-size: 0.7rem !important;
+  }
+
+  /* Quick Fill Samples */
+  .quickFillBox {
+    padding: 10px 10px !important;
+    margin-bottom: 12px !important;
+  }
+  .quickFillHeader {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+  }
+  .quickFillGrid {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  .quickFillBtn {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 6px 10px !important;
+    min-height: 36px !important;
+  }
+  .quickFillName {
+    font-size: 0.74rem !important;
+  }
+  .quickFillRole {
+    font-size: 0.62rem !important;
+    margin-top: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Forms & Inputs */
+  .formStack {
+    gap: 12px !important;
+  }
+  .label {
+    font-size: 0.68rem !important;
+  }
+  .checkRow {
+    font-size: 0.76rem !important;
+    gap: 8px !important;
+  }
+
+  /* OTP */
+  .otpRow {
+    gap: 5px !important;
+    max-width: 300px !important;
+    margin: 6px auto !important;
+  }
+  .otpBox {
+    width: 40px !important;
+    max-width: 42px !important;
+    height: 44px !important;
+    font-size: 1.15rem !important;
+  }
+  .otpMeta {
+    flex-direction: column !important;
+    gap: 6px !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  /* Phone */
+  .phonePrefix {
+    padding: 0 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Upload & eKYC */
+  .uploadGrid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .uploadZone {
+    min-height: 80px !important;
+    padding: 10px !important;
+  }
+  .uploadIcon {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .uploadLabel {
+    font-size: 0.76rem !important;
+  }
+  .uploadHint {
+    font-size: 0.66rem !important;
+  }
+  .uploadPreviewImg {
+    width: 48px !important;
+    height: 36px !important;
+  }
+  .uploadPreviewName {
+    font-size: 0.72rem !important;
+  }
+
+  /* Privacy & Info Boxes */
+  .privacyBox {
+    padding: 10px 12px !important;
+    gap: 6px !important;
+  }
+  .privacyHeader {
+    font-size: 0.72rem !important;
+  }
+  .privacyItem {
+    font-size: 0.68rem !important;
+  }
+  .privacyNote {
+    font-size: 0.62rem !important;
+    padding-top: 6px !important;
+  }
+  .infoBox {
+    padding: 10px 12px !important;
+    font-size: 0.75rem !important;
+    gap: 10px !important;
+  }
+  .bigIcon {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  /* Mobile Actions: Stacked touch-friendly 44px buttons */
+  .stepActions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 4px !important;
+  }
+  .stepActions button {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    font-size: 0.85rem !important;
+  }
+  .stepActions button.btn-primary,
+  .stepActions button[class*="btn-primary"] {
+    order: 1 !important;
+  }
+  .stepActions button.btn-ghost,
+  .stepActions button.btn-secondary,
+  .stepActions button[class*="btn-ghost"],
+  .stepActions button[class*="btn-secondary"] {
+    order: 2 !important;
+  }
+
+  /* Done Screen */
+  .doneCenter {
+    gap: 14px !important;
+    padding: 4px 0 !important;
+  }
+  .doneIcon {
+    font-size: 3rem !important;
+  }
+  .levelsSummary {
+    max-width: 100% !important;
+    padding: 12px 14px !important;
+    gap: 6px !important;
+  }
+  .levelRow {
+    padding: 6px 0 !important;
+    gap: 8px !important;
+  }
+  .levelLabel {
+    font-size: 0.76rem !important;
+  }
+  .pendingBox {
+    padding: 12px 12px !important;
+    gap: 10px !important;
+    font-size: 0.76rem !important;
+  }
+
+  .modalFooterNav {
+    padding: 12px 14px 16px !important;
+  }
+  .modalFooterText {
+    font-size: 0.78rem !important;
+  }
 }

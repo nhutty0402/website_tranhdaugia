@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Lock, Award, HeartHandshake } from 'lucide-react';
+import { ShieldCheck, Lock, Award, HeartHandshake, ChevronDown } from 'lucide-react';
 import Logo from './Logo';
 import styles from './Footer.module.css';
 
@@ -32,6 +32,16 @@ const FOOTER_LINKS = [
 ];
 
 const Footer = () => {
+  // Mobile accordion state: mở mặc định nhóm "Khám phá"
+  const [openSections, setOpenSections] = useState({ 0: true });
+
+  const toggleSection = (idx) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [idx]: !prev[idx]
+    }));
+  };
+
   return (
     <footer className={styles.footerRoot}>
       {/* 4 huy hiệu bảo chứng thu gọn dạng 1 thanh ngang tinh tế */}
@@ -77,22 +87,36 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Cột Phải: Các liên kết điều hướng 3 cột gọn nhẹ */}
+            {/* Cột Phải: Các liên kết điều hướng 3 cột gọn nhẹ (Accordion trên Mobile 390px) */}
             <div className={styles.linksGroup}>
-              {FOOTER_LINKS.map((col, idx) => (
-                <div key={idx} className={styles.linkCol}>
-                  <h5 className={styles.colHeader}>{col.title}</h5>
-                  <ul className={styles.linkList}>
-                    {col.links.map((link, lIdx) => (
-                      <li key={lIdx}>
-                        <Link to={link.path} className={styles.linkItem}>
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+              {FOOTER_LINKS.map((col, idx) => {
+                const isOpen = !!openSections[idx];
+                return (
+                  <div key={idx} className={`${styles.linkCol} ${isOpen ? styles.colOpen : ''}`}>
+                    <button
+                      type="button"
+                      className={styles.colHeaderBtn}
+                      onClick={() => toggleSection(idx)}
+                      aria-expanded={isOpen}
+                    >
+                      <h5 className={styles.colHeader}>{col.title}</h5>
+                      <ChevronDown
+                        size={15}
+                        className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
+                      />
+                    </button>
+                    <ul className={`${styles.linkList} ${isOpen ? styles.linkListOpen : ''}`}>
+                      {col.links.map((link, lIdx) => (
+                        <li key={lIdx}>
+                          <Link to={link.path} className={styles.linkItem}>
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

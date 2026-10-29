@@ -1,262 +1,354 @@
-.modalCard {
-  max-width: 580px;
-  width: 95%;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-gold);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.8), var(--shadow-glow);
-  padding: 32px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 20px;
-}
-
-.headerTitleWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerTitle {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.closeBtn {
-  margin-top: -8px;
-  margin-right: -8px;
-}
-
-.artworkSummary {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 12px 16px;
-  margin-bottom: 24px;
-}
-
-.artworkThumb {
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-md);
-  object-fit: cover;
-  border: 1px solid var(--border-subtle);
-}
-
-.artworkInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.artTitle {
-  font-family: var(--font-brand);
-  font-size: 1.05rem;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.artArtist {
-  font-size: 0.8rem;
-  color: var(--gold-primary);
-  margin: 0;
-}
-
-.artMinBid {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.artMinBid strong {
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-}
-
-.formContent,
-.confirmContent {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.fieldGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.fieldLabel {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.inputWrap {
-  position: relative;
-}
-
-.helperPriceText {
-  font-size: 0.8rem;
-  color: var(--gold-primary);
-  margin: 2px 0 0;
-}
-
-.quickStepsWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.quickLabel {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.quickButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.secrecyNotice {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(212, 175, 55, 0.08);
-  border: 1px solid var(--border-gold);
-  border-radius: var(--radius-md);
-  padding: 12px 16px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.secrecyNotice strong {
-  color: var(--gold-primary);
-}
-
-.footerActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 12px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-/* Step 2 */
-.reviewBox {
-  background: var(--bg-card);
-  border: 1px solid var(--border-gold);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.reviewRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.reviewLabel {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.reviewValueBig {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--gold-primary);
-  font-family: var(--font-mono);
-}
-
-.reviewStatus {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--success);
-  background: rgba(46, 204, 113, 0.1);
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid rgba(46, 204, 113, 0.25);
-}
-
-.reviewRowNotes {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 12px;
-}
-
-.reviewNoteText {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-style: italic;
-  margin: 0;
-}
-
-.commitmentCard {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 16px;
-}
-
-.commitmentTitle {
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 10px 0;
-}
-
-.commitmentList {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.agreementLabel {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  user-select: none;
-  background: var(--bg-card);
-  padding: 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-}
-
-.agreementLabel input {
-  margin-top: 3px;
-  accent-color: var(--gold-primary);
-  width: 16px;
-  height: 16px;
-}
+.modalCard {
+  max-width: 580px;
+  width: 95%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.8), var(--shadow-glow);
+  padding: 32px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.headerTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTitle {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.closeBtn {
+  margin-top: -8px;
+  margin-right: -8px;
+}
+
+.artworkSummary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+
+.artworkThumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+}
+
+.artworkInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.artTitle {
+  font-family: var(--font-brand);
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.artArtist {
+  font-size: 0.8rem;
+  color: var(--gold-primary);
+  margin: 0;
+}
+
+.artMinBid {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.artMinBid strong {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.formContent,
+.confirmContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.helperPriceText {
+  font-size: 0.8rem;
+  color: var(--gold-primary);
+  margin: 2px 0 0;
+}
+
+.quickStepsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quickLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.quickButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.secrecyNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.secrecyNotice strong {
+  color: var(--gold-primary);
+}
+
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.btnCancel {
+  min-width: 110px;
+  min-height: 44px;
+  padding: 12px 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.btnSubmit {
+  min-width: 200px;
+  min-height: 44px;
+  padding: 12px 28px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-base);
+}
+
+/* Step 2 */
+.reviewBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reviewRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviewLabel {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.reviewValueBig {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  font-family: var(--font-mono);
+}
+
+.reviewStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--success);
+  background: rgba(46, 204, 113, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+.reviewRowNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 12px;
+}
+
+.reviewNoteText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+.commitmentCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.commitmentTitle {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px 0;
+}
+
+.commitmentList {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.agreementLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-card);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.agreementLabel input {
+  margin-top: 3px;
+  accent-color: var(--gold-primary);
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive 768px & 390px SealedBidModal */
+@media (max-width: 768px) {
+  .modalCard {
+    padding: 24px;
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalCard {
+    padding: 16px 14px;
+    border-radius: 16px;
+    width: 96%;
+    max-height: 94dvh;
+  }
+  .headerTitle {
+    font-size: 1.15rem;
+  }
+  .artworkSummary {
+    padding: 10px 12px;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .artworkThumb {
+    width: 48px;
+    height: 48px;
+  }
+  .artTitle {
+    font-size: 0.95rem;
+  }
+  .quickButtons {
+    gap: 6px;
+  }
+  .quickButtons button {
+    flex: 1 1 calc(50% - 6px);
+    font-size: 0.72rem;
+    padding: 6px 8px;
+  }
+  .secrecyNotice {
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    gap: 8px;
+  }
+  .formContent, .confirmContent {
+    gap: 14px;
+  }
+  .footerActions {
+    flex-direction: column-reverse;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    width: 100%;
+  }
+  .btnCancel,
+  .btnSubmit {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    justify-content: center;
+    white-space: nowrap;
+  }
+}

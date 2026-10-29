@@ -1219,3 +1219,155 @@
   transition: all 0.2s;
 }
 .btnGhost:hover { border-color: var(--gold-dim); color: var(--gold-primary); }
+
+
+/* Responsive 390px Mobile CheckoutPage */
+@media (max-width: 480px) {
+  .page {
+    padding-bottom: 48px;
+  }
+  .pageHeaderInner {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .backBtn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .secureLabel {
+    display: none;
+  }
+  .timer {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .stepBar {
+    padding: 16px 12px 0;
+  }
+  .stepLabel {
+    display: none;
+  }
+  .stepCircle {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  .stepConnector {
+    margin: 0 4px;
+  }
+  .layout {
+    padding: 0 12px;
+    margin-top: 16px;
+    gap: 16px;
+  }
+  .card {
+    padding: 16px 14px;
+    border-radius: 16px;
+    gap: 14px;
+  }
+  .cardHeader {
+    padding-bottom: 12px;
+  }
+  .cardTitle {
+    font-size: 16px;
+  }
+  .serviceOptions {
+    padding: 12px;
+  }
+  .cardPreview {
+    padding: 14px 14px 12px;
+    min-height: 110px;
+  }
+  .cardPreviewChip {
+    width: 32px;
+    height: 24px;
+    margin-bottom: 10px;
+  }
+  .cardPreviewNumber {
+    font-size: 13.5px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .cardPreviewBottom {
+    gap: 12px;
+  }
+  .cardPreviewName,
+  .cardPreviewExpiry {
+    font-size: 11.5px;
+  }
+  .cardPreviewBrand {
+    font-size: 16px;
+  }
+  .cardFields {
+    padding: 14px 12px;
+    gap: 12px;
+  }
+  .qrBox {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  .qrImg {
+    width: 140px;
+    height: 140px;
+  }
+  .vnpayOptions {
+    grid-template-columns: 1fr;
+  }
+  .bankSection {
+    padding: 14px;
+  }
+  .bankRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .bankLabel {
+    width: 100%;
+  }
+  .bankValue {
+    width: 100%;
+  }
+  .orderArtwork {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .orderImg {
+    width: 60px;
+    height: 60px;
+  }
+  .orderArtist {
+    padding: 10px 14px;
+  }
+  .priceBreakdown {
+    padding: 12px 14px;
+  }
+  .certBox {
+    padding: 12px 14px;
+  }
+  .trustBadges {
+    padding: 12px 14px;
+  }
+  .successCard {
+    padding: 24px 16px;
+    border-radius: 18px;
+    gap: 16px;
+  }
+  .successTitle {
+    font-size: 20px;
+  }
+  .successActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btnPrimary,
+  .btnGhost {
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+

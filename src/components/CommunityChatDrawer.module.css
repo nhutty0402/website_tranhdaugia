@@ -135,15 +135,15 @@
   position: fixed;
   bottom: 28px;
   right: 28px;
-  width: 480px;
-  height: 680px;
+  width: 420px;
+  height: 620px;
   max-height: calc(100vh - 60px);
   background: #0E0E14;
-  background-image: 
+  background-image:
     radial-gradient(circle at 100% 0%, rgba(197, 160, 89, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.05) 0%, transparent 40%);
   border: 1px solid rgba(197, 160, 89, 0.4);
-  border-radius: 22px;
+  border-radius: 18px;
   box-shadow: 0 28px 72px rgba(0, 0, 0, 0.9), 0 0 45px rgba(197, 160, 89, 0.16);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
@@ -152,6 +152,16 @@
   z-index: 1000;
   overflow: hidden;
   animation: salonSlideIn 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: height 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              width  280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Thu nho — chi con header */
+.drawerMinimized {
+  height: auto !important;
+  width: 300px;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 18px rgba(197,160,89,0.2);
 }
 
 @keyframes salonSlideIn {
@@ -1089,5 +1099,72 @@
   .authActionGroup {
     width: 100%;
     justify-content: flex-end;
+  }
+}
+
+/* Responsive 768px iPad & 390px Mobile Drawer */
+@media (max-width: 768px) and (min-width: 561px) {
+  .salonDrawer {
+    width: 380px;
+    height: 580px;
+    bottom: 24px;
+    right: 24px;
+  }
+  .salonTriggerPill {
+    bottom: 24px;
+    right: 84px;
+  }
+}
+
+@media (max-width: 560px) {
+  .salonDrawer {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 8px !important;
+    width: calc(100vw - 16px) !important;
+    height: calc(100dvh - 16px) !important;
+    max-height: 96dvh !important;
+    border-radius: 16px !important;
+  }
+  .salonTriggerPill {
+    bottom: 18px !important;
+    right: 16px !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+  .channelTabBar {
+    padding: 6px 4px;
+    gap: 4px;
+  }
+  .channelTabItem {
+    padding: 6px 4px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+  .tabIconCircle {
+    width: 24px;
+    height: 24px;
+  }
+  .tabMainName {
+    font-size: 0.72rem;
+  }
+  .tabBadgeDesc {
+    display: none !important;
+  }
+  .brandName {
+    font-size: 0.95rem;
+  }
+  .luxuryPill {
+    display: none;
+  }
+  .statusText {
+    font-size: 0.65rem;
+  }
+  .quickQuestions, .inspirationSection {
+    padding: 8px 12px;
+  }
+  .mainInput {
+    font-size: 0.85rem;
   }
 }

@@ -77,6 +77,19 @@
   flex-direction: column;
 }
 
+.colHeaderBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: default;
+}
+
 .colHeader {
   font-family: var(--font-brand, 'Playfair Display', serif);
   font-size: 0.82rem;
@@ -85,6 +98,10 @@
   letter-spacing: 0.08em;
   margin: 0 0 14px;
   text-transform: uppercase;
+}
+
+.chevron {
+  display: none;
 }
 
 .linkList {
@@ -153,19 +170,117 @@
   }
 }
 
+/* ===================================================
+   Tối ưu toàn diện cho Mobile 390px (max-width: 580px)
+   =================================================== */
 @media (max-width: 580px) {
+  .mainFooter {
+    padding: 28px 0 20px;
+  }
+
+  /* Thanh huy hiệu bảo chứng dạng lưới 2x2 cân xứng */
   .trustRow {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 10px;
+  }
+
+  .trustItem {
+    font-size: 0.72rem;
+    gap: 6px;
+    letter-spacing: 0;
+  }
+
+  .brandBox {
+    max-width: 100%;
+  }
+
+  .brandText {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    margin: 10px 0 12px;
+  }
+
+  .contactCompact {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 4px;
+    font-size: 0.76rem;
   }
+
+  .contactDot {
+    display: none;
+  }
+
+  /* Chuyển 3 nhóm liên kết thành Accordion chạm mở mượt mà */
   .linksGroup {
     flex-direction: column;
-    gap: 20px;
+    gap: 0;
+    width: 100%;
   }
+
+  .linkCol {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 2px 0;
+  }
+
+  .colHeaderBtn {
+    cursor: pointer;
+    min-height: 44px;
+    padding: 10px 0;
+  }
+
+  .colHeader {
+    margin: 0;
+    font-size: 0.82rem;
+  }
+
+  .chevron {
+    display: block;
+    color: var(--gold-primary, #D4AF37);
+    transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chevronOpen {
+    transform: rotate(180deg);
+  }
+
+  .linkList {
+    display: none;
+    padding-bottom: 12px;
+    gap: 4px;
+  }
+
+  .linkListOpen {
+    display: flex;
+    animation: fadeInFooter 200ms ease;
+  }
+
+  .linkItem {
+    padding: 8px 0;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
   .bottomRow {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+}
+
+@keyframes fadeInFooter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

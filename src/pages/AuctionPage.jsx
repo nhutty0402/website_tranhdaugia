@@ -67,9 +67,9 @@ const AuctionPage = ({ addToast, currentUser }) => {
           <div style={{ marginBottom: 48 }}>
             <div className={styles.sectionHeader}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                {/* <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                   <Lock size={12} /> SEALED-BID
-                </span>
+                </span> */}
                 <h2>Phiên Đấu Giá Kín (Bảo mật giá thầu)</h2>
               </div>
             </div>

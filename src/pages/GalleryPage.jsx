@@ -37,7 +37,7 @@ const GalleryPage = ({ wishlisted, onWishlist }) => {
           <span className={styles.sectionLabel}>TRIỂN LÃM SỐ HOÀNG GIA</span>
           <h1 className={styles.pageTitle}>Khám phá Tác phẩm</h1>
           <p className={styles.pageDesc}>
-            {ARTWORKS.length} kiệt tác hội họa độc bản được thẩm định & bảo chứng chứng thư số SHA-256 từ các danh họa hàng đầu.
+          Kiệt tác hội họa độc bản được thẩm định & bảo chứng chứng thư số SHA-256 từ các danh họa hàng đầu.
           </p>
         </div>
       </div>

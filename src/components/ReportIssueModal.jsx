@@ -65,7 +65,8 @@ const ReportIssueModal = ({
         <div className={styles.header}>
           <div className={styles.headerTitleWrap}>
             <div className={styles.badgeDispute}>
-              <ShieldAlert size={14} /> Tạm dừng ký quỹ · Mở khiếu nại
+              <ShieldAlert size={14} style={{ flexShrink: 0 }} />
+              <span>Tạm dừng ký quỹ · Mở khiếu nại</span>
             </div>
             <h2 id="report-issue-title" className={styles.title}>
               Báo cáo sự cố tác phẩm #{order?.escrow_id?.toUpperCase() || 'ESC1'}
@@ -144,12 +145,12 @@ const ReportIssueModal = ({
             >
               {hasPhotos ? (
                 <div className={styles.uploadDone}>
-                  <CheckCircle2 size={24} className={styles.iconSuccess} />
+                  <CheckCircle2 size={22} className={styles.iconSuccess} />
                   <span>Đã tải lên 2 ảnh mở kiện gỗ & tem niêm phong (Click để gỡ)</span>
                 </div>
               ) : (
                 <div className={styles.uploadPrompt}>
-                  <Camera size={22} className={styles.uploadIcon} />
+                  <Camera size={20} className={styles.uploadIcon} />
                   <span>Nhấn để chọn ảnh bằng chứng hoặc quay video unboxing hiện trường</span>
                 </div>
               )}
@@ -160,11 +161,11 @@ const ReportIssueModal = ({
           <div className={styles.footerActions}>
             <button
               type="button"
-              className="btn btn-ghost"
+              className={`btn btn-ghost ${styles.btnCancel}`}
               onClick={onClose}
               disabled={submitting}
             >
-              Hủy bỏ (Tôi click nhầm)
+              Hủy bỏ
             </button>
 
             <button
@@ -172,7 +173,7 @@ const ReportIssueModal = ({
               className={`btn btn-danger ${styles.submitBtn}`}
               disabled={!canSubmit || submitting}
             >
-              {submitting ? 'Đang gửi hồ sơ...' : 'Đóng băng Escrow & Gửi thẩm định'}
+              {submitting ? 'Đang gửi hồ sơ...' : 'Báo cáo'}
             </button>
           </div>
         </form>

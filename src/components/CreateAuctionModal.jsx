@@ -10,9 +10,10 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
   const [step, setStep] = useState(1); // 1: Form, 2: Preview & Confirm
 
   // Available artworks for artist (either created by artist or available in list)
-  const availableArtworks = artistArtworks && artistArtworks.length > 0 
+  const candidateArtworks = artistArtworks && artistArtworks.length > 0 
     ? artistArtworks 
-    : ARTWORKS.filter(a => a.artist_id === currentUser?.user_id || currentUser?.role === 'artist');
+    : ARTWORKS.filter(a => a.artist_id === currentUser?.user_id);
+  const availableArtworks = (candidateArtworks && candidateArtworks.length > 0) ? candidateArtworks : ARTWORKS;
 
   const [selectedArtworkId, setSelectedArtworkId] = useState(availableArtworks[0]?.artwork_id || ARTWORKS[0].artwork_id);
   const [auctionType, setAuctionType] = useState('sealed'); // 'sealed' | 'live'
@@ -104,7 +105,14 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                 id="select-artwork"
                 className="input"
                 value={selectedArtworkId}
-                onChange={e => setSelectedArtworkId(e.target.value)}
+                onChange={e => {
+                  const id = e.target.value;
+                  setSelectedArtworkId(id);
+                  const found = ARTWORKS.find(a => a.artwork_id === id);
+                  if (found?.reserve_price) {
+                    setMinBid(found.reserve_price);
+                  }
+                }}
               >
                 {availableArtworks.map(art => (
                   <option key={art.artwork_id} value={art.artwork_id}>
@@ -112,6 +120,35 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                   </option>
                 ))}
               </select>
+              {selectedArtwork && (
+                <div style={{
+                  display: 'flex',
+                  gap: 12,
+                  alignItems: 'center',
+                  marginTop: 10,
+                  padding: '10px 14px',
+                  background: 'rgba(212, 175, 55, 0.05)',
+                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  borderRadius: 10,
+                }}>
+                  <img
+                    src={selectedArtwork.image}
+                    alt={selectedArtwork.title}
+                    style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border-gold)' }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                      {selectedArtwork.title}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      {selectedArtwork.artist_name || currentUser?.full_name} · {selectedArtwork.medium} · {selectedArtwork.dimensions}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 600, marginTop: 2 }}>
+                      Giá khởi điểm đề xuất: {formatPriceFull(selectedArtwork.reserve_price || selectedArtwork.current_price || 0)}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Chọn loại phiên: Công khai vs Kín */}

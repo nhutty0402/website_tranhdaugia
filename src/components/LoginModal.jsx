@@ -49,6 +49,18 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
   // OTP inputs refs
   const otpRefs = Array.from({ length: 6 }, () => useRef(null));
 
+  // =========================================================
+  // GHI CHÚ THANH CUỘN: Khóa thanh cuộn trang web khi mở Modal
+  // Đảm bảo nền web phía sau đứng yên hoàn toàn, không cuộn lăn
+  // =========================================================
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   useEffect(() => {
     if (view !== 'reset' || countdown <= 0) return;
     const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
@@ -199,8 +211,40 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
      RENDER
   ───────────────────────────────────────────── */
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal" style={{ maxWidth: 460 }}>
+    <div
+      className={`${styles.loginOverlay} modal-overlay`}
+      onClick={e => e.target === e.currentTarget && onClose()}
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Background Decorative Layer - Tách biệt hoàn toàn với trang web bên dưới */}
+      <div className={styles.bgBackdropDecor} aria-hidden="true">
+        {/* Spotlight chùm sáng bảo tàng từ đỉnh chiếu xuống trung tâm */}
+        <div className={styles.spotlightTop} />
+        {/* Vầng sáng vàng ấm hai bên mạn */}
+        <div className={styles.ambientOrbLeft} />
+        <div className={styles.ambientOrbRight} />
+        {/* Họa tiết lưới hình học nghệ thuật cao cấp chìm ở nền */}
+        <div className={styles.decorGrid} />
+
+        {/* Watermark thương hiệu chìm sang trọng ở đỉnh nền */}
+        {/* <div className={styles.bgHeaderBranding}>
+          <Shield size={14} className={styles.bgShieldIcon} />
+          <span>ARTISAN HUB • CỔNG TRUY CẬP BẢO MẬT & BẢO CHỨNG ĐỘC BẢN</span>
+        </div> */}
+
+        {/* Dải thông điệp bảo chứng chìm ở chân nền */}
+        {/* <div className={styles.bgFooterTrust}>
+          <span>✦ QUY CHUẨN KIỂM ĐỊNH ICOM</span>
+          <span className={styles.dotSeparator}>•</span>
+          <span>KÝ QUỸ ESCROW 72H</span>
+          <span className={styles.dotSeparator}>•</span>
+          <span>CHỨNG THƯ SỐ SHA-256</span>
+        </div> */}
+      </div>
+
+      {/* Main Modal Card */}
+      <div className={`modal ${styles.loginModalCard}`} style={{ maxWidth: 460 }}>
         <div className={styles.modalInner}>
           {/* Close button */}
           <button className={`btn btn-icon btn-ghost ${styles.closeBtn}`} onClick={onClose} aria-label="Đóng">
@@ -442,9 +486,9 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                 </div> */}
               </form>
 
-              <div className={styles.divider} style={{ margin: '16px 0 12px' }}>
+              {/* <div className={styles.divider} style={{ margin: '16px 0 12px' }}>
                 <span>hoặc</span>
-              </div>
+              </div> */}
 
               {/* Link to Register Modal */}
               <p className={styles.switchMode}>

@@ -14,7 +14,7 @@
 .profileHeader {
   background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-base) 100%);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 40px 0;
+  padding: 36px 0 28px;
 }
 
 .profileHero {
@@ -101,6 +101,9 @@
   margin-bottom: 32px;
   overflow-x: auto;
   scrollbar-width: none;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab {
@@ -593,13 +596,401 @@
   margin: 0;
 }
 
+
+
+/* My Auction Item Cards */
+.myAuctionItem {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  transition: all var(--transition-fast);
+}
+
+.myAuctionArtwork {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.myAuctionArtworkImg {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.myAuctionRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.myAuctionBidBlock {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.myAuctionBidLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.myAuctionBidAmount {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  font-family: var(--font-mono);
+  line-height: 1.3;
+}
+
+.myAuctionBidSub {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.myAuctionActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 @media (max-width: 900px) {
   .collectionGrid { grid-template-columns: repeat(2, 1fr); }
-  .escrowProgress { flex-direction: column; align-items: flex-start; }
-  .stepLine { display: none; }
+  .escrowProgress {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .escrowStep {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    gap: 14px;
+    width: 100%;
+  }
+  .stepInfo {
+    align-items: flex-start;
+    text-align: left;
+    flex: 1;
+    min-width: 0;
+  }
+  .stepLine {
+    display: block !important;
+    width: 2px;
+    height: 20px;
+    margin: 4px 0 4px 17px;
+    background: rgba(255, 255, 255, 0.15);
+    align-self: auto;
+  }
 }
 
 @media (max-width: 600px) {
   .profileHero { flex-direction: column; }
   .collectionGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .profileHeader { padding: 24px 0 18px !important; }
+}
+
+
+/* Responsive 390px Mobile ProfilePage */
+@media (max-width: 480px) {
+  .profileHeader {
+    padding: 16px 0 14px !important;
+  }
+  .profileHero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .avatar {
+    width: 76px;
+    height: 76px;
+  }
+  .profileName {
+    font-size: 1.35rem;
+  }
+  .profileStats {
+    justify-content: center;
+    gap: 18px;
+  }
+  .profileHeroActions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .profileHeroActions button,
+  .profileHeroActions a {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+  .tabs {
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+  .tabTitle {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+  }
+  .settingsForm {
+    padding: 16px 14px;
+    border-radius: 16px;
+    gap: 16px;
+  }
+  .settingsFormHeader {
+    padding-bottom: 14px;
+  }
+  .dangerZone {
+    padding: 16px 14px;
+    border-radius: 16px;
+  }
+  .certCard {
+    padding: 16px 14px;
+    border-radius: 16px;
+    gap: 16px;
+  }
+  .certHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .certArtwork {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px;
+    gap: 12px;
+  }
+  .certImg {
+    width: 100%;
+    height: 140px;
+  }
+  .certActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .certActions button {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+  /* Tối ưu chi tiết Ví Ký Quỹ & Đơn hàng cho Mobile 390px */
+  .escrowCard {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+    gap: 18px !important;
+  }
+  .escrowHeader {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+  .escrowMeta {
+    width: 100%;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .escrowTitle {
+    font-size: 1.05rem !important;
+    margin: 4px 0 0 !important;
+    letter-spacing: 0.5px;
+  }
+  .escrowAmount {
+    width: 100%;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: baseline !important;
+    text-align: left !important;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 10px 14px !important;
+    box-sizing: border-box;
+  }
+  .priceLabel {
+    margin: 0 !important;
+    font-size: 0.68rem !important;
+    color: var(--text-muted);
+  }
+  .escrowPrice {
+    font-size: 1.25rem !important;
+    color: var(--gold-primary);
+    line-height: 1.2;
+  }
+  .escrowProgress {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 14px 12px !important;
+    box-sizing: border-box;
+  }
+  .escrowStep {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  .stepDot {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-width: 1.5px !important;
+  }
+  .stepLine {
+    display: block !important;
+    width: 2px !important;
+    height: 18px !important;
+    margin: 2px 0 2px 15px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    align-self: auto !important;
+  }
+  .stepInfo {
+    flex: 1 !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+    padding-top: 1px;
+  }
+  .stepLabel {
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    margin: 0 0 2px !important;
+    color: var(--text-primary);
+  }
+  .stepDesc {
+    font-size: 0.72rem !important;
+    line-height: 1.35 !important;
+    color: var(--text-muted);
+    word-break: break-word;
+    margin: 0 !important;
+  }
+  .escrowActions {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .escrowActions button {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    font-size: 0.85rem !important;
+  }
+  .escrowSuccessBox,
+  .escrowDisputeBox {
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 14px 12px !important;
+    gap: 12px !important;
+    box-sizing: border-box;
+  }
+  .escrowSuccessBox button,
+  .escrowDisputeBox button {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 42px !important;
+    font-size: 0.82rem !important;
+  }
+
+  
+  /* Tối ưu danh sách phiên và khối mức giá cho Mobile 390px */
+  .myAuctionItem {
+    padding: 14px 12px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .myAuctionArtwork {
+    gap: 12px;
+    align-items: center;
+  }
+  .myAuctionArtworkImg {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 8px !important;
+  }
+  .myAuctionRight {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .myAuctionBidBlock {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+      "label amount"
+      "sub   amount" !important;
+    align-items: center !important;
+    column-gap: 12px !important;
+    row-gap: 2px !important;
+    text-align: left !important;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-sizing: border-box;
+  }
+  .myAuctionBidLabel {
+    grid-area: label;
+    font-size: 0.68rem !important;
+    color: var(--text-muted);
+  }
+  .myAuctionBidAmount {
+    grid-area: amount;
+    font-size: 1.15rem !important;
+    text-align: right !important;
+    white-space: nowrap;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+  .myAuctionBidSub {
+    grid-area: sub;
+    font-size: 0.65rem !important;
+    color: var(--text-secondary);
+  }
+  .myAuctionActions {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px;
+  }
+  .myAuctionActions button,
+  .myAuctionActions a {
+    flex: 1 !important;
+    justify-content: center !important;
+    min-height: 40px !important;
+    font-size: 0.8rem !important;
+    padding: 8px 10px !important;
+  }
+
 }

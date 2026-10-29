@@ -1,3 +1,8 @@
+.navbarSpacer {
+  height: 76px;
+  width: 100%;
+}
+
 /* ==========================================================================
    ARTISAN HUB - LUXURIOUS MODERN NAVIGATION HEADER
    Palette: Dark #0A0A0A base, Subtle blur, Delicate Gold Accents
@@ -392,6 +397,12 @@
   font-family: inherit;
 }
 
+.userChipMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .userChip:hover,
 .userChipActive {
   background: rgba(212, 175, 55, 0.1);
@@ -557,11 +568,53 @@
    EXPANDABLE SEARCH BAR
    ========================================================================== */
 
+.searchBackdrop {
+  position: fixed;
+  inset: 0;
+  top: 76px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 98;
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .searchBar {
+  position: relative;
+  z-index: 99;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 12px 48px;
-  background: rgba(10, 10, 10, 0.96);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 14px 48px;
+  background: #101013;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
   animation: slideDown 200ms ease;
+}
+
+.searchCloseBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.searchCloseBtn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 @keyframes slideDown {
@@ -739,5 +792,183 @@
 
   .searchBar {
     padding: 12px 20px;
+  }
+}
+
+/* Responsive 768px & 390px Navigation */
+@media (max-width: 768px) {
+  .navbar {
+    height: 64px;
+  }
+  .navbarSpacer {
+    height: 64px;
+  }
+  .inner {
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .actions {
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  /* On mobile / tablet bar, auth buttons are moved to inside the mobile drawer */
+  .authGroup {
+    display: none !important;
+  }
+  .menuBtn {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .userChip {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  .userChip:hover,
+  .userChipActive {
+    border-color: var(--gold-primary) !important;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.45) !important;
+  }
+  .userChip .avatar {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: none !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .userChipMeta {
+    display: none !important;
+  }
+  .userDropdown {
+    position: fixed !important;
+    top: 66px !important;
+    right: 12px !important;
+    left: auto !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 290px !important;
+    z-index: 1001 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    height: 64px;
+  }
+  .navbarSpacer {
+    height: 64px;
+  }
+  .searchBackdrop {
+    top: 64px;
+  }
+  .searchBar {
+    padding: 10px 12px;
+  }
+  .searchInner {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .searchCloseBtn {
+    display: flex;
+  }
+  .searchKbd {
+    display: none;
+  }
+  .inner {
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-shrink: 0 !important;
+  }
+  /* Hide non-essential bell icon on small mobile, keep key Search + Avatar + Hamburger */
+  .actions button[aria-label="Thông báo"] {
+    display: none !important;
+  }
+  .iconBtn {
+    width: 36px !important;
+    height: 36px !important;
+    flex-shrink: 0 !important;
+  }
+  .userMenuWrapper {
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .menuBtn {
+    width: 38px !important;
+    height: 38px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(197, 160, 89, 0.12) !important;
+    border: 1px solid rgba(197, 160, 89, 0.35) !important;
+    border-radius: 8px !important;
+  }
+  .mobileMenu {
+    padding: 16px 14px 28px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
+  }
+  .mobileLink {
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+  .mobileUserSection {
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    margin-top: 8px;
+  }
+  .mobileUserInfo .avatar {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    border: 1.5px solid var(--gold-primary) !important;
+    object-fit: cover !important;
+  }
+  .mobileAuthRow {
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+  .mobileAuthRow .btnRegister,
+  .mobileAuthRow .btnLogin {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
   }
 }

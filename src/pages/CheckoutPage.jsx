@@ -86,6 +86,7 @@ export default function CheckoutPage({ currentUser, addToast }) {
   const insuranceFee = Math.round(winPrice * 0.005);
   const subtotal = winPrice + platformFee + packagingFee + insuranceFee;
 
+  const [txId] = useState(() => 'AH-' + Math.floor(10000000 + Math.random() * 90000000));
   const [step, setStep] = useState(0);
   const [selectedMethod, setSelectedMethod] = useState('card');
   const [paymentDone, setPaymentDone] = useState(false);
@@ -200,7 +201,7 @@ export default function CheckoutPage({ currentUser, addToast }) {
             <div className={styles.successCheck}><CheckCircle2 size={56} /></div>
           </div>
           <h1 className={styles.successTitle}>Thanh toán thành công!</h1>
-          <p className={styles.successSub}>Mã giao dịch: <strong>AH-{Date.now().toString().slice(-8)}</strong></p>
+          <p className={styles.successSub}>Mã giao dịch: <strong>{txId}</strong></p>
           <div className={styles.successArtwork}>
             <img src={artwork.image} alt={artwork.title} />
             <div>

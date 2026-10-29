@@ -355,3 +355,75 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Responsive 390px Mobile Create Auction Modal */
+@media (max-width: 480px) {
+  .modalCard {
+    padding: 16px 14px;
+    width: 96%;
+    max-height: 94dvh;
+    border-radius: 16px;
+  }
+  .header {
+    margin-bottom: 16px;
+  }
+  .headerTitle {
+    font-size: 1.15rem;
+  }
+  .stepProgress {
+    padding: 8px 12px;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .stepIndicator {
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+  .stepNumber {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+  }
+  .typeSelectorGrid,
+  .gridTwo {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .typeCard {
+    padding: 12px;
+  }
+  .previewCard {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 14px;
+  }
+  .previewImage {
+    max-height: 180px;
+  }
+  .previewTitle {
+    font-size: 1.1rem;
+  }
+  .previewGrid {
+    padding: 10px;
+    gap: 8px;
+  }
+  .footerActions {
+    flex-direction: column-reverse;
+    gap: 8px;
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+  .footerActions button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .stepIndicator span:last-child {
+    display: none;
+  }
+}
+

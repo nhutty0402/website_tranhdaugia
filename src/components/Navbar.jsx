@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Search, Bell, User, Menu, X, ChevronDown, LogOut,
   Compass, Gavel, Palette, Landmark, Sun, Moon
@@ -38,6 +38,7 @@ const NAV_LINKS = [
 
 const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark', onToggleTheme }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -61,7 +62,21 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
   useEffect(() => {
     setMobileOpen(false);
     setUserMenuOpen(false);
+    setSearchOpen(false);
   }, [location.pathname]);
+
+  // Close search/menus on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+        setMobileOpen(false);
+        setUserMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <>
@@ -112,7 +127,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
             <button
               id="nav-search-btn"
               className={styles.iconBtn}
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => { setSearchOpen(!searchOpen); setMobileOpen(false); setUserMenuOpen(false); }}
               aria-label="Tìm kiếm tác phẩm"
             >
               <Search size={18} strokeWidth={1.4} />
@@ -130,7 +145,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
             </button>
 
             {/* Nút chuyển đổi chế độ giao diện Sáng / Tối */}
-            <button
+            {/* <button
               id="theme-toggle-btn"
               type="button"
               className={`${styles.iconBtn} ${styles.themeBtn} ${isLight ? styles.themeBtnActive : ''}`}
@@ -143,7 +158,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
               ) : (
                 <Moon size={18} strokeWidth={1.6} className={styles.moonIcon} />
               )}
-            </button>
+            </button> */}
 
             {user ? (
               <div className={styles.userMenuWrapper} ref={userMenuRef}>
@@ -151,18 +166,20 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                   type="button"
                   id="nav-profile-btn"
                   className={`${styles.userChip} ${userMenuOpen ? styles.userChipActive : ''}`}
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  onClick={() => { setUserMenuOpen(!userMenuOpen); setMobileOpen(false); }}
                   aria-expanded={userMenuOpen}
                   aria-label="Menu tài khoản"
                 >
                   <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
-                  <span className={styles.userName}>{user.full_name.split(' ').slice(-1)[0]}</span>
-                  <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
-                  <ChevronDown
-                    size={14}
-                    strokeWidth={1.5}
-                    className={`${styles.chevron} ${userMenuOpen ? styles.chevronRotated : ''}`}
-                  />
+                  <span className={styles.userChipMeta}>
+                    <span className={styles.userName}>{user.full_name.split(' ').slice(-1)[0]}</span>
+                    <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
+                    <ChevronDown
+                      size={14}
+                      strokeWidth={1.5}
+                      className={`${styles.chevron} ${userMenuOpen ? styles.chevronRotated : ''}`}
+                    />
+                  </span>
                 </button>
 
                 {/* Dropdown Menu */}
@@ -232,7 +249,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
             <button
               className={styles.menuBtn}
-              onClick={() => setMobileOpen(!mobileOpen)}
+              onClick={() => { setMobileOpen(!mobileOpen); setUserMenuOpen(false); }}
               aria-label="Mở menu di động"
             >
               {mobileOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
@@ -242,18 +259,35 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
         {/* Search bar */}
         {searchOpen && (
-          <div className={styles.searchBar}>
-            <div className={styles.searchInner}>
-              <Search size={16} color="var(--text-muted)" />
-              <input
-                id="nav-search-input"
-                autoFocus
-                className={styles.searchInput}
-                placeholder="Tìm kiếm tác phẩm, họa sĩ, phong cách..."
-              />
-              <kbd className={styles.searchKbd}>ESC</kbd>
+          <>
+            <div className={styles.searchBackdrop} onClick={() => setSearchOpen(false)} />
+            <div className={styles.searchBar}>
+              <div className={styles.searchInner}>
+                <Search size={16} color="var(--text-muted)" />
+                <input
+                  id="nav-search-input"
+                  autoFocus
+                  className={styles.searchInput}
+                  placeholder="Tìm kiếm tác phẩm, họa sĩ, phong cách..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.target.value.trim()) {
+                      navigate(`/gallery?q=${encodeURIComponent(e.target.value.trim())}`);
+                      setSearchOpen(false);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles.searchCloseBtn}
+                  onClick={() => setSearchOpen(false)}
+                  aria-label="Đóng tìm kiếm"
+                >
+                  <X size={16} />
+                </button>
+                <kbd className={styles.searchKbd} onClick={() => setSearchOpen(false)}>ESC</kbd>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {/* Mobile nav */}
@@ -291,11 +325,14 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
               <div className={styles.mobileUserSection}>
                 <div className={styles.mobileUserInfo}>
                   <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
-                  <div>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.85rem' }}>
-                      {user.full_name}
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {user.full_name}
+                      </span>
+                      <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', marginTop: 2 }}>
                       {user.role === 'artist' ? 'Họa sĩ xác thực' : 'Nhà sưu tầm (Collector)'}
                     </div>
                   </div>
@@ -351,7 +388,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
         )}
       </header>
       {/* Spacer */}
-      <div style={{ height: 76 }} />
+      <div className={styles.navbarSpacer} />
     </>
   );
 };

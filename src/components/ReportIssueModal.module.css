@@ -1,14 +1,47 @@
+/* ==========================================================================
+   ReportIssueModal.module.css
+   Full multi-device responsive design:
+   - Fixes bottom content cut-off via max-height & overflow-y auto
+   - Desktop 1440px (Spacious, elegant, luxurious red accent)
+   - iPad 768px (Clean proportions, responsive 2-button footer)
+   - Mobile 390px (Touch-friendly radio items, full-width actions, no overflow)
+   ========================================================================== */
+
 .modalCard {
-  max-width: 580px;
-  width: 92%;
+  max-width: 640px;
+  width: 94%;
   background: #141210;
-  border: 1px solid rgba(231, 76, 60, 0.4);
+  border: 1px solid rgba(231, 76, 60, 0.45);
   border-radius: 20px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 30px rgba(231, 76, 60, 0.12);
-  padding: 28px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 35px rgba(231, 76, 60, 0.15);
+  padding: 28px 30px;
   animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  overflow: hidden;
+  max-height: 90vh;
+  max-height: 90dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(231, 76, 60, 0.3) transparent;
+}
+
+.modalCard::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modalCard::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.modalCard::-webkit-scrollbar-thumb {
+  background: rgba(231, 76, 60, 0.3);
+  border-radius: 4px;
+}
+
+.modalCard::-webkit-scrollbar-thumb:hover {
+  background: rgba(231, 76, 60, 0.6);
 }
 
 @keyframes modalIn {
@@ -29,12 +62,15 @@
   margin-bottom: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 16px;
+  gap: 12px;
 }
 
 .headerTitleWrap {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .badgeDispute {
@@ -59,11 +95,16 @@
   color: var(--text-primary);
   margin: 0;
   font-family: var(--font-heading);
+  line-height: 1.3;
+  word-break: break-word;
 }
 
 .closeBtn {
   color: var(--text-muted);
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .closeBtn:hover {
@@ -92,6 +133,7 @@
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.45;
   margin: 0;
+  flex: 1;
 }
 
 .form {
@@ -124,7 +166,7 @@
 
 .reasonItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -134,6 +176,7 @@
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
+  line-height: 1.35;
 }
 
 .reasonItem:hover {
@@ -150,6 +193,8 @@
 .reasonItem input[type="radio"] {
   accent-color: #e74c3c;
   cursor: pointer;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .textarea {
@@ -163,6 +208,7 @@
   resize: vertical;
   outline: none;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 .textarea:focus {
@@ -201,6 +247,7 @@
 
 .uploadIcon {
   color: var(--gold-primary);
+  flex-shrink: 0;
 }
 
 .uploadBoxDone {
@@ -218,27 +265,312 @@
   font-weight: 500;
 }
 
+.iconSuccess {
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   FOOTER ACTIONS
+   ========================================================================== */
 .footerActions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 18px;
   margin-top: 6px;
-  flex-wrap: wrap;
+}
+
+.btnCancel {
+  color: var(--text-secondary);
+  padding: 10px 22px;
+  min-height: 42px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnCancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .submitBtn {
-  min-width: 220px;
+  min-width: 140px;
+  min-height: 42px;
+  padding: 10px 26px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #e74c3c;
+  color: #fff;
+  border: 1px solid rgba(231, 76, 60, 0.8);
+  box-shadow: 0 4px 14px rgba(231, 76, 60, 0.35);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-@media (max-width: 600px) {
+.submitBtn:hover:not(:disabled) {
+  background: #c0392b;
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ==========================================================================
+   DESKTOP 1440PX OPTIMIZATION
+   ========================================================================== */
+@media (min-width: 1200px) {
+  .modalCard {
+    max-width: 680px;
+    padding: 32px 36px;
+    max-height: 88vh;
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+  }
+
+  .title {
+    font-size: 1.45rem;
+  }
+
+  .infoBanner {
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+
+  .infoText {
+    font-size: 0.82rem;
+  }
+
+  .form {
+    gap: 18px;
+  }
+
+  .reasonItem {
+    padding: 11px 14px;
+    font-size: 0.84rem;
+  }
+
+  .textarea {
+    padding: 12px 14px;
+    font-size: 0.84rem;
+    min-height: 84px;
+  }
+
+  .uploadBox {
+    padding: 16px;
+  }
+
+  .footerActions {
+    padding-top: 20px;
+    gap: 14px;
+    justify-content: flex-end;
+  }
+
+  .btnCancel {
+    padding: 10px 24px;
+    font-size: 0.88rem;
+    min-height: 44px;
+  }
+
+  .submitBtn {
+    min-height: 44px;
+    min-width: 150px;
+    font-size: 0.88rem;
+    padding: 10px 30px;
+  }
+}
+
+/* ==========================================================================
+   IPAD & TABLET 768PX OPTIMIZATION (641px - 1024px)
+   ========================================================================== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .modalCard {
+    width: 90%;
+    max-width: 600px;
+    padding: 24px 24px;
+    max-height: 88vh;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .infoBanner {
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+
+  .reasonItem {
+    padding: 9px 12px;
+    font-size: 0.78rem;
+  }
+
+  .footerActions {
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 18px;
+  }
+
+  .btnCancel {
+    padding: 9px 20px;
+    font-size: 0.84rem;
+    min-height: 42px;
+  }
+
+  .submitBtn {
+    min-width: 135px;
+    min-height: 42px;
+    padding: 9px 24px;
+    font-size: 0.84rem;
+  }
+}
+
+/* ==========================================================================
+   MOBILE 390PX OPTIMIZATION (max-width: 640px / 390px)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .modalCard {
+    width: 96% !important;
+    max-width: 420px;
+    padding: 16px 14px 20px !important;
+    border-radius: 16px !important;
+    max-height: 94dvh;
+  }
+
+  .header {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+
+  .badgeDispute {
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    gap: 5px;
+  }
+
+  .title {
+    font-size: 1.12rem !important;
+    line-height: 1.3;
+  }
+
+  .closeBtn {
+    min-width: 34px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -4px;
+    margin-right: -4px;
+  }
+
+  .infoBanner {
+    padding: 10px 12px;
+    gap: 8px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+  }
+
+  .infoText {
+    font-size: 0.73rem;
+    line-height: 1.4;
+  }
+
+  .form {
+    gap: 14px;
+  }
+
+  .label {
+    font-size: 0.78rem;
+  }
+
+  .reasonList {
+    gap: 6px;
+  }
+
+  .reasonItem {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    gap: 8px;
+    border-radius: 8px;
+    line-height: 1.35;
+  }
+
+  .reasonItem input[type="radio"] {
+    margin-top: 1px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .textarea {
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    border-radius: 8px;
+  }
+
+  .charCount {
+    font-size: 0.68rem;
+  }
+
+  .uploadBox {
+    padding: 12px 10px;
+    border-radius: 8px;
+  }
+
+  .uploadPrompt {
+    font-size: 0.73rem;
+    gap: 8px;
+  }
+
+  .uploadDone {
+    font-size: 0.75rem;
+    gap: 8px;
+  }
+
   .footerActions {
     flex-direction: column-reverse;
+    gap: 8px;
+    padding-top: 14px;
     width: 100%;
   }
-  .footerActions button {
-    width: 100%;
+
+  .submitBtn {
+    width: 100% !important;
+    min-width: unset !important;
+    min-height: 46px !important;
+    font-size: 0.84rem !important;
+    justify-content: center !important;
+  }
+
+  .btnCancel {
+    width: 100% !important;
+    min-height: 38px !important;
+    font-size: 0.76rem !important;
+    justify-content: center !important;
+    text-align: center;
+    padding: 8px 12px !important;
   }
 }

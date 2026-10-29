@@ -220,7 +220,7 @@ const AboutPage = () => {
             </p>
             <div className={styles.ctaButtons}>
               <Link to="/gallery" className="btn btn-primary">
-                Khám phá Gallery tác phẩm <ArrowRight size={16} />
+                Khám phá  <ArrowRight size={16} />
               </Link>
             </div>
           </div>

@@ -1,26 +1,46 @@
+/* ==========================================================================
+   ArtistSessionDashboardModal.module.css
+   Full multi-device responsive design:
+   - Desktop 1440px (Wide, luxurious, spacious table & metrics)
+   - iPad 768px (Optimized compact table, custom scrollbar, fitted buttons)
+   - Mobile 390px (Mobile card list, touch targets >= 40px, no overflow)
+   ========================================================================== */
+
 .modalCard {
-  max-width: 860px;
+  max-width: 920px;
   width: 95%;
   max-height: 90vh;
   overflow-y: auto;
   background: var(--bg-surface);
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-xl);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.85), var(--shadow-glow);
-  padding: 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), var(--shadow-glow);
+  padding: 30px;
+  box-sizing: border-box;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 24px;
+  gap: 16px;
 }
 
 .headerTitleWrap {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .headerTitle {
@@ -29,12 +49,15 @@
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
+  word-break: break-word;
+  line-height: 1.3;
 }
 
 .headerSubtitle {
   font-size: 0.8rem;
   color: var(--text-secondary);
   margin: 0;
+  word-break: break-word;
 }
 
 .code {
@@ -43,26 +66,32 @@
 }
 
 .closeBtn {
-  margin-top: -8px;
-  margin-right: -8px;
+  margin-top: -6px;
+  margin-right: -6px;
+  flex-shrink: 0;
 }
 
 /* Metrics */
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 14px;
+  margin-bottom: 22px;
 }
 
 .metricCard {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 16px 20px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.metricLeadingCard {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, var(--bg-elevated) 100%);
+  border-color: rgba(212, 175, 55, 0.35);
 }
 
 .metricLabel {
@@ -76,14 +105,14 @@
 }
 
 .metricValue {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
   font-family: var(--font-mono);
 }
 
 .metricValueGold {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--gold-primary);
   font-family: var(--font-mono);
@@ -92,6 +121,9 @@
 .metricSub {
   font-size: 0.75rem;
   color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Status banners */
@@ -103,9 +135,17 @@
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-md);
   padding: 14px 18px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
+  gap: 12px;
+}
+
+.liveNoticeText {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.85rem;
   color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .endedNotice {
@@ -116,16 +156,48 @@
   border: 1px solid rgba(46, 204, 113, 0.3);
   border-radius: var(--radius-md);
   padding: 16px 20px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
-/* Table */
+.endedNoticeHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.endedNoticeTitle {
+  margin: 0 0 4px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.endedNoticeDesc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.contactedBadge {
+  flex-shrink: 0;
+}
+
+.noticeActionBtn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   TABLE SECTION
+   ========================================================================== */
 .tableSection {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .tableSectionHeader {
@@ -133,26 +205,62 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  gap: 12px;
+}
+
+.tableTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .tableTitle {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0;
+}
+
+.tableSubtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 
 .tableTag {
   font-size: 0.7rem;
   color: var(--gold-primary);
   background: rgba(212, 175, 55, 0.1);
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 4px;
   border: 1px solid var(--border-gold);
+  white-space: nowrap;
+  font-weight: 500;
 }
 
-.tableWrap {
+/* Desktop & Tablet Table */
+.desktopTableWrap {
   overflow-x: auto;
+  display: block;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+}
+
+.desktopTableWrap::-webkit-scrollbar {
+  height: 6px;
+}
+
+.desktopTableWrap::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.desktopTableWrap::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.25);
+  border-radius: 4px;
+}
+
+.desktopTableWrap::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-primary);
 }
 
 .bidsTable {
@@ -161,27 +269,57 @@
   text-align: left;
 }
 
+/* Column proportional widths */
+.colRank {
+  width: 11%;
+}
+.colCollector {
+  width: 22%;
+}
+.colPrice {
+  width: 18%;
+}
+.colTime {
+  width: 17%;
+}
+.colNote {
+  width: 16%;
+}
+.colActions {
+  width: 16%;
+}
+
 .bidsTable th {
-  padding: 10px 14px;
+  padding: 12px 14px;
   font-size: 0.75rem;
   text-transform: uppercase;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-default);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .bidsTable td {
-  padding: 12px 14px;
+  padding: 13px 14px;
   border-bottom: 1px solid var(--border-subtle);
   vertical-align: middle;
 }
 
+.bidTableRow {
+  transition: background 0.15s ease;
+}
+
 .bidTableRow:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .topRow {
   background: rgba(212, 175, 55, 0.06);
+}
+
+.topRow:hover {
+  background: rgba(212, 175, 55, 0.09);
 }
 
 .rankBadgeTop {
@@ -189,11 +327,13 @@
   align-items: center;
   gap: 4px;
   background: var(--gold-primary);
-  color: #000;
+  color: #0b0b10;
   font-size: 0.7rem;
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 12px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 6px rgba(212, 175, 55, 0.25);
 }
 
 .rankBadge {
@@ -206,12 +346,14 @@
 .bidderCell {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .bidderName {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   font-weight: 600;
   color: var(--text-primary);
+  line-height: 1.25;
 }
 
 .bidderId {
@@ -221,28 +363,30 @@
 }
 
 .priceTop {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--gold-primary);
   font-family: var(--font-mono);
+  letter-spacing: -0.01em;
 }
 
 .priceNormal {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 600;
   color: var(--text-secondary);
   font-family: var(--font-mono);
 }
 
 .timeText {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .noteText {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  max-width: 180px;
+  max-width: 170px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -251,7 +395,24 @@
 
 .rowActions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.tblActionBtn {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  min-height: 32px;
+}
+
+/* Mobile Card List View (hidden on desktop/tablet) */
+.mobileBidsList {
+  display: none;
 }
 
 /* Footer */
@@ -261,6 +422,7 @@
   align-items: center;
   padding-top: 16px;
   border-top: 1px solid var(--border-subtle);
+  gap: 16px;
 }
 
 .footerNote {
@@ -269,15 +431,516 @@
   gap: 8px;
   font-size: 0.8rem;
   color: var(--text-muted);
+  line-height: 1.35;
 }
 
-@media (max-width: 768px) {
-  .metricsGrid {
-    grid-template-columns: 1fr;
+.footerCloseBtn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   DESKTOP 1440PX OPTIMIZATION
+   Spacious, comfortable reading, wide columns, generous padding
+   ========================================================================== */
+@media (min-width: 1200px) {
+  .modalCard {
+    max-width: 980px;
+    padding: 34px 38px;
   }
+
+  .headerTitle {
+    font-size: 1.65rem;
+  }
+
+  .metricsGrid {
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .metricCard {
+    padding: 18px 22px;
+    gap: 8px;
+  }
+
+  .metricValue {
+    font-size: 1.4rem;
+  }
+
+  .metricValueGold {
+    font-size: 1.4rem;
+  }
+
+  .tableSection {
+    padding: 24px 26px;
+    margin-bottom: 24px;
+  }
+
+  .tableTitle {
+    font-size: 1.05rem;
+  }
+
+  .bidsTable th {
+    padding: 13px 16px;
+    font-size: 0.78rem;
+  }
+
+  .bidsTable td {
+    padding: 14px 16px;
+  }
+
+  .bidderName {
+    font-size: 0.9rem;
+  }
+
+  .priceTop {
+    font-size: 1.15rem;
+  }
+
+  .priceNormal {
+    font-size: 0.98rem;
+  }
+
+  .noteText {
+    max-width: 240px;
+    font-size: 0.8rem;
+  }
+
+  .rowActions {
+    gap: 8px;
+  }
+
+  .tblActionBtn {
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    min-height: 34px;
+  }
+}
+
+/* ==========================================================================
+   IPAD & TABLET 768PX OPTIMIZATION (641px - 1024px)
+   Compact 6-column table, fits nicely without ugly wrapping or overflow
+   ========================================================================== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .modalCard {
+    width: 94%;
+    max-width: 740px;
+    padding: 22px 18px;
+  }
+
+  .header {
+    margin-bottom: 18px;
+  }
+
+  .headerTitle {
+    font-size: 1.35rem;
+  }
+
+  .metricsGrid {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .metricCard {
+    padding: 12px 14px;
+    gap: 4px;
+  }
+
+  .metricLabel {
+    font-size: 0.7rem;
+    gap: 4px;
+  }
+
+  .metricValue {
+    font-size: 1.15rem;
+  }
+
+  .metricValueGold {
+    font-size: 1.15rem;
+  }
+
+  .metricSub {
+    font-size: 0.7rem;
+  }
+
+  .tableSection {
+    padding: 16px 14px;
+    margin-bottom: 18px;
+  }
+
+  .tableSectionHeader {
+    margin-bottom: 12px;
+  }
+
+  .tableTitle {
+    font-size: 0.95rem;
+  }
+
+  /* Table column proportions for iPad 768px */
+  .bidsTable {
+    min-width: 630px;
+  }
+
+  .colRank {
+    width: 12%;
+  }
+  .colCollector {
+    width: 21%;
+  }
+  .colPrice {
+    width: 18%;
+  }
+  .colTime {
+    width: 17%;
+  }
+  .colNote {
+    width: 14%;
+  }
+  .colActions {
+    width: 18%;
+  }
+
+  .bidsTable th {
+    padding: 10px 8px;
+    font-size: 0.7rem;
+  }
+
+  .bidsTable td {
+    padding: 11px 8px;
+  }
+
+  .bidderName {
+    font-size: 0.82rem;
+  }
+
+  .bidderId {
+    font-size: 0.68rem;
+  }
+
+  .priceTop {
+    font-size: 0.95rem;
+  }
+
+  .priceNormal {
+    font-size: 0.86rem;
+  }
+
+  .timeText {
+    font-size: 0.7rem;
+  }
+
+  .noteText {
+    max-width: 110px;
+    font-size: 0.7rem;
+  }
+
+  .rowActions {
+    gap: 4px;
+  }
+
+  .tblActionBtn {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+    gap: 4px;
+    min-height: 30px;
+  }
+
+  .tblActionBtn svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE 390PX OPTIMIZATION (<= 640px)
+   Table hidden, modern card list active, touch-friendly, pixel-perfect
+   ========================================================================== */
+@media (max-width: 640px) {
+  .modalCard {
+    width: 96% !important;
+    max-width: 440px;
+    padding: 16px 12px !important;
+    border-radius: 16px !important;
+    max-height: 94dvh;
+  }
+
+  .header {
+    margin-bottom: 14px;
+    gap: 10px;
+  }
+
+  .headerTitle {
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .headerSubtitle {
+    font-size: 0.74rem;
+  }
+
+  .closeBtn {
+    margin-top: -4px;
+    margin-right: -4px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  /* Compact 2-column metrics on mobile to preserve vertical space */
+  .metricsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .metricLeadingCard {
+    grid-column: span 2;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(30, 30, 40, 0.7) 100%);
+  }
+
+  .metricCard {
+    padding: 10px 12px;
+    gap: 4px;
+  }
+
+  .metricLabel {
+    font-size: 0.68rem;
+    gap: 4px;
+  }
+
+  .metricValue {
+    font-size: 1.05rem;
+  }
+
+  .metricValueGold {
+    font-size: 1.2rem;
+  }
+
+  .metricSub {
+    font-size: 0.68rem;
+  }
+
+  /* Status Notice */
   .liveNotice {
     flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+
+  .liveNoticeText {
+    font-size: 0.78rem;
+  }
+
+  .endedNotice {
+    flex-direction: column;
+    align-items: stretch;
     gap: 12px;
-    align-items: flex-start;
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+
+  .endedNoticeHeader {
+    gap: 10px;
+  }
+
+  .endedNoticeTitle {
+    font-size: 0.88rem;
+  }
+
+  .endedNoticeDesc {
+    font-size: 0.75rem;
+  }
+
+  .noticeActionBtn {
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+    font-size: 0.82rem;
+  }
+
+  .contactedBadge {
+    width: 100%;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  /* Table Section Mobile */
+  .tableSection {
+    padding: 12px 10px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+  }
+
+  .tableSectionHeader {
+    margin-bottom: 12px;
+  }
+
+  .tableTitle {
+    font-size: 0.88rem;
+  }
+
+  .tableSubtitle {
+    font-size: 0.7rem;
+  }
+
+  /* Hide Desktop/Tablet Table on Mobile */
+  .desktopTableWrap {
+    display: none !important;
+  }
+
+  /* Show Card List on Mobile */
+  .mobileBidsList {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobileEmptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 26px 12px;
+    gap: 8px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  .mobileBidCard {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    transition: all 0.2s ease;
+  }
+
+  .mobileBidCardTop {
+    border-color: rgba(212, 175, 55, 0.45);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(28, 28, 38, 0.6) 100%);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.08);
+  }
+
+  .mobileCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mobileCardRank {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobileCardTime {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .mobileCardMain {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .mobileBidderInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .mobileBidderName {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobileBidderId {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .mobilePriceWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .mobilePriceLabel {
+    font-size: 0.64rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .mobileCardNote {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px dashed var(--border-subtle);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    line-height: 1.35;
+  }
+
+  .mobileNoteLabel {
+    color: var(--gold-primary);
+    font-weight: 600;
+  }
+
+  .mobileCardActions {
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .mobileActionBtn {
+    flex: 1;
+    min-height: 38px !important;
+    font-size: 0.78rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 8px 6px !important;
+  }
+
+  /* Footer Mobile */
+  .footerBar {
+    flex-direction: column-reverse;
+    gap: 12px;
+    align-items: stretch;
+    padding-top: 14px;
+  }
+
+  .footerNote {
+    font-size: 0.72rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .footerCloseBtn {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    font-size: 0.85rem !important;
   }
 }

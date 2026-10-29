@@ -244,3 +244,28 @@
     letter-spacing: 0.22em;
   }
 }
+
+/* Responsive Mobile 390px Logo */
+@media (max-width: 420px) {
+  .taglineRow {
+    display: none !important;
+  }
+  .logoContainer {
+    gap: 8px !important;
+  }
+  .md .iconWrapper {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 9px !important;
+  }
+  .md .svgSymbol {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .md .brandNamePrimary {
+    font-size: 1.02rem !important;
+  }
+  .md .brandNameAccent {
+    font-size: 0.9rem !important;
+  }
+}

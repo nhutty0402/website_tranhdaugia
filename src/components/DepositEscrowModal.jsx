@@ -68,12 +68,13 @@ const DepositEscrowModal = ({
   const handleSliderMove = (clientX) => {
     if (!sliderTrackRef.current || sliderCompleted) return;
     const rect = sliderTrackRef.current.getBoundingClientRect();
-    const trackWidth = rect.width - 56; // minus thumb diameter
-    const offsetX = Math.max(0, Math.min(clientX - rect.left, trackWidth));
+    const thumbWidth = 50;
+    const trackWidth = rect.width - thumbWidth;
+    const offsetX = Math.max(0, Math.min(clientX - rect.left - thumbWidth / 2, trackWidth));
     const percent = Math.round((offsetX / trackWidth) * 100);
     setSliderProgress(percent);
 
-    if (percent >= 92) {
+    if (percent >= 88) {
       setSliderProgress(100);
       setSliderCompleted(true);
       isDraggingRef.current = false;
@@ -101,11 +102,30 @@ const DepositEscrowModal = ({
       }
     };
 
+    const handleGlobalTouchMove = (e) => {
+      if (isDraggingRef.current && e.touches[0]) {
+        handleSliderMove(e.touches[0].clientX);
+      }
+    };
+    const handleGlobalTouchEnd = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false;
+        if (!sliderCompleted) {
+          setSliderProgress(0);
+        }
+      }
+    };
+
     window.addEventListener('mousemove', handleGlobalMouseMove);
     window.addEventListener('mouseup', handleGlobalMouseUp);
+    window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+    window.addEventListener('touchend', handleGlobalTouchEnd);
+
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseup', handleGlobalMouseUp);
+      window.removeEventListener('touchmove', handleGlobalTouchMove);
+      window.removeEventListener('touchend', handleGlobalTouchEnd);
     };
   }, [sliderCompleted]);
 
@@ -316,7 +336,7 @@ const DepositEscrowModal = ({
                   Xác nhận ý thức trước khi khóa tiền
                 </h3>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#948E85', lineHeight: 1.6 }}>
-                  Để bảo vệ bạn khỏi các cú chạm vô ý trên màn hình cảm ứng, hệ thống yêu cầu xác nhận chủ động bằng hành động kéo trượt (Slide-to-Confirm).
+                  Để bảo vệ bạn khỏi các cú chạm vô ý trên màn hình cảm ứng, hệ thống yêu cầu xác nhận chủ động bằng hành động kéo trượt.
                 </p>
               </div>
 
@@ -324,7 +344,8 @@ const DepositEscrowModal = ({
               <div
                 ref={sliderTrackRef}
                 className={styles.sliderTrack}
-                onTouchMove={(e) => handleSliderMove(e.touches[0].clientX)}
+                onTouchStart={handleMouseDown}
+                onTouchMove={(e) => e.touches[0] && handleSliderMove(e.touches[0].clientX)}
                 onTouchEnd={() => {
                   if (!sliderCompleted) setSliderProgress(0);
                 }}
@@ -336,21 +357,25 @@ const DepositEscrowModal = ({
 
                 <span className={styles.sliderText}>
                   {sliderCompleted ? (
-                    <span style={{ color: '#2ECC71', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span className={styles.sliderSuccessText}>
                       <CheckCircle2 size={16} /> ĐÃ MỞ CHỐT CAM KẾT
                     </span>
                   ) : (
-                    'Kéo sang phải để mở chốt cam kết →'
+                    <>
+                      <span className={styles.sliderTextDesktop}>Kéo sang phải để mở chốt cam kết →</span>
+                      <span className={styles.sliderTextMobile}>Kéo để mở chốt cam kết →</span>
+                    </>
                   )}
                 </span>
 
                 <div
                   className={styles.sliderThumb}
                   style={{
-                    transform: `translateX(${(sliderProgress / 100) * 440}px)`,
+                    left: `calc(3px + (100% - 50px) * ${sliderProgress / 100})`,
                     background: sliderCompleted ? '#2ECC71' : '#D4AF37',
                   }}
                   onMouseDown={handleMouseDown}
+                  onTouchStart={handleMouseDown}
                 >
                   {sliderCompleted ? <Check size={20} /> : <ArrowRight size={20} />}
                 </div>
@@ -545,7 +570,7 @@ const DepositEscrowModal = ({
                 className={`btn btn-primary ${styles.nextBtn}`}
                 onClick={() => setCurrentStep(2)}
               >
-                Chấp thuận nghĩa vụ tài chính <ArrowRight size={16} />
+                Đấu giá <ArrowRight size={16} />
               </button>
             </>
           )}
@@ -565,7 +590,7 @@ const DepositEscrowModal = ({
                 disabled={!sliderCompleted && phraseInput.trim() !== REQUIRED_PHRASE}
                 onClick={() => setCurrentStep(3)}
               >
-                Tiến hành xác thực bảo mật (Bước 3/4) <ArrowRight size={16} />
+                Tiến hành xác thực bảo mật  <ArrowRight size={16} />
               </button>
             </>
           )}

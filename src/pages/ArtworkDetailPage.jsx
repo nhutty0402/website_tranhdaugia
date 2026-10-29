@@ -200,7 +200,7 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
   const urgent = countdown && countdown.total < 3600000;
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', paddingBottom: 80 }}>
+    <main className={styles.detailRoot}>
       {/* Breadcrumb */}
       <div className={styles.breadcrumb}>
         <div className="container">
@@ -729,33 +729,32 @@ const AuctionBox = ({
           <button
             id="open-deposit-btn"
             type="button"
-            className="btn btn-primary btn-sm"
-            style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}
+            className={`btn btn-primary btn-sm ${styles.depositBtn}`}
             onClick={onOpenDeposit}
           >
-            <Shield size={14} /> Ký quỹ bảo chứng 15% & Mở quyền phòng đấu
+            <Shield size={14} style={{ flexShrink: 0 }} />
+            <span>Ký quỹ bảo chứng 15% & Mở quyền phòng đấu</span>
           </button>
         </div>
       ) : (
         <div className={styles.depositUnlockedBanner}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className={styles.depositUnlockedRow}>
+            <div className={styles.depositUnlockedBadgeCol}>
               <div className={styles.unlockedIconBadge}>
                 <ShieldCheck size={18} color="#2ECC71" />
               </div>
-              <div>
-                <span className="badge badge-verified" style={{ fontSize: '0.7rem' }}>
+              <div style={{ minWidth: 0 }}>
+                <span className="badge badge-verified" style={{ fontSize: '0.7rem', display: 'inline-flex' }}>
                   ✦ ĐÃ KHÓA CỌC KÝ QUỸ ESCROW 15%
                 </span>
-                <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)' }}>
-                  Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp quyền VIP
+                <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)', wordBreak: 'break-word' }}>
+                  Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp VIP
                 </p>
               </div>
             </div>
             <button
               type="button"
-              className="btn btn-ghost btn-sm"
-              style={{ fontSize: '0.75rem', color: 'var(--gold-primary)' }}
+              className={`btn btn-ghost btn-sm ${styles.viewPassBtn}`}
               onClick={onOpenDeposit}
             >
               Xem thẻ Pass
@@ -842,7 +841,7 @@ const SealedAuctionBox = ({
   onOpenArtistDashboard,
   onOpenResult,
 }) => {
-  const now = new Date();
+  const [now] = useState(() => new Date());
   const isBeforeStart = new Date(session.start_time) > now;
   const isEnded = session.status === 'ended' || new Date(session.end_time) <= now || (countdown && countdown.total <= 0);
   const totalBidders = new Set(bids.map(b => b.bidder_id || b.bidder_name)).size;
@@ -891,9 +890,9 @@ const SealedAuctionBox = ({
 
       {/* Countdown timer if live */}
       {!isEnded && countdown && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(212,175,55,0.06)', padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-subtle)' }}>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Thời gian còn lại nộp giá:</span>
-          <span style={{ color: urgent ? 'var(--live)' : 'var(--gold-primary)', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, fontSize: '1rem' }}>
+        <div className={styles.sealedCountdownRow}>
+          <span className={styles.sealedCountdownLabel}>Thời gian còn lại nộp giá:</span>
+          <span className={styles.sealedCountdownVal} style={{ color: urgent ? 'var(--live)' : 'var(--gold-primary)' }}>
             {String(countdown.hours).padStart(2, '0')}:{String(countdown.minutes).padStart(2, '0')}:{String(countdown.seconds).padStart(2, '0')}
           </span>
         </div>
@@ -941,10 +940,10 @@ const SealedAuctionBox = ({
           </div>
           <button
             id="btn-open-artist-dashboard"
-            className="btn btn-secondary btn-sm"
+            className={`btn btn-secondary btn-sm ${styles.artistManageBtn}`}
             onClick={onOpenArtistDashboard}
           >
-            Mở Dashboard phiên
+            <LayoutDashboard size={15} /> Mở phiên tổng quan
           </button>
         </div>
       )}
@@ -955,25 +954,17 @@ const SealedAuctionBox = ({
           <button
             id="btn-view-sealed-result"
             className="btn btn-primary"
-            style={{ width: '100%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ width: '100%', padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, whiteSpace: 'normal', textAlign: 'center', lineHeight: 1.35 }}
             onClick={onOpenResult}
           >
             <Trophy size={16} /> Xem thông báo kết quả phiên
           </button>
-          {isArtistOwner && (
-            <button
-              className="btn btn-secondary"
-              style={{ width: '100%' }}
-              onClick={onOpenArtistDashboard}
-            >
-              Xem bảng xếp hạng thầu & Tạo Escrow
-            </button>
-          )}
+     
         </div>
       ) : isBeforeStart ? (
         <button
           className="btn btn-secondary"
-          style={{ width: '100%', padding: '16px', fontSize: '0.95rem', cursor: 'not-allowed', opacity: 0.7 }}
+          style={{ width: '100%', padding: '12px 14px', fontSize: '0.88rem', cursor: 'not-allowed', opacity: 0.7, whiteSpace: 'normal', textAlign: 'center', lineHeight: 1.35 }}
           disabled
         >
           <Clock size={16} /> Phiên sắp mở (Chưa đến giờ nhận giá)
@@ -981,7 +972,7 @@ const SealedAuctionBox = ({
       ) : isArtistOwner ? (
         <button
           className="btn btn-secondary"
-          style={{ width: '100%', padding: '16px', fontSize: '0.95rem', cursor: 'not-allowed', opacity: 0.8 }}
+          style={{ width: '100%', padding: '12px 14px', fontSize: '0.88rem', cursor: 'not-allowed', opacity: 0.8, whiteSpace: 'normal', textAlign: 'center', lineHeight: 1.35 }}
           disabled
           title="Chủ tranh không được phép tự đặt giá vào tranh của mình"
         >

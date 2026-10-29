@@ -915,7 +915,7 @@ const StepDone = ({ role, kycLevel, onClose }) => {
 /* ─────────────────────────────────────────────
    MAIN MODAL
 ───────────────────────────────────────────── */
-const RegisterModal = ({ onClose, onRegister, onOpenLogin }) => {
+export const RegisterForm = ({ onClose, onRegister, onOpenLogin, isPage = false }) => {
   const [role, setRole] = useState(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [accountData, setAccountData] = useState({});
@@ -973,69 +973,74 @@ const RegisterModal = ({ onClose, onRegister, onOpenLogin }) => {
       avatar: '/artist_avatar.png',
       ...(role === 'artist' ? { artist_bio: artistData.bio, studio_address: artistData.studio } : {}),
     };
-    onRegister(newUser);
-    onClose();
+    onRegister?.(newUser);
+    onClose?.();
   };
 
   const isDoneStep = currentStep?.id === 'done' || currentStep?.id === 'pending';
 
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className={`modal ${styles.registerModal}`}>
-        {/* Header */}
-        <div className={styles.modalHeader}>
-          <Link_Logo />
-          <button className={`btn btn-icon btn-ghost ${styles.closeBtn}`} onClick={onClose}>
+    <div className={`modal ${styles.registerModal} ${isPage ? styles.registerPageCard : ''}`}>
+      {/* Header */}
+      <div className={styles.modalHeader}>
+        <Link_Logo />
+        {onClose && (
+          <button className={`btn btn-icon btn-ghost ${styles.closeBtn}`} onClick={onClose} aria-label="Đóng">
             <X size={18} />
           </button>
-        </div>
-
-        {/* Stepper (after role chosen) */}
-        {role && stepIndex > 0 && (
-          <div className={styles.stepperWrap}>
-            <Stepper steps={steps} currentIndex={stepIndex} />
-          </div>
-        )}
-
-        {/* Step content */}
-        {currentStep?.id === 'role'    && <StepRole selected={role} onSelect={setRole} onNext={handleRoleNext} />}
-        {currentStep?.id === 'account' && <StepAccount data={accountData} setData={setAccountData} onNext={handleAccountNext} onBack={back} />}
-        {currentStep?.id === 'email'   && <StepEmailVerify email={accountData.email} onNext={handleEmailNext} onResend={() => {}} />}
-        {currentStep?.id === 'phone'   && <StepPhone data={accountData} setData={setAccountData} onNext={handlePhoneNext} onBack={back} />}
-        {currentStep?.id === 'kyc'     && <StepKYC data={accountData} setData={setAccountData} onNext={handleKYCNext} onBack={back} onSkip={handleKYCSkip} />}
-        {currentStep?.id === 'profile' && <StepArtistProfile data={artistData} setData={setArtistData} onNext={handleArtistNext} onBack={back} />}
-        {isDoneStep && (
-          <StepDone role={role} kycLevel={kycLevel} onClose={handleDone} />
-        )}
-
-        {/* Two-way Navigation footer back to LoginModal */}
-        {!isDoneStep && (
-          <div style={{ textAlign: 'center', padding: '16px 28px 24px', borderTop: '1px solid var(--border-subtle)', marginTop: 8 }}>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Đã có tài khoản?{' '}
-              <button
-                type="button"
-                id="reg-open-login"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--gold-primary)',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  padding: 0,
-                  textDecoration: 'underline'
-                }}
-                onClick={() => {
-                  onClose();
-                  onOpenLogin?.();
-                }}
-              >
-                Đăng nhập ngay
-              </button>
-            </p>
-          </div>
         )}
       </div>
+
+      {/* Stepper (after role chosen) */}
+      {role && stepIndex > 0 && (
+        <div className={styles.stepperWrap}>
+          <Stepper steps={steps} currentIndex={stepIndex} />
+        </div>
+      )}
+
+      {/* Step content */}
+      {currentStep?.id === 'role'    && <StepRole selected={role} onSelect={setRole} onNext={handleRoleNext} />}
+      {currentStep?.id === 'account' && <StepAccount data={accountData} setData={setAccountData} onNext={handleAccountNext} onBack={back} />}
+      {currentStep?.id === 'email'   && <StepEmailVerify email={accountData.email} onNext={handleEmailNext} onResend={() => {}} />}
+      {currentStep?.id === 'phone'   && <StepPhone data={accountData} setData={setAccountData} onNext={handlePhoneNext} onBack={back} />}
+      {currentStep?.id === 'kyc'     && <StepKYC data={accountData} setData={setAccountData} onNext={handleKYCNext} onBack={back} onSkip={handleKYCSkip} />}
+      {currentStep?.id === 'profile' && <StepArtistProfile data={artistData} setData={setArtistData} onNext={handleArtistNext} onBack={back} />}
+      {isDoneStep && (
+        <StepDone role={role} kycLevel={kycLevel} onClose={handleDone} />
+      )}
+
+      {/* Two-way Navigation footer back to Login */}
+      {!isDoneStep && (
+        <div className={styles.modalFooterNav}>
+          <p className={styles.modalFooterText}>
+            Đã có tài khoản?{' '}
+            <button
+              type="button"
+              id="reg-open-login"
+              className={styles.modalFooterBtn}
+              onClick={() => {
+                onClose?.();
+                onOpenLogin?.();
+              }}
+            >
+              Đăng nhập ngay
+            </button>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const RegisterModal = ({ onClose, onRegister, onOpenLogin }) => {
+  return (
+    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <RegisterForm
+        onClose={onClose}
+        onRegister={onRegister}
+        onOpenLogin={onOpenLogin}
+        isPage={false}
+      />
     </div>
   );
 };

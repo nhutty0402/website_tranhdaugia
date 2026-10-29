@@ -214,3 +214,52 @@
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
+
+/* Responsive Tablet & Mobile ArtworkCard */
+@media (max-width: 768px) {
+  .info {
+    padding: 14px 12px;
+    gap: 8px;
+  }
+  .title {
+    font-size: 0.98rem;
+  }
+  .price {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .info {
+    padding: 10px 8px;
+    gap: 6px;
+  }
+  .title {
+    font-size: 0.9rem;
+    line-height: 1.28;
+  }
+  .artist {
+    font-size: 0.74rem;
+  }
+  .price {
+    font-size: 1.02rem;
+  }
+  .priceLabel {
+    font-size: 0.58rem;
+  }
+  .wishlistBtn {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
+  }
+  .topBadges {
+    top: 8px;
+    left: 8px;
+    gap: 4px;
+  }
+  .countdown {
+    padding: 4px 8px;
+    font-size: 0.68rem;
+  }
+}

@@ -1,3 +1,15 @@
+.artistPage {
+  min-height: 100vh;
+  background: var(--bg-base);
+  padding-top: 0;
+}
+
+@media (max-width: 480px) {
+  .artistPage {
+    padding-top: 0 !important;
+  }
+}
+
 /* ============================================================
    ARTISAN HUB – ARTIST DETAIL PAGE (UCD & DARK LUXURY)
    Palette: #0A0A0C, #121215, #1A1A20, Gold #D4AF37, Light Gold #F3E5AB
@@ -1154,11 +1166,23 @@
   .heroActions {
     width: 100%;
     justify-content: center;
+    gap: 10px;
   }
 
   .heroCommissionBtn {
     flex: 1;
     min-width: 160px;
+    justify-content: center;
+  }
+
+  .heroFollowBtn {
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+  }
+
+  .heroShareBtn {
+    flex-shrink: 0;
   }
 
   .kpiGrid {
@@ -1198,5 +1222,90 @@
 
   .drawerPanel {
     max-width: 100%;
+  }
+}
+
+/* Responsive Mobile 390px Artist Detail */
+@media (max-width: 480px) {
+  .heroSection {
+    padding: 16px 0 !important;
+  }
+  .artistAvatar {
+    width: 76px !important;
+    height: 76px !important;
+  }
+  .artistName {
+    font-size: 1.35rem !important;
+  }
+  .studioAddressRow {
+    font-size: 0.75rem !important;
+  }
+  .heroStatsRow {
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  .statItem {
+    padding: 8px 12px !important;
+  }
+  .heroActions {
+    display: grid !important;
+    grid-template-columns: 1fr 44px !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+  .heroCommissionBtn {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 46px !important;
+    padding: 0 16px !important;
+    font-size: 0.92rem !important;
+    font-weight: 600 !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+  }
+  .heroFollowBtn {
+    grid-column: 1 / 2 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    padding: 0 12px !important;
+    font-size: 0.88rem !important;
+    font-weight: 500 !important;
+    justify-content: center !important;
+    border-radius: 10px !important;
+    white-space: nowrap !important;
+  }
+  .heroShareBtn {
+    grid-column: 2 / 3 !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 10px !important;
+  }
+  .tabsBar {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 4px !important;
+  }
+  .tabBtn {
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+    white-space: nowrap !important;
+  }
+  .sectionTitle {
+    font-size: 1.25rem !important;
+  }
+  .kpiCard {
+    padding: 14px !important;
+  }
+  .kpiVal {
+    font-size: 1.25rem !important;
   }
 }
