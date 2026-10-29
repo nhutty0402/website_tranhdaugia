@@ -229,7 +229,8 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   id="zoom-in"
                   className={`btn btn-icon btn-ghost ${styles.zoomBtn}`}
                   onClick={() => setZoomLevel(z => Math.min(z + 0.5, 4))}
-                  title="Phóng to"
+                  title="Phóng to tác phẩm"
+                  aria-label="Phóng to tác phẩm"
                 >
                   <ZoomIn size={16} />
                 </button>
@@ -238,6 +239,8 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   className={`btn btn-ghost ${styles.zoomBtn}`}
                   onClick={() => setZoomLevel(1)}
                   style={{ fontSize: '0.7rem', padding: '6px 10px' }}
+                  title="Đặt lại mức thu phóng"
+                  aria-label="Đặt lại mức thu phóng 100%"
                 >
                   {(zoomLevel * 100).toFixed(0)}%
                 </button>
@@ -391,14 +394,34 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                 className={`btn btn-ghost ${isWishlisted ? styles.wishlisted : ''}`}
                 onClick={() => { setIsWishlisted(!isWishlisted); onWishlist?.(artwork.artwork_id); }}
                 style={{ flex: 1 }}
+                aria-label={isWishlisted ? 'Xóa khỏi bộ sưu tập theo dõi' : 'Thêm vào bộ sưu tập theo dõi'}
+                title={isWishlisted ? 'Xóa khỏi bộ sưu tập theo dõi' : 'Thêm vào bộ sưu tập theo dõi'}
               >
                 <Heart size={16} fill={isWishlisted ? '#D4AF37' : 'none'} color={isWishlisted ? '#D4AF37' : undefined} />
                 {isWishlisted ? 'Đã lưu' : 'Lưu tác phẩm'}
               </button>
-              <button id="share-btn" className="btn btn-ghost" style={{ flex: 1 }}>
+              <button
+                id="share-btn"
+                className="btn btn-ghost"
+                style={{ flex: 1 }}
+                aria-label="Chia sẻ tác phẩm này"
+                title="Sao chép liên kết chia sẻ"
+                onClick={() => {
+                  navigator.clipboard?.writeText(window.location.href);
+                  addToast?.('✦ Đã sao chép liên kết tác phẩm vào bộ nhớ tạm!', 'success');
+                }}
+              >
                 <Share2 size={16} /> Chia sẻ
               </button>
-              <button id="report-btn" className="btn btn-danger" title="Báo cáo tranh giả">
+              <button
+                id="report-btn"
+                className="btn btn-danger"
+                title="Báo cáo tác phẩm nghi vấn đến Hội đồng Thẩm định"
+                aria-label="Báo cáo tác phẩm nghi vấn"
+                onClick={() => {
+                  addToast?.('Đã ghi nhận yêu cầu giám định lại. Hội đồng sẽ phản hồi trong 24h.', 'info');
+                }}
+              >
                 <AlertTriangle size={16} />
               </button>
             </div>

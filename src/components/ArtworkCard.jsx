@@ -63,7 +63,8 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
           id={`wishlist-${artwork.artwork_id}`}
           className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlisted : ''}`}
           onClick={(e) => { e.preventDefault(); onWishlist?.(artwork.artwork_id); }}
-          aria-label="Thêm vào yêu thích"
+          aria-label={wishlisted ? "Xóa khỏi danh sách theo dõi" : "Thêm vào danh sách theo dõi"}
+          title={wishlisted ? "Xóa khỏi danh sách theo dõi" : "Thêm vào danh sách theo dõi"}
         >
           <Heart size={16} fill={wishlisted ? '#D4AF37' : 'none'} />
         </button>

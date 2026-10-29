@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, SlidersHorizontal, Grid3X3, List, X } from 'lucide-react';
+import { Search, SlidersHorizontal, Grid3X3, List, X, RotateCcw, Palette } from 'lucide-react';
 import ArtworkCard from '../components/ArtworkCard';
 import { ARTWORKS, AUCTION_SESSIONS, FILTER_STYLES, FILTER_PRICE_RANGES } from '../data/mockData';
 import styles from './GalleryPage.module.css';
@@ -168,11 +168,40 @@ const GalleryPage = ({ wishlisted, onWishlist }) => {
           </div>
         ) : (
           <div className={styles.emptyState}>
-            <span style={{ fontSize: '3rem' }}>🎨</span>
-            <h3>Không tìm thấy tác phẩm</h3>
-            <p>Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.</p>
-            <button className="btn btn-secondary" onClick={() => { setSearchQuery(''); setSelectedStyle('Tất cả'); setSelectedPrice(FILTER_PRICE_RANGES[0]); }}>
-              Đặt lại tất cả
+            <div className={styles.emptyIconWrap}>
+              <Palette size={32} />
+            </div>
+            <h3>Không tìm thấy kiệt tác phù hợp</h3>
+            <p>
+              Không có tác phẩm nào khớp với từ khóa tìm kiếm <strong>"{searchQuery}"</strong> hoặc các tiêu chí bộ lọc đã chọn.
+            </p>
+            <div className={styles.emptySuggestions}>
+              <span className={styles.emptySuggestLabel}>Khám phá nhanh:</span>
+              {['Sơn dầu', 'Sơn mài', 'Tranh lụa', 'Trừu tượng'].map(style => (
+                <button
+                  key={style}
+                  type="button"
+                  className="tag"
+                  style={{ fontSize: '0.75rem', cursor: 'pointer' }}
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedStyle(style);
+                  }}
+                >
+                  {style}
+                </button>
+              ))}
+            </div>
+            <button
+              className="btn btn-primary"
+              style={{ marginTop: 8 }}
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedStyle('Tất cả');
+                setSelectedPrice(FILTER_PRICE_RANGES[0]);
+              }}
+            >
+              <RotateCcw size={15} /> Đặt lại tất cả bộ lọc
             </button>
           </div>
         )}

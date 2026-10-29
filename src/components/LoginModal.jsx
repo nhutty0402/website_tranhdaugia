@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   X, Palette, Eye, EyeOff, Shield, Award, AlertCircle,
-  ArrowLeft, CheckCircle2, RefreshCw, KeyRound, Check
+  ArrowLeft, CheckCircle2, RefreshCw, KeyRound, Check, Sparkles
 } from 'lucide-react';
 import { USERS } from '../data/mockData';
 import Logo from './Logo';
@@ -228,42 +228,71 @@ const LoginModal = ({ onClose, onLogin, onOpenRegister, addToast }) => {
                 </div>
               )}
 
-              {/* Quick Demo Switcher */}
-              {/* <div style={{ background: 'rgba(212, 175, 55, 0.08)', padding: '10px 12px', borderRadius: 10, border: '1px solid var(--border-gold)' }}>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
-                  ⚡ Đăng nhập nhanh kiểm thử:
-                </span>
-                <div style={{ display: 'flex', gap: 8 }}>
+              {/* Quick Demo Switcher for Examiners / Reviewers */}
+              <div className={styles.demoSwitcher}>
+                <div className={styles.demoHeader}>
+                  <Sparkles size={13} />
+                  <span>Dùng thử vai trải nghiệm (Dành cho Giám khảo)</span>
+                </div>
+                <div className={styles.demoGrid}>
                   <button
                     type="button"
-                    className="btn btn-secondary btn-sm"
-                    style={{ flex: 1, fontSize: '0.75rem', padding: '6px 8px' }}
+                    className={styles.demoCard}
                     onClick={() => {
-                      setEmail('tran@example.com');
+                      const user = USERS.find(u => u.username === 'minh_collector') || USERS[0];
+                      setEmail(user.email);
                       setPassword('password');
                       setEmailError('');
                       setPasswordError('');
                       setGeneralError('');
+                      onLogin(user);
+                      onClose();
                     }}
+                    title="Đăng nhập ngay vai Nhà sưu tầm Nguyễn Minh Khôi (Cấp L2)"
                   >
-                    🎨 Họa sĩ Dương
+                    <span className={styles.demoRole}>💼 Sưu Tầm</span>
+                    <span className={styles.demoName}>Minh Khôi · L2</span>
                   </button>
+
                   <button
                     type="button"
-                    className="btn btn-secondary btn-sm"
-                    style={{ flex: 1, fontSize: '0.75rem', padding: '6px 8px' }}
+                    className={styles.demoCard}
                     onClick={() => {
-                      setEmail('minh@example.com');
+                      const user = USERS.find(u => u.username === 'tran_artist') || USERS[1];
+                      setEmail(user.email);
                       setPassword('password');
                       setEmailError('');
                       setPasswordError('');
                       setGeneralError('');
+                      onLogin(user);
+                      onClose();
                     }}
+                    title="Đăng nhập ngay vai Họa sĩ Trần Thị Ánh Dương (Cấp L3)"
                   >
-                    💼 Collector Khôi
+                    <span className={styles.demoRole}>🎨 Họa Sĩ</span>
+                    <span className={styles.demoName}>Ánh Dương · L3</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={styles.demoCard}
+                    onClick={() => {
+                      const user = USERS.find(u => u.username === 'victoria_vip') || USERS[3];
+                      setEmail(user.email);
+                      setPassword('password');
+                      setEmailError('');
+                      setPasswordError('');
+                      setGeneralError('');
+                      onLogin(user);
+                      onClose();
+                    }}
+                    title="Đăng nhập ngay vai Quỹ Di Sản VIP Victoria Yến Trang (Cấp L3)"
+                  >
+                    <span className={styles.demoRole}>👑 VIP Patron</span>
+                    <span className={styles.demoName}>Victoria · L3</span>
                   </button>
                 </div>
-              </div> */}
+              </div>
 
               <form onSubmit={handleLoginSubmit} className={styles.form} noValidate>
                 {/* Email Input */}

@@ -80,6 +80,7 @@ const App = () => {
         onLoginClick={() => setLoginOpen(true)}
         onRegisterClick={() => setRegisterOpen(true)}
         onLogout={handleLogout}
+        addToast={addToast}
       />
 
       <Routes>

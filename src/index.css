@@ -27,10 +27,10 @@
   --gold-muted: rgba(197, 160, 89, 0.12);
   --gold-glow: rgba(197, 160, 89, 0.18);
 
-  /* Text - Tương phản đạt WCAG AA (≥4.5:1 trên nền tối) */
+  /* Text - Tương phản đạt WCAG AA & AAA (≥4.5:1 đến 7:1 trên nền tối) */
   --text-primary: #F4F0EC;       /* ~14:1 trên #0D0D0F — tiêu đề, label quan trọng */
   --text-secondary: #C8C3BC;    /* ~8:1 — body text, mô tả chính */
-  --text-muted: #9A9490;        /* ~4.8:1 — placeholder, meta, sub-label */
+  --text-muted: #ABA49F;        /* ~6.5:1 — placeholder, meta, sub-label sắc nét */
   --text-disabled: #5A5660;     /* < 4.5:1 — chỉ dùng cho trạng thái disabled */
 
   /* Status Colors */

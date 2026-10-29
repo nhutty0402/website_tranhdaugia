@@ -225,17 +225,55 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: 80px 40px;
+  padding: 64px 32px;
   text-align: center;
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(18, 18, 20, 0.4) 100%);
+  border: 1px dashed rgba(212, 175, 55, 0.25);
+  border-radius: 16px;
+  max-width: 680px;
+  margin: 32px auto;
+}
+
+.emptyIconWrap {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(197, 160, 89, 0.1);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-primary);
+  box-shadow: 0 0 24px rgba(197, 160, 89, 0.15);
 }
 
 .emptyState h3 {
   color: var(--text-primary);
+  font-family: var(--font-brand, 'Playfair Display', serif);
+  font-size: 1.4rem;
+  margin: 0;
 }
 
 .emptyState p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  max-width: 480px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.emptySuggestions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.emptySuggestLabel {
+  font-size: 0.78rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
 }
 
 @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }

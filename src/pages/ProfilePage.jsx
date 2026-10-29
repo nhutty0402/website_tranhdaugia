@@ -39,12 +39,30 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   if (!currentUser) {
     return (
       <div className={styles.notLoggedIn}>
-        <span style={{ fontSize: '3rem' }}>🔐</span>
-        <h2>Bạn chưa đăng nhập</h2>
-        <p>Vui lòng đăng nhập để xem và quản lý bộ sưu tập, phiên đấu giá kín, đơn hàng và chứng chỉ số của bạn.</p>
+        <div style={{
+          width: 72,
+          height: 72,
+          borderRadius: '50%',
+          background: 'rgba(197, 160, 89, 0.1)',
+          border: '1px solid rgba(197, 160, 89, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--gold-primary)',
+          boxShadow: '0 0 28px rgba(197, 160, 89, 0.15)',
+          marginBottom: 8
+        }}>
+          <Lock size={32} />
+        </div>
+        <h2 style={{ fontFamily: "var(--font-brand, 'Playfair Display', serif)", fontSize: '1.6rem' }}>
+          Hồ Sơ & Bộ Sưu Tập Cá Nhân
+        </h2>
+        <p style={{ maxWidth: 480, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+          Vui lòng đăng nhập để xem và quản lý bộ sưu tập theo dõi, phiên đấu giá kín, đơn hàng ký quỹ Escrow 72h và chứng chỉ số SHA-256 của bạn.
+        </p>
         <button
           className="btn btn-primary"
-          style={{ marginTop: 16 }}
+          style={{ marginTop: 12 }}
           onClick={onLoginClick}
         >
           Đăng nhập ngay

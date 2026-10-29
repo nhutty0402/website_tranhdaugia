@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Search, Bell, User, Menu, X, ChevronDown, LogOut,
-  Compass, Gavel, Palette, Landmark
+  Compass, Gavel, Palette, Landmark, Sun, Moon
 } from 'lucide-react';
 import VerificationBadge from './VerificationBadge';
 import Logo from './Logo';
@@ -36,12 +36,27 @@ const NAV_LINKS = [
   },
 ];
 
-const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
+const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, addToast }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isLightMode, setIsLightMode] = useState(false);
   const userMenuRef = useRef(null);
+
+  const handleThemeToggle = () => {
+    const nextMode = !isLightMode;
+    setIsLightMode(nextMode);
+    if (addToast) {
+      addToast(
+        nextMode
+          ? '✦ Đã chọn Chế độ Sáng (Light Mode). Tính năng đổi màu toàn diện sẽ được áp dụng khi hoàn thiện!'
+          : '✦ Đã quay lại Chế độ Tối (Dark Luxury Gallery).',
+        'gold',
+        4000
+      );
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -124,6 +139,22 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
                 <Bell size={18} strokeWidth={1.4} />
                 <span className={styles.notifDot} />
               </div>
+            </button>
+
+            {/* Nút chuyển đổi chế độ giao diện Sáng / Tối */}
+            <button
+              id="theme-toggle-btn"
+              type="button"
+              className={`${styles.iconBtn} ${styles.themeBtn} ${isLightMode ? styles.themeBtnActive : ''}`}
+              onClick={handleThemeToggle}
+              aria-label={isLightMode ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
+              title={isLightMode ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
+            >
+              {isLightMode ? (
+                <Sun size={18} strokeWidth={1.6} className={styles.sunIcon} />
+              ) : (
+                <Moon size={18} strokeWidth={1.6} className={styles.moonIcon} />
+              )}
             </button>
 
             {user ? (
