@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield, Clock, Zap, Heart, Share2, Eye, ZoomIn,
   ArrowLeft, Award, AlertTriangle, Check, ChevronLeft, ChevronRight,
-  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare, ShieldCheck
+  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare, ShieldCheck,
+  CheckCircle2, Download, CheckCircle, FileText
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY,
   QUICK_BID_STEPS, ROOM_TYPES, LIGHT_MODES,
-  USERS, formatPrice, formatPriceFull, formatCountdown,
+  USERS, CERTIFICATES, formatPrice, formatPriceFull, formatCountdown,
 } from '../data/mockData';
 import KYCBanner from '../components/KYCBanner';
 import VerificationBadge from '../components/VerificationBadge';
@@ -25,7 +26,23 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
   const { id } = useParams();
   const navigate = useNavigate();
   const artwork = ARTWORKS.find(a => a.artwork_id === id) || ARTWORKS[0];
-  const [session, setSession] = useState(AUCTION_SESSIONS.find(s => s.artwork_id === artwork.artwork_id));
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isOwnedParam = searchParams.get('owned') === 'true' || location.state?.isOwned;
+  const certificate = CERTIFICATES.find(c => c.artwork_id === artwork.artwork_id);
+
+  // Check if current artwork is owned by user
+  const isOwned = Boolean(
+    isOwnedParam ||
+    (currentUser && ['aw1', 'aw2'].includes(artwork.artwork_id)) ||
+    (certificate && (certificate.current_owner_id === currentUser?.user_id || certificate.current_owner_id === 'u1'))
+  );
+
+  const [session, setSession] = useState(() => {
+    // If owned, we do not attach active auction session
+    if (isOwned) return null;
+    return AUCTION_SESSIONS.find(s => s.artwork_id === artwork.artwork_id);
+  });
   const artist = USERS.find(u => u.user_id === artwork.artist_id);
 
   const [activeTab, setActiveTab] = useState('Thông tin');
@@ -248,7 +265,11 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
 
               {/* Badges */}
               <div className={styles.imageBadges}>
-                {isSealedAuction ? (
+                {isOwned ? (
+                  <span className="badge badge-verified" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(46,204,113,0.2)', color: '#2ECC71', border: '1px solid rgba(46,204,113,0.4)', fontWeight: 600 }}>
+                    <CheckCircle2 size={12} /> BẠN ĐÃ SỞ HỮU
+                  </span>
+                ) : isSealedAuction ? (
                   <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                     <Lock size={11} /> PHIÊN KÍN
                   </span>
@@ -342,8 +363,19 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
 
             <hr className="divider" style={{ margin: '20px 0' }} />
 
-            {/* Auction Box (Sealed vs Live vs Buy) */}
-            {session ? (
+            {/* Auction Box vs Buy Box OR Owned Artwork Info Box */}
+            {isOwned ? (
+              <OwnedArtworkBox
+                artwork={artwork}
+                artist={artist}
+                certificate={certificate}
+                onViewRoomView={() => setActiveTab('Room View')}
+                onViewTexture={() => setActiveTab('Vệt cọ')}
+                onViewCertificate={() => navigate('/profile', { state: { tab: 'Chứng chỉ số' } })}
+                onBackToCollection={() => navigate('/profile', { state: { tab: 'Bộ sưu tập' } })}
+                addToast={addToast}
+              />
+            ) : session ? (
               isSealedAuction ? (
                 <SealedAuctionBox
                   session={session}
@@ -1019,3 +1051,229 @@ const BuyBox = ({ artwork, addToast, navigate }) => (
 
 export default ArtworkDetailPage;
 
+
+
+/* ===== OWNED ARTWORK DETAILS BOX (NO PAYMENT / BIDDING CONTROLS) ===== */
+const OwnedArtworkBox = ({
+  artwork,
+  artist,
+  certificate,
+  onViewRoomView,
+  onViewTexture,
+  onViewCertificate,
+  onBackToCollection,
+  addToast
+}) => (
+  <div className={styles.ownedBox}>
+    {/* Ownership Status Banner */}
+    <div style={{
+      background: 'linear-gradient(135deg, rgba(46, 204, 113, 0.12) 0%, rgba(212, 175, 55, 0.12) 100%)',
+      border: '1px solid rgba(46, 204, 113, 0.35)',
+      borderRadius: 14,
+      padding: '16px 18px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#2ECC71', fontWeight: 700, fontSize: '0.95rem' }}>
+          <CheckCircle2 size={18} /> TÁC PHẨM ĐÃ SỞ HỮU
+        </div>
+        <span className="badge badge-gold" style={{ fontSize: '0.68rem', padding: '3px 8px' }}>
+          ✦ Độc bản 1/1
+        </span>
+      </div>
+      <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+        Bạn là chủ nhân chính thức của tác phẩm này. Quyền sở hữu độc bản và Thẻ chứng nhận số SHA-256 đã kích hoạt toàn quyền cho bộ sưu tập cá nhân của bạn.
+      </p>
+    </div>
+
+    {/* Product Specifications Section */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <h4 style={{
+        margin: 0,
+        fontSize: '0.82rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+        color: 'var(--gold-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6
+      }}>
+        <Award size={14} /> Thông số sản phẩm nghệ thuật
+      </h4>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gap: 8,
+        background: 'rgba(255, 255, 255, 0.02)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 12,
+        padding: '14px 16px',
+        fontSize: '0.82rem'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+          <span style={{ color: 'var(--text-muted)' }}>Kích thước chuẩn:</span>
+          <strong>{artwork.dimensions}</strong>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+          <span style={{ color: 'var(--text-muted)' }}>Chất liệu & Kỹ thuật:</span>
+          <strong>{artwork.medium}</strong>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+          <span style={{ color: 'var(--text-muted)' }}>Năm sáng tác:</span>
+          <strong>{artwork.creation_year}</strong>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+          <span style={{ color: 'var(--text-muted)' }}>Phong cách mỹ thuật:</span>
+          <strong>{artwork.style || 'Trừu tượng / Đương đại'}</strong>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+          <span style={{ color: 'var(--text-muted)' }}>Quy cách bảo tồn:</span>
+          <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>Khung sồi tự nhiên, kính lọc 99% UV</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)' }}>Tình trạng tác phẩm:</span>
+          <span style={{ color: '#2ECC71', fontWeight: 600 }}>Hoàn hảo (100% Mint Condition)</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Digital Certificate Hash Snapshot */}
+    <div style={{
+      background: 'rgba(212, 175, 55, 0.04)',
+      border: '1px dashed rgba(212, 175, 55, 0.25)',
+      borderRadius: 12,
+      padding: '12px 14px',
+      fontSize: '0.78rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--gold-primary)', fontWeight: 600 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <ShieldCheck size={14} /> Thẻ chứng nhận số SHA-256
+        </span>
+        <span className="badge badge-verified" style={{ fontSize: '0.65rem' }}>Đã kích hoạt</span>
+      </div>
+      <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
+        Mã thẻ: <strong>{certificate?.qr_verify_code || 'AH-CERT-2024-0042'}</strong>
+      </div>
+    </div>
+
+    {/* Exclusive Actions for Owner */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {/* <button
+        type="button"
+        className="btn btn-secondary"
+        style={{ width: '100%', padding: '12px', justifyContent: 'center' }}
+        onClick={onViewCertificate}
+      >
+        <Award size={16} /> Xem Thẻ chứng nhận số SHA-256
+      </button> */}
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          style={{ padding: '10px 8px', fontSize: '0.8rem', justifyContent: 'center' }}
+          onClick={onViewRoomView}
+        >
+          <Eye size={14} /> Treo phòng 3D
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          style={{ padding: '10px 8px', fontSize: '0.8rem', justifyContent: 'center' }}
+          onClick={onViewTexture}
+        >
+          <ZoomIn size={14} /> Soi vệt cọ 4K
+        </button>
+      </div>
+
+      <button
+        type="button"
+        className="btn btn-ghost"
+        style={{ width: '100%', fontSize: '0.78rem', color: 'var(--text-muted)', justifyContent: 'center' }}
+        onClick={() => addToast?.('✦ Đã tải tài liệu giám định & Giấy chứng nhận quyền sở hữu (PDF)!', 'success')}
+      >
+        <Download size={13} /> Tải hồ sơ giám định & Hợp đồng (PDF)
+      </button>
+
+      <button
+        type="button"
+        className="btn btn-ghost"
+        style={{ width: '100%', fontSize: '0.82rem', justifyContent: 'center', marginTop: 4 }}
+        onClick={onBackToCollection}
+      >
+        <ArrowLeft size={14} /> Quay lại Bộ sưu tập cá nhân
+      </button>
+    </div>
+  </div>
+);
+
+const ProvenanceCertificateTab = ({ artwork, certificate }) => (
+  <div className={styles.infoTab}>
+    <div style={{
+      background: 'rgba(212, 175, 55, 0.05)',
+      border: '1px solid rgba(212, 175, 55, 0.25)',
+      borderRadius: 14,
+      padding: '16px 20px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h4 style={{ margin: 0, color: 'var(--gold-primary)', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.95rem' }}>
+          <ShieldCheck size={16} /> Chứng nhận bản quyền số & Chuỗi nguồn gốc
+        </h4>
+        <span className="badge badge-verified">Bảo chứng L3</span>
+      </div>
+      <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+        Tác phẩm được bảo trợ bản quyền số vĩnh viễn trên Artisan Hub. Mã băm SHA-256 xác thực tính độc bản và chống giả mạo tuyệt đối.
+      </p>
+      <div style={{
+        background: 'rgba(0, 0, 0, 0.3)',
+        padding: '10px 12px',
+        borderRadius: 8,
+        fontFamily: 'var(--font-mono)',
+        fontSize: '0.74rem',
+        color: 'var(--gold-light)',
+        wordBreak: 'break-all'
+      }}>
+        HASH: {certificate?.ownership_hash || 'SHA-256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2'}
+      </div>
+    </div>
+
+    <div style={{ marginTop: 16 }}>
+      <h4 style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Clock size={15} /> Lịch sử xuất xứ & Sở hữu (Provenance Chain)
+      </h4>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {[
+          { title: 'Sáng tác hoàn thiện tại xưởng', by: `${artwork.artist_name} (Họa sĩ)`, date: `${artwork.creation_year}-03-15`, type: 'Tác quyền khởi tạo' },
+          { title: 'Giám định & Đóng kiện bảo tàng', by: 'Hội đồng giám định Artisan Hub L3', date: '2024-09-18', type: 'Giám định bảo tàng' },
+          { title: 'Xác lập quyền sở hữu vĩnh viễn', by: 'Bộ sưu tập cá nhân của bạn', date: 'Vừa xong', type: 'Chủ sở hữu hiện tại' },
+        ].map((item, i) => (
+          <div key={i} style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 10,
+            padding: '10px 14px',
+            fontSize: '0.8rem'
+          }}>
+            <div>
+              <strong>{item.title}</strong>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{item.by} · {item.date}</div>
+            </div>
+            <span className="badge badge-gold" style={{ fontSize: '0.68rem' }}>{item.type}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);

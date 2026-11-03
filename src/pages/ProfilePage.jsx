@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   User, Package, Award, Clock, Shield, ArrowRight,
   CheckCircle, Download, QrCode, ExternalLink, Lock,
   PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut, Palette,
-  ShieldAlert, CheckCircle2, RotateCcw, Settings as SettingsIcon, UserCog
+  ShieldAlert, CheckCircle2, RotateCcw, Settings as SettingsIcon, UserCog,
+  Truck, Copy, Check, Search, Filter, Receipt, FileText, ChevronRight, Eye, ShieldCheck, MapPin, Phone, CreditCard, Sparkles, Printer, X
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, CERTIFICATES,
@@ -29,7 +30,19 @@ const PROFILE_TABS = [
 
 const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('Phiên của tôi');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(() => {
+    if (location.state?.tab) return location.state.tab;
+    const params = new URLSearchParams(location.search);
+    if (params.get('tab') === 'orders' || params.get('tab') === 'don-hang') return 'Đơn hàng & Ký quỹ';
+    return 'Phiên của tôi';
+  });
+
+  React.useEffect(() => {
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
   const [createAuctionOpen, setCreateAuctionOpen] = useState(false);
   const [uploadArtworkOpen, setUploadArtworkOpen] = useState(false);
   const [artworksVersion, setArtworksVersion] = useState(0);
@@ -190,9 +203,10 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
           />
         )}
         {activeTab === 'Đơn hàng & Ký quỹ' && (
-          <EscrowTab
+          <OrdersAndEscrowTab
             addToast={addToast}
             onViewCertificates={() => setActiveTab('Chứng chỉ số')}
+            highlightOrderId={location.state?.highlightOrderId}
           />
         )}
         {activeTab === 'Chứng chỉ số' && <CertificatesTab addToast={addToast} />}
@@ -289,30 +303,224 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   );
 };
 
+
+/* ===== OWNED ARTWORK DETAILS MODAL (COLLECTION TAB) ===== */
+const OwnedArtworkModal = ({ artwork, onClose, addToast }) => {
+  if (!artwork) return null;
+
+  return (
+    <div className={styles.invoiceModalOverlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={styles.invoiceModalBox} style={{ maxWidth: 720 }}>
+        {/* Header */}
+        <div className={styles.invoiceHeader}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span className="badge badge-verified" style={{ background: 'rgba(46,204,113,0.18)', color: '#2ECC71', border: '1px solid rgba(46,204,113,0.4)', fontWeight: 600 }}>
+                <CheckCircle2 size={12} /> BẠN ĐÃ SỞ HỮU
+              </span>
+              <span className="badge badge-gold" style={{ fontSize: '0.7rem' }}>
+                ✦ Độc bản 1/1
+              </span>
+            </div>
+            <h3 style={{ margin: '8px 0 2px', fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: 'var(--text-primary)' }}>
+              {artwork.title}
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--gold-light)' }}>
+              bởi Họa sĩ <strong>{artwork.artist_name}</strong>
+            </p>
+          </div>
+          <button
+            className="btn btn-icon btn-ghost"
+            onClick={onClose}
+            aria-label="Đóng"
+            style={{ borderRadius: '50%' }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Content Layout */}
+        <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 20, alignItems: 'start' }}>
+          {/* Image */}
+          <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border-subtle)', background: '#000' }}>
+            <img src={artwork.image} alt={artwork.title} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
+          </div>
+
+          {/* Specs */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gap: 8,
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 12,
+              padding: '12px 14px',
+              fontSize: '0.8rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+                <span style={{ color: 'var(--text-muted)' }}>Kích thước chuẩn:</span>
+                <strong>{artwork.dimensions}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+                <span style={{ color: 'var(--text-muted)' }}>Chất liệu & Kỹ thuật:</span>
+                <strong>{artwork.medium}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+                <span style={{ color: 'var(--text-muted)' }}>Năm sáng tác:</span>
+                <strong>{artwork.creation_year}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+                <span style={{ color: 'var(--text-muted)' }}>Phong cách mỹ thuật:</span>
+                <strong>{artwork.style || 'Trừu tượng / Đương đại'}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 6 }}>
+                <span style={{ color: 'var(--text-muted)' }}>Quy cách bảo tồn:</span>
+                <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>Khung sồi tự nhiên, kính lọc 99% UV</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Tình trạng vật lý:</span>
+                <span style={{ color: '#2ECC71', fontWeight: 600 }}>Hoàn hảo (100% Mint)</span>
+              </div>
+            </div>
+
+            {/* Curator note */}
+            {artwork.curator_statement && (
+              <div style={{
+                background: 'rgba(212, 175, 55, 0.04)',
+                border: '1px solid rgba(212, 175, 55, 0.15)',
+                borderRadius: 12,
+                padding: '12px 14px',
+                fontSize: '0.78rem'
+              }}>
+                <div style={{ fontWeight: 600, color: 'var(--gold-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Award size={14} /> Ý niệm sáng tác của Họa sĩ
+                </div>
+                <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: 1.5, fontStyle: 'italic' }}>
+                  "{artwork.curator_statement}"
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Proof info */}
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px dashed var(--border-subtle)',
+          borderRadius: 12,
+          padding: '12px 14px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 10,
+          fontSize: '0.76rem'
+        }}>
+          <div>
+            <span style={{ color: 'var(--text-muted)' }}>Chứng chỉ số SHA-256:</span>{' '}
+            <strong style={{ color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>AH-CERT-2024-0042</strong>
+          </div>
+          <span className="badge badge-verified" style={{ fontSize: '0.68rem' }}>
+            Bảo chứng bản quyền trọn đời
+          </span>
+        </div>
+
+        {/* Footer buttons */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => addToast?.('✦ Đã tải tài liệu hồ sơ thẩm định tác phẩm (PDF)!', 'success')}
+          >
+            <Download size={14} /> Tải hồ sơ giám định (PDF)
+          </button>
+          <Link
+            to={`/artwork/${artwork.artwork_id}?owned=true`}
+            state={{ isOwned: true }}
+            className="btn btn-secondary"
+          >
+            <Eye size={14} /> Mở trang chi tiết 3D & Vệt cọ
+          </Link>
+          <button type="button" className="btn btn-primary" onClick={onClose}>
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CollectionTab = ({ addToast }) => {
   const ownedArtworks = ARTWORKS.slice(0, 2);
+  const [selectedArtwork, setSelectedArtwork] = useState(null);
+
   return (
     <div className={styles.tabContent}>
-      <h2 className={styles.tabTitle}>Bộ sưu tập của tôi</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+        <div>
+          <h2 className={styles.tabTitle} style={{ margin: '0 0 6px' }}>Bộ sưu tập của tôi</h2>
+          <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+            Danh sách tác phẩm nghệ thuật độc bản bạn đã mua và sở hữu toàn quyền. Xem thông số chi tiết, nguồn gốc xuất xứ và thẻ chứng nhận số SHA-256.
+          </p>
+        </div>
+        <span className="badge badge-gold" style={{ fontSize: '0.78rem', padding: '6px 14px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          👑 {ownedArtworks.length} Tác phẩm sở hữu
+        </span>
+      </div>
+
       <div className={styles.collectionGrid}>
         {ownedArtworks.map(artwork => (
           <div key={artwork.artwork_id} className={styles.collectionCard}>
-            <img src={artwork.image} alt={artwork.title} className={styles.collectionImg} />
+            <div style={{ position: 'relative', overflow: 'hidden' }}>
+              <img src={artwork.image} alt={artwork.title} className={styles.collectionImg} />
+              <span className="badge badge-verified" style={{ position: 'absolute', top: 12, left: 12, backdropFilter: 'blur(8px)', background: 'rgba(46,204,113,0.85)', color: '#fff', border: 'none', fontWeight: 600 }}>
+                <CheckCircle2 size={11} /> Đã sở hữu
+              </span>
+              <span className="badge badge-gold" style={{ position: 'absolute', top: 12, right: 12 }}>
+                Độc bản
+              </span>
+            </div>
             <div className={styles.collectionInfo}>
-              <span className="badge badge-verified" style={{ alignSelf: 'flex-start' }}>Đã sở hữu</span>
               <h3 className={styles.collectionTitle}>{artwork.title}</h3>
-              <p className={styles.collectionArtist}>{artwork.artist_name}</p>
-              <p className={styles.collectionMeta}>{artwork.medium} · {artwork.dimensions}</p>
+              <p className={styles.collectionArtist}>bởi <strong>{artwork.artist_name}</strong></p>
+              <p className={styles.collectionMeta}>{artwork.medium} · {artwork.dimensions} · {artwork.creation_year}</p>
               <div className={styles.collectionFooter}>
-                <span className={styles.collectionPrice}>{formatPrice(artwork.current_price)}</span>
-                <Link to={`/artwork/${artwork.artwork_id}`} className="btn btn-secondary btn-sm">
-                  Xem <ArrowRight size={12} />
-                </Link>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Giá trị định giá: <strong style={{ color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>{formatPrice(artwork.current_price)}</strong>
+                </span>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  {/* <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => setSelectedArtwork(artwork)}
+                    title="Xem nhanh thông tin tác phẩm đã sở hữu"
+                  >
+                    <Eye size={12} /> Xem nhanh
+                  </button> */}
+                  <Link
+                    to={`/artwork/${artwork.artwork_id}?owned=true`}
+                    state={{ isOwned: true }}
+                    className="btn btn-secondary btn-sm"
+                    title="Xem chi tiết đầy đủ sản phẩm đã sở hữu"
+                  >
+                    Chi tiết <ArrowRight size={12} />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Owned Artwork Quick View Modal */}
+      {selectedArtwork && (
+        <OwnedArtworkModal
+          artwork={selectedArtwork}
+          onClose={() => setSelectedArtwork(null)}
+          addToast={addToast}
+        />
+      )}
     </div>
   );
 };
@@ -596,210 +804,781 @@ const ArtistArtworkManagementTab = ({ currentUser, onOpenCreate, onOpenUpload, o
   );
 };
 
-const EscrowTab = ({ addToast, onViewCertificates }) => {
-  const order = ESCROW_ORDERS[0];
-  const artwork = ARTWORKS.find(a => a.artwork_id === 'aw2');
 
-  // Slip-prevention states
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [escrowState, setEscrowState] = useState('locked'); // 'locked' | 'released' | 'disputed'
-  const [disputeInfo, setDisputeInfo] = useState(null);
+const OrderDetailModal = ({ order, onClose, addToast }) => {
+  if (!order) return null;
 
-  const handleReleaseSuccess = () => {
-    setEscrowState('released');
-    setShowConfirmModal(false);
-    addToast('✦ Đã xác nhận nghiệm thu! Tiền ký quỹ 35.000.000 đ đã giải ngân về ví Họa sĩ.', 'success', 6000);
+  return (
+    <div className={styles.invoiceModalOverlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={styles.invoiceModalBox}>
+        {/* Header */}
+        <div className={styles.invoiceHeader}>
+          <div>
+            <div className={styles.invoiceBrand}>ARTISAN HUB</div>
+            <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              Biên lai điện tử & Xác thực thanh toán bảo chứng
+            </p>
+          </div>
+          <button
+            className="btn btn-icon btn-ghost"
+            onClick={onClose}
+            aria-label="Đóng"
+            style={{ borderRadius: '50%' }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Invoice Meta */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: 12,
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 12,
+          padding: '14px 16px',
+          fontSize: '0.8rem'
+        }}>
+          <div>
+            <span style={{ color: 'var(--text-muted)' }}>Mã đơn hàng:</span>{' '}
+            <strong style={{ color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>#{order.orderId}</strong>
+          </div>
+          <div>
+            <span style={{ color: 'var(--text-muted)' }}>Mã giao dịch:</span>{' '}
+            <strong style={{ fontFamily: 'var(--font-mono)' }}>{order.txId || order.orderId}</strong>
+          </div>
+          <div>
+            <span style={{ color: 'var(--text-muted)' }}>Thời gian:</span>{' '}
+            <strong>{new Date(order.paidAt).toLocaleString('vi-VN')}</strong>
+          </div>
+          <div>
+            <span style={{ color: 'var(--text-muted)' }}>Phương thức:</span>{' '}
+            <strong style={{ textTransform: 'uppercase' }}>
+              {order.paymentMethod === 'escrow' ? 'Ký quỹ Escrow 72h' : order.paymentMethod === 'banking' ? 'VietQR 24/7' : 'Thẻ quốc tế'}
+            </strong>
+          </div>
+        </div>
+
+        {/* Recipient info */}
+        <div style={{
+          background: 'rgba(212, 175, 55, 0.03)',
+          border: '1px solid rgba(212, 175, 55, 0.15)',
+          borderRadius: 12,
+          padding: '14px 16px',
+          fontSize: '0.82rem'
+        }}>
+          <div style={{ fontWeight: 600, color: 'var(--gold-light)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <MapPin size={14} /> Thông tin giao nhận bảo hiểm
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 8 }}>
+            <div><span style={{ color: 'var(--text-muted)' }}>Người nhận:</span> {order.deliveryInfo?.name}</div>
+            <div><span style={{ color: 'var(--text-muted)' }}>Số điện thoại:</span> {order.deliveryInfo?.phone}</div>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Địa chỉ:</span> {order.deliveryInfo?.address}, {order.deliveryInfo?.city}
+            </div>
+            {order.deliveryInfo?.note && (
+              <div style={{ gridColumn: '1 / -1', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Ghi chú:</span> "{order.deliveryInfo.note}"
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Breakdown Table */}
+        <table className={styles.invoiceTable}>
+          <thead>
+            <tr>
+              <th>Khoản mục</th>
+              <th>Chi tiết</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>{order.title}</strong>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                  Họa sĩ: {order.artist_name} · {order.medium} ({order.dimensions})
+                </div>
+              </td>
+              <td>1 tác phẩm độc bản</td>
+              <td style={{ fontFamily: 'var(--font-mono)' }}>{formatPriceFull(order.winPrice || Math.round(order.grandTotal * 0.95))}</td>
+            </tr>
+            <tr>
+              <td>Đóng gói kiện gỗ bảo tàng</td>
+              <td>Kiện gỗ thông xông hơi khử trùng chống ẩm</td>
+              <td style={{ fontFamily: 'var(--font-mono)' }}>{formatPriceFull(order.packagingFee || 850000)}</td>
+            </tr>
+            <tr>
+              <td>Bảo hiểm vận chuyển mỹ thuật 100%</td>
+              <td>Bảo hiểm rủi ro toàn diện trong hành trình</td>
+              <td style={{ fontFamily: 'var(--font-mono)' }}>{formatPriceFull(order.insuranceFee || 450000)}</td>
+            </tr>
+            <tr>
+              <td>Phí nền tảng bảo chứng Artisan Hub</td>
+              <td>Miễn phí ưu đãi phiên đấu giá</td>
+              <td style={{ color: 'var(--success)', fontFamily: 'var(--font-mono)' }}>0 ₫ (Miễn phí)</td>
+            </tr>
+            <tr className={styles.invoiceTotalRow}>
+              <td colSpan="2">TỔNG CỘNG ĐÃ THANH TOÁN</td>
+              <td style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem' }}>{formatPriceFull(order.grandTotal)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Blockchain proof */}
+        <div style={{
+          padding: '12px 14px',
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px dashed var(--border-subtle)',
+          borderRadius: 10,
+          fontSize: '0.72rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--gold-primary)', fontWeight: 600 }}>
+            <ShieldCheck size={14} /> Xác thực Hợp đồng Ký quỹ & Băm SHA-256
+          </div>
+          <div style={{ color: 'var(--text-muted)', wordBreak: 'break-all', fontFamily: 'var(--font-mono)' }}>
+            HASH: {order.hash || '0x8f2c3d5a7b1e4c9f0a2d4e6b8c0e2f4a6c8e0b2d4f6a8c0e2b4d6f8a0c2e4b6d'}
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, flexWrap: 'wrap' }}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => addToast?.('Biên lai VAT điện tử đã được tải xuống máy!', 'success')}
+          >
+            <Printer size={15} /> In / Tải PDF
+          </button>
+          <button className="btn btn-primary" onClick={onClose}>
+            Đóng biên lai
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) => {
+  const DEFAULT_MOCK_ORDERS = [
+    {
+      orderId: 'AH-ORD-2024-8924',
+      txId: 'AH-89241042',
+      artworkId: 'aw2',
+      title: 'Hoàng Hôn Sông Hương',
+      artist_name: 'Nguyễn Gia Trí',
+      image: '/gallery_2.png',
+      medium: 'Sơn mài truyền thống & Vàng quỳ 24K',
+      dimensions: '90 x 120 cm',
+      creation_year: '2023',
+      winPrice: 35000000,
+      packagingFee: 850000,
+      insuranceFee: 450000,
+      grandTotal: 36300000,
+      paidAt: '2026-11-02T14:30:00.000Z',
+      paymentMethod: 'escrow',
+      deliveryInfo: {
+        name: 'Nguyễn Văn An',
+        phone: '0912345678',
+        address: '128 Đường Xuân Diệu, P. Quảng An, Tây Hồ',
+        city: 'Hà Nội',
+        note: 'Giao giờ hành chính, gọi trước 30 phút để chuẩn bị phòng trưng bày.'
+      },
+      status: 'escrow_locked',
+      escrowState: 'locked',
+      trackingCode: 'AH-EXPRESS-928410',
+      certificateId: 'AH-CERT-2024-0042',
+      hash: '0x8f2c3d5a7b1e4c9f0a2d4e6b8c0e2f4a6c8e0b2d4f6a8c0e2b4d6f8a0c2e4b6d',
+      carrier: 'Artisan Hub Logistics - Chuyên vận chuyển Tác Phẩm Mỹ Thuật & Bảo hiểm 100%',
+    },
+    {
+      orderId: 'AH-ORD-2024-9102',
+      txId: 'AH-91028341',
+      artworkId: 'aw1',
+      title: 'Mùa Vàng Tây Bắc',
+      artist_name: 'Trần Văn Cẩn',
+      image: '/gallery_1.png',
+      medium: 'Sơn dầu trên toan (Oil on canvas)',
+      dimensions: '80 x 100 cm',
+      creation_year: '2024',
+      winPrice: 28500000,
+      packagingFee: 650000,
+      insuranceFee: 350000,
+      grandTotal: 29500000,
+      paidAt: '2026-11-03T08:45:00.000Z',
+      paymentMethod: 'banking',
+      deliveryInfo: {
+        name: 'Nguyễn Văn An',
+        phone: '0912345678',
+        address: '128 Đường Xuân Diệu, P. Quảng An, Tây Hồ',
+        city: 'Hà Nội',
+        note: 'Đóng thùng gỗ 2 lớp chống va đập.'
+      },
+      status: 'shipping',
+      escrowState: 'locked',
+      trackingCode: 'AH-EXPRESS-834112',
+      certificateId: 'AH-CERT-2024-0089',
+      hash: '0x3a5e7c9b1d3f5a7c9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f1a3c5e7b9d1f3a5',
+      carrier: 'Artisan Express - Xe chuyên dụng điều hòa nhiệt ẩm',
+    },
+    {
+      orderId: 'AH-ORD-2024-7620',
+      txId: 'AH-76201945',
+      artworkId: 'aw3',
+      title: 'Thiếu Nữ Bên Hoa Huệ',
+      artist_name: 'Tô Ngọc Vân',
+      image: '/gallery_3.png',
+      medium: 'Sơn mài phục dựng cao cấp',
+      dimensions: '75 x 95 cm',
+      creation_year: '2022',
+      winPrice: 65000000,
+      packagingFee: 1200000,
+      insuranceFee: 800000,
+      grandTotal: 67000000,
+      paidAt: '2026-10-25T16:20:00.000Z',
+      paymentMethod: 'card',
+      deliveryInfo: {
+        name: 'Nguyễn Văn An',
+        phone: '0912345678',
+        address: '128 Đường Xuân Diệu, P. Quảng An, Tây Hồ',
+        city: 'Hà Nội',
+        note: 'Đã nghiệm thu hài lòng và lưu kho sưu tập cá nhân.'
+      },
+      status: 'completed',
+      escrowState: 'released',
+      trackingCode: 'AH-EXPRESS-719302',
+      certificateId: 'AH-CERT-2024-0015',
+      hash: '0x1f4a7c0d2e5b8a1c4e7b0d3f6a9c2e5b8d1f4a7c0e3b6d9f2a5c8e1b4d7f0a3',
+      carrier: 'Artisan Hub Logistics - Đã bàn giao trọn vẹn',
+    }
+  ];
+
+  const [orders, setOrders] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('artisan_orders') || '[]');
+      if (stored.length === 0) return DEFAULT_MOCK_ORDERS;
+      const storedIds = new Set(stored.map(o => o.orderId));
+      const rest = DEFAULT_MOCK_ORDERS.filter(o => !storedIds.has(o.orderId));
+      return [...stored, ...rest];
+    } catch {
+      return DEFAULT_MOCK_ORDERS;
+    }
+  });
+
+  const [filter, setFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [copiedId, setCopiedId] = useState(null);
+
+  // Modals
+  const [confirmOrder, setConfirmOrder] = useState(null);
+  const [reportOrder, setReportOrder] = useState(null);
+  const [detailOrder, setDetailOrder] = useState(null);
+
+  const handleCopy = (text, id, label = 'mã') => {
+    navigator.clipboard?.writeText(text);
+    setCopiedId(id);
+    addToast?.(`Đã sao chép ${label}: ${text}`, 'success');
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleConfirmRelease = () => {
+    if (!confirmOrder) return;
+    const targetOrder = confirmOrder;
+    const updated = orders.map(o => {
+      if (o.orderId === targetOrder.orderId) {
+        return { ...o, status: 'completed', escrowState: 'released' };
+      }
+      return o;
+    });
+    setOrders(updated);
+    try {
+      localStorage.setItem('artisan_orders', JSON.stringify(updated));
+    } catch {}
+    setConfirmOrder(null);
+    addToast?.(`✦ Nghiệm thu thành công! Tiền ký quỹ ${formatPriceFull(targetOrder.grandTotal)} đã giải ngân về ví Họa sĩ ${targetOrder.artist_name}.`, 'success', 6000);
   };
 
   const handleDisputeSubmit = (reportData) => {
-    setDisputeInfo(reportData);
-    setEscrowState('disputed');
-    setShowReportModal(false);
-    addToast('⚠️ Đã tạm dừng Escrow & chuyển hồ sơ sang Ban giám định L3 xem xét.', 'warning', 6000);
+    if (!reportOrder) return;
+    const updated = orders.map(o => {
+      if (o.orderId === reportOrder.orderId) {
+        return { ...o, status: 'disputed', escrowState: 'disputed', disputeInfo: reportData };
+      }
+      return o;
+    });
+    setOrders(updated);
+    try {
+      localStorage.setItem('artisan_orders', JSON.stringify(updated));
+    } catch {}
+    setReportOrder(null);
+    addToast?.(`⚠️ Đã tạm dừng ký quỹ đơn #${reportOrder.orderId} & gửi hồ sơ sang Ban giám định L3.`, 'warning', 6000);
   };
 
-  const handleCancelDispute = () => {
-    setEscrowState('locked');
-    setDisputeInfo(null);
-    addToast('Đã khôi phục quy trình nghiệm thu 72h bình thường.', 'info');
+  const handleCancelDispute = (orderId) => {
+    const updated = orders.map(o => {
+      if (o.orderId === orderId) {
+        return { ...o, status: 'escrow_locked', escrowState: 'locked', disputeInfo: null };
+      }
+      return o;
+    });
+    setOrders(updated);
+    try {
+      localStorage.setItem('artisan_orders', JSON.stringify(updated));
+    } catch {}
+    addToast?.('Đã khôi phục quy trình nghiệm thu 72h bình thường.', 'info');
   };
+
+  // Metrics calculation
+  const totalCount = orders.length;
+  const totalSpent = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
+  const activeCount = orders.filter(o => o.status !== 'completed').length;
+  const completedCount = orders.filter(o => o.status === 'completed').length;
+
+  // Filtered orders
+  const filteredOrders = orders.filter(order => {
+    if (filter === 'in_transit' && order.status === 'completed') return false;
+    if (filter === 'completed' && order.status !== 'completed') return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const matchTitle = order.title?.toLowerCase().includes(q);
+      const matchArtist = order.artist_name?.toLowerCase().includes(q);
+      const matchId = order.orderId?.toLowerCase().includes(q);
+      const matchTracking = order.trackingCode?.toLowerCase().includes(q);
+      return matchTitle || matchArtist || matchId || matchTracking;
+    }
+    return true;
+  });
 
   return (
     <div className={styles.tabContent}>
-      <h2 className={styles.tabTitle}>Đơn hàng & Ví ký quỹ</h2>
-
-      <div className={styles.escrowCard}>
-        <div className={styles.escrowHeader}>
-          <div className={styles.escrowMeta}>
-            {escrowState === 'locked' && (
-              <span className="badge" style={{ background: 'rgba(243,156,18,0.15)', color: '#F39C12', border: '1px solid rgba(243,156,18,0.3)' }}>
-                <Clock size={10} /> Đang ký quỹ 72h
-              </span>
-            )}
-            {escrowState === 'released' && (
-              <span className="badge" style={{ background: 'rgba(46,204,113,0.15)', color: '#2ecc71', border: '1px solid rgba(46,204,113,0.3)' }}>
-                <CheckCircle2 size={10} /> Đã giải ngân hoàn tất
-              </span>
-            )}
-            {escrowState === 'disputed' && (
-              <span className="badge" style={{ background: 'rgba(231,76,60,0.15)', color: '#e74c3c', border: '1px solid rgba(231,76,60,0.3)' }}>
-                <ShieldAlert size={10} /> Tạm dừng ký quỹ · Đang khiếu nại
-              </span>
-            )}
-            <h3 className={styles.escrowTitle}>#{order.escrow_id.toUpperCase()}</h3>
-          </div>
-          <div className={styles.escrowAmount}>
-            <p className={styles.priceLabel}>Số tiền ký quỹ</p>
-            <p className={styles.escrowPrice}>{formatPriceFull(order.amount_locked)}</p>
-          </div>
+      <div className={styles.ordersContainer}>
+        {/* Header */}
+        <div className={styles.ordersHeader}>
+          <h2 className={styles.tabTitle}>Đơn hàng đã thanh toán & Ký quỹ Escrow</h2>
+          <p className={styles.ordersSubtitle}>
+            Theo dõi hành trình bảo chứng tác phẩm nghệ thuật: từ khâu kiểm định tình trạng, đóng kiện gỗ bảo tàng, vận chuyển bảo hiểm 100% đến nghiệm thu 72h và nhận Thẻ chứng nhận số SHA-256.
+          </p>
         </div>
 
-        {/* 4-Step Progress */}
-        <div className={styles.escrowProgress}>
-          {/* Step 1 */}
-          <div className={styles.escrowStep}>
-            <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
-            <div className={styles.stepInfo}>
-              <p className={styles.stepLabel}>Thanh toán</p>
-              <p className={styles.stepDesc}>Đã thanh toán thành công</p>
+        {/* 4 Stats Cards */}
+        <div className={styles.ordersStatsGrid}>
+          <div className={styles.orderStatCard}>
+            <div className={styles.statIconBox}>
+              <Package size={22} />
+            </div>
+            <div>
+              <p className={styles.statVal}>{totalCount}</p>
+              <p className={styles.statLabel}>Đơn đã thanh toán</p>
             </div>
           </div>
-          <div className={styles.stepLine} />
 
-          {/* Step 2 */}
-          <div className={styles.escrowStep}>
-            <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
-            <div className={styles.stepInfo}>
-              <p className={styles.stepLabel}>Vận chuyển</p>
-              <p className={styles.stepDesc}>Kiện gỗ đã giao tới người mua</p>
+          <div className={styles.orderStatCard}>
+            <div className={styles.statIconBox} style={{ color: 'var(--gold-primary)', borderColor: 'rgba(212,175,55,0.4)' }}>
+              <Sparkles size={22} />
             </div>
-          </div>
-          <div className={styles.stepLine} />
-
-          {/* Step 3 */}
-          <div className={styles.escrowStep}>
-            {escrowState === 'released' ? (
-              <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
-            ) : escrowState === 'disputed' ? (
-              <div className={`${styles.stepDot} ${styles.stepDisputed}`}><AlertCircle size={14} /></div>
-            ) : (
-              <div className={`${styles.stepDot} ${styles.stepActive}`}><Clock size={14} /></div>
-            )}
-            <div className={styles.stepInfo}>
-              <p className={styles.stepLabel}>Nghiệm thu 72h</p>
-              <p className={styles.stepDesc}>
-                {escrowState === 'released'
-                  ? 'Đã nghiệm thu hài lòng'
-                  : escrowState === 'disputed'
-                  ? 'Đang tạm dừng thẩm định'
-                  : 'Còn 48 giờ để xem xét tranh'}
+            <div>
+              <p className={styles.statVal} style={{ fontSize: '1.1rem', color: 'var(--gold-primary)' }}>
+                {formatPrice(totalSpent)}
               </p>
+              <p className={styles.statLabel}>Tổng giá trị sở hữu</p>
             </div>
           </div>
-          <div className={styles.stepLine} />
 
-          {/* Step 4 */}
-          <div className={styles.escrowStep}>
-            {escrowState === 'released' ? (
-              <div className={`${styles.stepDot} ${styles.stepDone}`}><CheckCircle size={14} /></div>
-            ) : escrowState === 'disputed' ? (
-              <div className={`${styles.stepDot} ${styles.stepDisputed}`}><ShieldAlert size={14} /></div>
-            ) : (
-              <div className={styles.stepDot}><Shield size={14} /></div>
-            )}
-            <div className={styles.stepInfo}>
-              <p className={styles.stepLabel}>Giải ngân</p>
-              <p className={styles.stepDesc}>
-                {escrowState === 'released'
-                  ? 'Đã chuyển tiền cho Họa sĩ'
-                  : escrowState === 'disputed'
-                  ? 'Tạm khóa bảo lưu tiền'
-                  : 'Chưa giải ngân'}
-              </p>
+          <div className={styles.orderStatCard}>
+            <div className={styles.statIconBox} style={{ color: '#F39C12', borderColor: 'rgba(243,156,18,0.3)', background: 'rgba(243,156,18,0.1)' }}>
+              <Clock size={22} />
+            </div>
+            <div>
+              <p className={styles.statVal} style={{ color: '#F39C12' }}>{activeCount}</p>
+              <p className={styles.statLabel}>Đang vận chuyển & Ký quỹ</p>
+            </div>
+          </div>
+
+          <div className={styles.orderStatCard}>
+            <div className={styles.statIconBox} style={{ color: '#2ECC71', borderColor: 'rgba(46,204,113,0.3)', background: 'rgba(46,204,113,0.1)' }}>
+              <CheckCircle2 size={22} />
+            </div>
+            <div>
+              <p className={styles.statVal} style={{ color: '#2ECC71' }}>{completedCount}</p>
+              <p className={styles.statLabel}>Đã nghiệm thu & Cấp thẻ</p>
             </div>
           </div>
         </div>
 
-        {/* Action / Feedback Area */}
-        <div className={styles.escrowActions}>
-          {escrowState === 'locked' && (
-            <>
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowConfirmModal(true)}
-              >
-                <CheckCircle size={16} /> Xác nhận đã nhận hàng
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => setShowReportModal(true)}
-              >
-                Báo cáo vấn đề
-              </button>
-            </>
-          )}
+        {/* Filter & Search Toolbar */}
+        <div className={styles.ordersToolbar}>
+          <div className={styles.filterGroup}>
+            <button
+              className={`${styles.filterPill} ${filter === 'all' ? styles.filterPillActive : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              Tất cả ({totalCount})
+            </button>
+            <button
+              className={`${styles.filterPill} ${filter === 'in_transit' ? styles.filterPillActive : ''}`}
+              onClick={() => setFilter('in_transit')}
+            >
+              Đang ký quỹ & Vận chuyển ({activeCount})
+            </button>
+            <button
+              className={`${styles.filterPill} ${filter === 'completed' ? styles.filterPillActive : ''}`}
+              onClick={() => setFilter('completed')}
+            >
+              Đã hoàn tất ({completedCount})
+            </button>
+          </div>
 
-          {escrowState === 'released' && (
-            <div className={styles.escrowSuccessBox}>
-              <div>
-                <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--success)' }}>
-                  ✦ Hợp đồng Escrow đã hoàn tất giải ngân
-                </p>
-                <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                  Số tiền <strong>{formatPriceFull(order.amount_locked)}</strong> đã chuyển về tài khoản của Họa sĩ {artwork?.artist_name}. Quyền sở hữu độc bản và Thẻ chứng nhận số SHA-256 đã kích hoạt toàn quyền cho bạn.
-                </p>
-              </div>
-              {onViewCertificates && (
-                <button
-                  className="btn btn-secondary"
-                  onClick={onViewCertificates}
-                  style={{ whiteSpace: 'nowrap' }}
-                >
-                  Xem Thẻ chứng nhận số →
-                </button>
-              )}
-            </div>
-          )}
-
-          {escrowState === 'disputed' && (
-            <div className={styles.escrowDisputeBox}>
-              <div>
-                <p style={{ margin: '0 0 4px', fontWeight: 600, color: '#e74c3c' }}>
-                  ⚠️ Đơn hàng đang trong trạng thái xem xét khiếu nại (#DISP-8924)
-                </p>
-                <p style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.8)' }}>
-                  Khoản ký quỹ <strong>{formatPriceFull(order.amount_locked)}</strong> được bảo lưu an toàn. Ban thẩm định L3 sẽ liên hệ bạn và Họa sĩ trong 24 giờ.
-                </p>
-              </div>
-              <button
-                className="btn btn-ghost"
-                onClick={handleCancelDispute}
-                style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-              >
-                <RotateCcw size={14} /> Hủy khiếu nại
-              </button>
-            </div>
-          )}
+          <div className={styles.searchBox}>
+            <Search size={15} style={{ color: 'var(--text-muted)' }} />
+            <input
+              type="text"
+              placeholder="Tìm theo tên tranh, họa sĩ, mã đơn..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
+
+        {/* Orders List */}
+        {filteredOrders.length === 0 ? (
+          <div style={{
+            background: 'var(--bg-elevated)',
+            border: '1px dashed var(--border-subtle)',
+            borderRadius: 20,
+            padding: '48px 24px',
+            textAlign: 'center',
+            color: 'var(--text-muted)'
+          }}>
+            <Package size={48} style={{ margin: '0 auto 12px', opacity: 0.4 }} />
+            <p style={{ margin: '0 0 6px', fontWeight: 600, color: 'var(--text-primary)' }}>
+              Không tìm thấy đơn hàng phù hợp
+            </p>
+            <p style={{ fontSize: '0.8rem', margin: 0 }}>
+              Hãy thử tìm kiếm với từ khóa khác hoặc chuyển bộ lọc hiển thị.
+            </p>
+          </div>
+        ) : (
+          filteredOrders.map(order => {
+            const isHighlighted = highlightOrderId === order.orderId || highlightOrderId === order.txId;
+            const isReleased = order.escrowState === 'released' || order.status === 'completed';
+            const isDisputed = order.escrowState === 'disputed' || order.status === 'disputed';
+            const isLocked = !isReleased && !isDisputed;
+
+            return (
+              <div
+                key={order.orderId}
+                id={`order-${order.orderId}`}
+                className={`${styles.orderItemCard} ${isHighlighted ? styles.orderItemHighlighted : ''}`}
+              >
+                {isHighlighted && (
+                  <div className={styles.highlightRibbon}>
+                    <Sparkles size={12} /> Đơn hàng vừa thanh toán
+                  </div>
+                )}
+
+                {/* Card Top: Order Code, Badges, Price */}
+                <div className={styles.orderCardHeader}>
+                  <div className={styles.orderIdSection}>
+                    <span className={styles.orderIdText}>#{order.orderId}</span>
+                    <button
+                      className={styles.copyIconBtn}
+                      onClick={() => handleCopy(order.orderId, order.orderId, 'mã đơn hàng')}
+                      title="Sao chép mã đơn hàng"
+                    >
+                      {copiedId === order.orderId ? <Check size={14} style={{ color: 'var(--success)' }} /> : <Copy size={14} />}
+                    </button>
+
+                    {/* Status Pill */}
+                    {isReleased && (
+                      <span className="badge" style={{ background: 'rgba(46,204,113,0.15)', color: '#2ECC71', border: '1px solid rgba(46,204,113,0.3)' }}>
+                        <CheckCircle2 size={11} /> Đã nghiệm thu & Hoàn tất
+                      </span>
+                    )}
+                    {isLocked && order.status === 'shipping' && (
+                      <span className="badge" style={{ background: 'rgba(52,152,219,0.15)', color: '#3498db', border: '1px solid rgba(52,152,219,0.3)' }}>
+                        <Truck size={11} /> Đang vận chuyển bảo hiểm
+                      </span>
+                    )}
+                    {isLocked && order.status !== 'shipping' && (
+                      <span className="badge" style={{ background: 'rgba(243,156,18,0.15)', color: '#F39C12', border: '1px solid rgba(243,156,18,0.3)' }}>
+                        <Clock size={11} /> Đang ký quỹ Escrow 72h
+                      </span>
+                    )}
+                    {isDisputed && (
+                      <span className="badge" style={{ background: 'rgba(231,76,60,0.15)', color: '#e74c3c', border: '1px solid rgba(231,76,60,0.3)' }}>
+                        <ShieldAlert size={11} /> Tạm dừng ký quỹ · Đang khiếu nại
+                      </span>
+                    )}
+
+                    {/* Payment Method Badge */}
+                    <span className="badge" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }}>
+                      <CreditCard size={11} />{' '}
+                      {order.paymentMethod === 'escrow' ? 'Ký quỹ Escrow' : order.paymentMethod === 'banking' ? 'VietQR 24/7' : 'Thẻ Visa/Master'}
+                    </span>
+
+                    <span className={styles.orderDateText}>
+                      <Clock size={12} /> {new Date(order.paidAt).toLocaleDateString('vi-VN')}
+                    </span>
+                  </div>
+
+                  <div className={styles.orderHeaderRight}>
+                    <p className={styles.orderPriceBig}>{formatPriceFull(order.grandTotal)}</p>
+                  </div>
+                </div>
+
+                {/* Card Middle: Artwork Info + Delivery Details */}
+                <div className={styles.orderContentGrid}>
+                  {/* Artwork Snapshot */}
+                  <div className={styles.artworkSection}>
+                    <div className={styles.artworkImgWrap}>
+                      <img src={order.image} alt={order.title} className={styles.artworkImg} />
+                    </div>
+                    <div className={styles.artworkMetaInfo}>
+                      <h3 className={styles.artworkTitleText}>{order.title}</h3>
+                      <p className={styles.artworkArtistLine}>
+                        bởi <strong>{order.artist_name}</strong>
+                        <span className="badge badge-verified" style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
+                          <Shield size={9} /> Xác thực
+                        </span>
+                      </p>
+                      <p className={styles.artworkSpecText}>
+                        {order.medium} · {order.dimensions} · {order.creation_year}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Delivery Snapshot */}
+                  <div className={styles.deliverySnapshot}>
+                    <div className={styles.deliveryTitle}>
+                      <Truck size={13} /> Địa chỉ nhận hàng & Vận đơn
+                    </div>
+                    <p className={styles.deliveryRow}>
+                      <span>Người nhận:</span> <strong>{order.deliveryInfo?.name}</strong> ({order.deliveryInfo?.phone})
+                    </p>
+                    <p className={styles.deliveryRow}>
+                      <span>Địa chỉ:</span> {order.deliveryInfo?.address}, {order.deliveryInfo?.city}
+                    </p>
+                    <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                      <span className={styles.trackingBadge}>
+                        Mã vận đơn: {order.trackingCode}
+                      </span>
+                      <button
+                        className={styles.copyIconBtn}
+                        onClick={() => handleCopy(order.trackingCode, `track-${order.orderId}`, 'mã vận đơn')}
+                        title="Sao chép mã vận đơn"
+                      >
+                        {copiedId === `track-${order.orderId}` ? <Check size={13} style={{ color: 'var(--success)' }} /> : <Copy size={13} />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4-Step Escrow & Delivery Progress */}
+                <div className={styles.escrowProgress} style={{ marginTop: 4 }}>
+                  {/* Step 1: Payment */}
+                  <div className={styles.escrowStep}>
+                    <div className={`${styles.stepDot} ${styles.stepDone}`}>
+                      <CheckCircle size={14} />
+                    </div>
+                    <div className={styles.stepInfo}>
+                      <p className={styles.stepLabel}>Đã thanh toán</p>
+                      <p className={styles.stepDesc}>Cổng thanh toán xác nhận</p>
+                    </div>
+                  </div>
+                  <div className={styles.stepLine} />
+
+                  {/* Step 2: Crate & Inspection */}
+                  <div className={styles.escrowStep}>
+                    <div className={`${styles.stepDot} ${styles.stepDone}`}>
+                      <CheckCircle size={14} />
+                    </div>
+                    <div className={styles.stepInfo}>
+                      <p className={styles.stepLabel}>Đóng kiện gỗ</p>
+                      <p className={styles.stepDesc}>Niêm phong chống ẩm</p>
+                    </div>
+                  </div>
+                  <div className={styles.stepLine} />
+
+                  {/* Step 3: Transit */}
+                  <div className={styles.escrowStep}>
+                    {isReleased ? (
+                      <div className={`${styles.stepDot} ${styles.stepDone}`}>
+                        <CheckCircle size={14} />
+                      </div>
+                    ) : (
+                      <div className={`${styles.stepDot} ${styles.stepDone}`}>
+                        <Truck size={14} />
+                      </div>
+                    )}
+                    <div className={styles.stepInfo}>
+                      <p className={styles.stepLabel}>Vận chuyển bảo hiểm</p>
+                      <p className={styles.stepDesc}>Đã giao tới tư gia</p>
+                    </div>
+                  </div>
+                  <div className={styles.stepLine} />
+
+                  {/* Step 4: 72h Escrow & Inspection */}
+                  <div className={styles.escrowStep}>
+                    {isReleased ? (
+                      <div className={`${styles.stepDot} ${styles.stepDone}`}>
+                        <CheckCircle size={14} />
+                      </div>
+                    ) : isDisputed ? (
+                      <div className={`${styles.stepDot} ${styles.stepDisputed}`}>
+                        <ShieldAlert size={14} />
+                      </div>
+                    ) : (
+                      <div className={`${styles.stepDot} ${styles.stepActive}`}>
+                        <Clock size={14} />
+                      </div>
+                    )}
+                    <div className={styles.stepInfo}>
+                      <p className={styles.stepLabel}>Nghiệm thu 72h</p>
+                      <p className={styles.stepDesc}>
+                        {isReleased
+                          ? 'Đã nghiệm thu hài lòng'
+                          : isDisputed
+                          ? 'Đang tạm dừng thẩm định'
+                          : 'Đang mở kiểm tra tranh'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Banner Notifications */}
+                {isReleased && (
+                  <div className={styles.escrowSuccessBox}>
+                    <div>
+                      <p style={{ margin: '0 0 4px', fontWeight: 600, color: 'var(--success)' }}>
+                        ✦ Hợp đồng Escrow đã hoàn tất giải ngân
+                      </p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                        Số tiền <strong>{formatPriceFull(order.grandTotal)}</strong> đã giải ngân về ví Họa sĩ {order.artist_name}. Quyền sở hữu độc bản và Thẻ chứng nhận số SHA-256 đã kích hoạt toàn quyền cho bạn.
+                      </p>
+                    </div>
+                    {onViewCertificates && (
+                      <button
+                        className="btn btn-secondary"
+                        onClick={onViewCertificates}
+                        style={{ whiteSpace: 'nowrap' }}
+                      >
+                        Xem Thẻ chứng nhận số →
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {isDisputed && (
+                  <div className={styles.escrowDisputeBox}>
+                    <div>
+                      <p style={{ margin: '0 0 4px', fontWeight: 600, color: '#e74c3c' }}>
+                        ⚠️ Đơn hàng đang trong trạng thái xem xét khiếu nại (#{order.orderId})
+                      </p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.8)' }}>
+                        Khoản ký quỹ <strong>{formatPriceFull(order.grandTotal)}</strong> được bảo lưu an toàn. Ban thẩm định L3 sẽ liên hệ bạn và Họa sĩ trong 24 giờ.
+                      </p>
+                    </div>
+                    <button
+                      className="btn btn-ghost"
+                      onClick={() => handleCancelDispute(order.orderId)}
+                      style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <RotateCcw size={14} /> Hủy khiếu nại
+                    </button>
+                  </div>
+                )}
+
+                {/* Actions Bottom Bar */}
+                <div className={styles.orderActionsRow}>
+                  <div className={styles.orderActionsLeft}>
+                    {isLocked && (
+                      <>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => setConfirmOrder(order)}
+                        >
+                          <CheckCircle size={15} /> Xác nhận đã nhận hàng
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => setReportOrder(order)}
+                        >
+                          <ShieldAlert size={15} /> Báo cáo vấn đề
+                        </button>
+                      </>
+                    )}
+                    {isReleased && onViewCertificates && (
+                      <button
+                        className="btn btn-secondary"
+                        onClick={onViewCertificates}
+                      >
+                        <Award size={15} /> Thẻ chứng nhận SHA-256
+                      </button>
+                    )}
+                  </div>
+
+                  <div className={styles.orderActionsRight}>
+                    <button
+                      className="btn btn-ghost"
+                      onClick={() => setDetailOrder(order)}
+                    >
+                      <Receipt size={15} /> Xem chi tiết hóa đơn
+                    </button>
+                    <button
+                      className="btn btn-ghost"
+                      onClick={() => addToast?.(`Đã tải xuống biên lai điện tử VAT đơn #${order.orderId}`, 'success')}
+                    >
+                      <Download size={15} /> Tải biên lai
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Slip-Prevention Modals */}
-      {showConfirmModal && (
+      {confirmOrder && (
         <ConfirmDeliveryModal
-          order={order}
-          artwork={artwork}
-          onClose={() => setShowConfirmModal(false)}
-          onConfirmRelease={handleReleaseSuccess}
+          order={confirmOrder}
+          artwork={{
+            title: confirmOrder.title,
+            artist_name: confirmOrder.artist_name,
+            image: confirmOrder.image,
+            medium: confirmOrder.medium,
+            dimensions: confirmOrder.dimensions,
+          }}
+          onClose={() => setConfirmOrder(null)}
+          onConfirmRelease={handleConfirmRelease}
         />
       )}
 
-      {showReportModal && (
+      {reportOrder && (
         <ReportIssueModal
-          order={order}
-          artwork={artwork}
-          onClose={() => setShowReportModal(false)}
+          order={reportOrder}
+          artwork={{
+            title: reportOrder.title,
+            artist_name: reportOrder.artist_name,
+            image: reportOrder.image,
+            medium: reportOrder.medium,
+            dimensions: reportOrder.dimensions,
+          }}
+          onClose={() => setReportOrder(null)}
           onSubmitReport={handleDisputeSubmit}
+        />
+      )}
+
+      {/* Order Detail & Invoice Modal */}
+      {detailOrder && (
+        <OrderDetailModal
+          order={detailOrder}
+          onClose={() => setDetailOrder(null)}
+          addToast={addToast}
         />
       )}
     </div>

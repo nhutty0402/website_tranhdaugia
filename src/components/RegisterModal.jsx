@@ -622,9 +622,9 @@ const StepPhone = ({ data, setData, onNext, onBack }) => {
               <p className={styles.errorMsg}><AlertCircle size={12} /> Mã OTP không đúng. Vui lòng thử lại.</p>
             )}
             <div className={styles.otpMeta}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              {/* <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Demo: nhập <strong style={{ color: 'var(--gold-primary)' }}>123456</strong>
-              </span>
+              </span> */}
               <button
                 id="resend-otp"
                 className={styles.resendBtn}

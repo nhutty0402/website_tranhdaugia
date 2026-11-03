@@ -171,6 +171,43 @@ export default function CheckoutPage({ currentUser, addToast }) {
     clearInterval(timerRef.current);
     await new Promise(r => setTimeout(r, 2200));
     setProcessing(false);
+    const orderRecord = {
+      orderId: txId,
+      txId: txId,
+      artworkId: artwork?.artwork_id || 'aw-checkout',
+      title: artwork?.title || 'Tác phẩm nghệ thuật',
+      artist_name: artwork?.artist_name || 'Họa sĩ Artisan Hub',
+      image: artwork?.image || '/gallery_1.png',
+      medium: artwork?.medium || 'Sơn dầu / Sơn mài',
+      dimensions: artwork?.dimensions || '80 x 100 cm',
+      creation_year: artwork?.creation_year || '2024',
+      artistAvatar: artist?.avatar || '/artist_avatar.png',
+      winPrice: winPrice || 35000000,
+      packagingFee: packagingFee || 850000,
+      insuranceFee: insuranceFee || 450000,
+      grandTotal: grandTotal || 36300000,
+      paidAt: new Date().toISOString(),
+      paymentMethod: selectedMethod,
+      deliveryInfo: {
+        name: delivery.name || 'Người mua',
+        phone: delivery.phone || '0912345678',
+        address: delivery.address || 'Hà Nội',
+        city: delivery.city || 'Hà Nội',
+        note: delivery.note || '',
+      },
+      status: selectedMethod === 'escrow' ? 'escrow_locked' : 'shipping',
+      escrowState: 'locked',
+      trackingCode: 'VN-AH-' + Math.floor(100000 + Math.random() * 900000),
+      certificateId: 'AH-CERT-' + Math.floor(1000 + Math.random() * 9000),
+      hash: '0x' + Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+    };
+    try {
+      const existing = JSON.parse(localStorage.getItem('artisan_orders') || '[]');
+      const filtered = existing.filter(o => o.orderId !== txId);
+      localStorage.setItem('artisan_orders', JSON.stringify([orderRecord, ...filtered]));
+    } catch (e) {
+      console.error('Error saving order', e);
+    }
     setPaymentDone(true);
     addToast?.('🎉 Thanh toán thành công! Artisan Hub sẽ liên hệ trong 24h.', 'gold', 7000);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -228,7 +265,7 @@ export default function CheckoutPage({ currentUser, addToast }) {
             ))}
           </div>
           <div className={styles.successActions}>
-            <button className={styles.btnPrimary} onClick={() => navigate('/profile')}>Xem đơn hàng của tôi</button>
+            <button className={styles.btnPrimary} onClick={() => navigate('/profile', { state: { tab: 'Đơn hàng & Ký quỹ', highlightOrderId: txId } })}>Xem đơn hàng của tôi</button>
             <button className={styles.btnGhost} onClick={() => navigate('/gallery')}>Khám phá thêm tác phẩm</button>
           </div>
         </div>

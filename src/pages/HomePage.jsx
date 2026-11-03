@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Zap, Shield, Eye, Search, ChevronDown,
-  Star, Award, Clock, Users, TrendingUp,
+  ArrowRight, Zap, Shield, Eye, ChevronDown,
+  Star, Award, Users, TrendingUp,
 } from 'lucide-react';
 import ArtworkCard from '../components/ArtworkCard';
 import { ARTWORKS, AUCTION_SESSIONS, formatPrice, formatCountdown } from '../data/mockData';
-import Logo from '../components/Logo';
 import styles from './HomePage.module.css';
 
 const FEATURES = [
@@ -64,7 +63,7 @@ const HeroCountdown = () => {
           </div>
         ))}
       </div>
-      <Link to="/auction" className="btn btn-primary btn-sm" id="hero-join-auction">
+      <Link to="/auction" className={`btn btn-primary btn-sm ${styles.heroCountdownBtn}`} id="hero-join-auction">
         Vào phòng đấu giá <ArrowRight size={14} />
       </Link>
     </div>
@@ -88,16 +87,16 @@ const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
 
         <div className={`container ${styles.heroContent}`}>
           <div className={styles.heroLeft}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24 }}>
+            <div className={styles.heroBadges}>
               <span className="badge badge-gold">✦ Nền tảng nghệ thuật số #1</span>
               <span className="badge badge-verified">
-                <Shield size={10} /> Bảo chứng 100%
+                <Shield size={11} /> Bảo chứng 100%
               </span>
             </div>
 
             <h1 className={styles.heroTitle}>
-              Khám phá &<br />
-              <span className={styles.heroGold}>Sưu tầm Nghệ thuật</span><br />
+              Khám phá &<br className={styles.desktopBr} />
+              <span className={styles.heroGold}>Sưu tầm Nghệ thuật</span><br className={styles.desktopBr} />
               Độc bản
             </h1>
 
@@ -160,7 +159,7 @@ const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
       <hr className="divider-gold" />
 
       {/* ===== FEATURES ===== */}
-      <section className="section">
+      <section className={`section ${styles.featuresSection}`}>
         <div className="container">
           <div className={styles.sectionHeader}>
             <span className="section-label">Tính năng cốt lõi</span>
@@ -186,11 +185,11 @@ const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
       {/* ===== LIVE AUCTIONS ===== */}
       <section className={`section ${styles.auctionSection}`}>
         <div className="container">
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeaderWrap}>
             <span className="section-label">Đang diễn ra</span>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-              <h2>Phiên đấu giá trực tiếp</h2>
-              <Link to="/auction" className="btn btn-secondary" id="view-all-auction">
+            <div className={styles.sectionHeaderRow}>
+              <h2 className={styles.sectionTitle}>Phiên đấu giá trực tiếp</h2>
+              <Link to="/auction" className={`btn btn-secondary ${styles.viewAllBtn}`} id="view-all-auction">
                 Xem tất cả <ArrowRight size={14} />
               </Link>
             </div>
@@ -211,13 +210,13 @@ const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
       </section>
 
       {/* ===== GALLERY ===== */}
-      <section className="section">
+      <section className={`section ${styles.gallerySection}`}>
         <div className="container">
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeaderWrap}>
             <span className="section-label">Triển lãm</span>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-              <h2>Tác phẩm nổi bật</h2>
-              <Link to="/gallery" className="btn btn-secondary" id="view-all-gallery">
+            <div className={styles.sectionHeaderRow}>
+              <h2 className={styles.sectionTitle}>Tác phẩm nổi bật</h2>
+              <Link to="/gallery" className={`btn btn-secondary ${styles.viewAllBtn}`} id="view-all-gallery">
                 Khám phá thêm <ArrowRight size={14} />
               </Link>
             </div>

@@ -601,6 +601,24 @@
 }
 
 /* Buy Box */
+
+.ownedBox {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(46, 204, 113, 0.35);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease;
+}
+
+.ownedBox:hover {
+  border-color: rgba(46, 204, 113, 0.6);
+  box-shadow: 0 12px 36px rgba(46, 204, 113, 0.12);
+}
+
 .buyBox {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
@@ -857,7 +875,8 @@
   }
   .auctionBox,
   .buyBox,
-  .sealedBox {
+  .sealedBox,
+  .ownedBox {
     padding: 20px;
   }
   .tabs {
@@ -1106,7 +1125,8 @@
   /* Auction card mobile */
   .auctionBox,
   .buyBox,
-  .sealedBox {
+  .sealedBox,
+  .ownedBox {
     padding: 14px 12px;
     border-radius: 14px;
     gap: 12px;
@@ -1115,7 +1135,8 @@
   }
   .auctionBox button,
   .sealedBox button,
-  .buyBox button {
+  .buyBox button,
+  .ownedBox button {
     white-space: normal !important;
     text-align: center;
     line-height: 1.35;

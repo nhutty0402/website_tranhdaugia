@@ -268,7 +268,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                   id="nav-search-input"
                   autoFocus
                   className={styles.searchInput}
-                  placeholder="Tìm kiếm tác phẩm, họa sĩ, phong cách..."
+                  placeholder="Tìm kiếm ..."
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && e.target.value.trim()) {
                       navigate(`/gallery?q=${encodeURIComponent(e.target.value.trim())}`);

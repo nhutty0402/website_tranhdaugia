@@ -46,6 +46,18 @@
   max-width: 600px;
 }
 
+.heroBadges {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.desktopBr {
+  display: inline;
+}
+
 .heroTitle {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 4vw, 3.8rem);
@@ -87,6 +99,10 @@
   border: 1px solid rgba(255,71,87,0.2);
   border-radius: 12px;
   flex-wrap: wrap;
+}
+
+.heroCountdownBtn {
+  margin-left: auto;
 }
 
 .countdownBlocks {
@@ -264,6 +280,42 @@
   max-width: 500px;
   font-size: 0.95rem;
   line-height: 1.7;
+}
+
+.sectionHeaderWrap {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.viewAllBtn {
+  flex-shrink: 0;
+}
+
+.featuresSection {
+  background: var(--bg-base);
+}
+
+.gallerySection {
+  background: var(--bg-base);
 }
 
 /* Features */
@@ -504,36 +556,62 @@
 
 /* Responsive 390px Mobile HomePage */
 @media (max-width: 480px) {
+  :global(.section) {
+    padding: 36px 0;
+  }
+
   .hero {
     min-height: auto;
-    padding-top: 16px;
+    padding-top: 12px;
+    padding-bottom: 24px;
   }
+
   .heroContent {
-    padding-top: 20px;
-    padding-bottom: 32px;
-    gap: 20px;
+    padding-top: 16px;
+    padding-bottom: 24px;
+    gap: 16px;
   }
+
+  .heroBadges {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .heroBadges :global(.badge) {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .desktopBr {
+    display: none;
+  }
+
   .heroTitle {
-    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    font-size: clamp(1.75rem, 7.5vw, 2.15rem);
+    line-height: 1.22;
     margin-bottom: 14px;
+    letter-spacing: -0.02em;
   }
+
   .heroDesc {
     font-size: 0.88rem;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     line-height: 1.6;
   }
+
   .heroActions {
     flex-direction: column;
     width: 100%;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 20px;
   }
+
   .heroActions button,
   .heroActions a {
     width: 100%;
     min-height: 48px;
-    padding: 12px 20px;
-    font-size: 0.875rem;
+    padding: 12px 18px;
+    font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.05em;
     justify-content: center;
@@ -543,10 +621,12 @@
     white-space: nowrap;
     transition: transform var(--transition-fast), background var(--transition-fast);
   }
+
   .heroActions button:active,
   .heroActions a:active {
     transform: scale(0.98);
   }
+
   .heroCountdown {
     display: flex;
     flex-direction: column;
@@ -560,15 +640,18 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
   }
+
   .heroCountdown > span:first-child {
     align-self: flex-start;
   }
+
   .countdownBlocks {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
     width: 100%;
   }
+
   .countdownBlock {
     display: flex;
     flex-direction: column;
@@ -580,23 +663,26 @@
     padding: 8px 4px;
     min-width: 0;
   }
+
   .countdownNum {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--live);
     line-height: 1.1;
     font-family: var(--font-mono, monospace);
     font-variant-numeric: tabular-nums;
   }
+
   .countdownLabel {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 600;
     color: var(--text-muted);
     letter-spacing: 0.08em;
     margin-top: 3px;
   }
-  .heroCountdown a,
-  .heroCountdown :global(#hero-join-auction) {
+
+  .heroCountdownBtn,
+  .heroCountdown a {
     width: 100%;
     min-height: 44px;
     padding: 10px 16px;
@@ -604,64 +690,202 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     border-radius: 8px;
     box-sizing: border-box;
     white-space: nowrap;
     box-shadow: 0 4px 16px rgba(255, 71, 87, 0.25);
+    margin-left: 0;
   }
+
   .heroCountdown a:active,
   .heroCountdown :global(#hero-join-auction):active {
     transform: scale(0.98);
   }
+
+  .scrollCue {
+    display: none;
+  }
+
+  /* Stats */
+  .statsSection {
+    padding: 24px 0;
+  }
+
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
+
   .statCard {
-    padding: 14px 10px;
+    padding: 14px 8px;
     gap: 4px;
+    border-radius: 10px;
   }
+
   .statValue {
-    font-size: 1.35rem;
+    font-size: 1.3rem;
   }
+
   .statLabel {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
+    line-height: 1.3;
   }
+
+  /* Section Headers */
   .sectionHeader {
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     gap: 8px;
   }
+
+  .sectionHeader h2 {
+    font-size: 1.35rem;
+    line-height: 1.3;
+  }
+
+  .sectionHeader p {
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .sectionHeaderWrap {
+    margin-bottom: 18px;
+    gap: 4px;
+  }
+
+  .sectionHeaderRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sectionTitle {
+    font-size: 1.22rem;
+    line-height: 1.25;
+  }
+
+  .viewAllBtn {
+    padding: 6px 12px;
+    font-size: 0.74rem;
+    min-height: 34px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* Features */
   .featuresGrid {
-    gap: 14px;
-  }
-  .featureCard {
-    padding: 20px 16px;
-  }
-  .featureIcon {
-    width: 42px;
-    height: 42px;
-    margin-bottom: 14px;
-  }
-  .featureTitle {
-    font-size: 1.05rem;
-  }
-  .featureDesc {
-    font-size: 0.82rem;
-  }
-  .trustCard {
-    padding: 20px 16px;
-    gap: 20px;
-    border-radius: 16px;
-  }
-  .trustItem {
-    padding: 14px;
     gap: 12px;
   }
+
+  .featureCard {
+    padding: 18px 14px;
+    border-radius: 12px;
+  }
+
+  .featureIcon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+  }
+
+  .featureTitle {
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .featureDesc {
+    font-size: 0.8rem;
+    line-height: 1.55;
+  }
+
+  /* Artwork Grids */
+  .artworkGrid,
+  .artworkGrid4 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Trust Section */
+  .trustCard {
+    padding: 20px 14px;
+    gap: 20px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .trustBadges {
+    gap: 10px;
+    width: 100%;
+  }
+
+  .trustItem {
+    padding: 12px 14px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .trustEmoji {
+    font-size: 1.3rem;
+  }
+
+  .trustItemTitle {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+
+  .trustItemDesc {
+    font-size: 0.76rem;
+    line-height: 1.4;
+  }
+
+  .trustCta {
+    gap: 12px;
+    width: 100%;
+  }
+
   .trustCta h2 {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .trustCta p {
+    font-size: 0.84rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .trustCta button {
+    width: 100%;
+    min-height: 48px;
+    font-size: 0.86rem;
+    justify-content: center;
+  }
+
+  /* Footer on 390px */
+  .footer {
+    padding: 40px 0 24px;
+  }
+
+  .footerTop {
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+
+  .footerLinks {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 14px;
+  }
+
+  .footerBottom {
+    padding-top: 16px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
   }
 }
 
