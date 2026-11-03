@@ -31,6 +31,7 @@ const PROFILE_TABS = [
 const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [selectedCertTarget, setSelectedCertTarget] = useState(null);
   const [activeTab, setActiveTab] = useState(() => {
     if (location.state?.tab) return location.state.tab;
     const params = new URLSearchParams(location.search);
@@ -41,6 +42,9 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   React.useEffect(() => {
     if (location.state?.tab) {
       setActiveTab(location.state.tab);
+      if (location.state?.targetCert || location.state?.artworkId) {
+        setSelectedCertTarget(location.state.targetCert || location.state);
+      }
     }
   }, [location.state]);
   const [createAuctionOpen, setCreateAuctionOpen] = useState(false);
@@ -205,11 +209,22 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
         {activeTab === 'Đơn hàng & Ký quỹ' && (
           <OrdersAndEscrowTab
             addToast={addToast}
-            onViewCertificates={() => setActiveTab('Chứng chỉ số')}
+            onViewCertificates={(certTarget) => {
+              setSelectedCertTarget(certTarget);
+              setActiveTab('Chứng chỉ số');
+            }}
             highlightOrderId={location.state?.highlightOrderId}
           />
         )}
-        {activeTab === 'Chứng chỉ số' && <CertificatesTab addToast={addToast} />}
+        {activeTab === 'Chứng chỉ số' && (
+          <CertificatesTab
+            addToast={addToast}
+            selectedCertTarget={selectedCertTarget}
+            currentUser={currentUser}
+            onNavigateToArtwork={(artId) => navigate(`/artwork/${artId}?owned=true`, { state: { isOwned: true } })}
+            onNavigateToOrders={() => setActiveTab('Đơn hàng & Ký quỹ')}
+          />
+        )}
         {activeTab === 'Cài đặt' && (
           <SettingsTab
             user={currentUser}
@@ -1463,11 +1478,11 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
                     {onViewCertificates && (
                       <button
                         className="btn btn-secondary"
-                        onClick={onViewCertificates}
+                        onClick={() => onViewCertificates?.(order)}
                         style={{ whiteSpace: 'nowrap' }}
                       >
                         Xem Thẻ chứng nhận số →
-                      </button>
+                      </button> 
                     )}
                   </div>
                 )}
@@ -1514,7 +1529,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
                     {isReleased && onViewCertificates && (
                       <button
                         className="btn btn-secondary"
-                        onClick={onViewCertificates}
+                        onClick={() => onViewCertificates?.(order)}
                       >
                         <Award size={15} /> Thẻ chứng nhận SHA-256
                       </button>
@@ -1585,70 +1600,337 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
   );
 };
 
-const CertificatesTab = ({ addToast }) => {
-  const cert = CERTIFICATES[0];
-  const artwork = ARTWORKS.find(a => a.artwork_id === cert.artwork_id);
+const getAllPurchasedCertificates = (currentUser) => {
+  // 1. Default purchased/owned artworks certificates
+  const defaultList = [
+    {
+      certificate_id: 'AH-CERT-2024-0042',
+      qr_verify_code: 'AH-CERT-2024-0042',
+      artwork_id: 'aw2',
+      orderId: 'AH-ORD-2024-8924',
+      title: 'Hoàng Hôn Sông Hương',
+      artist_name: 'Nguyễn Gia Trí',
+      image: '/gallery_2.png',
+      medium: 'Sơn mài truyền thống & Vàng quỳ 24K',
+      dimensions: '90 x 120 cm',
+      creation_year: '2023',
+      current_price: 35000000,
+      ownership_hash: 'SHA-256:8f2c3d5a7b1e4c9f0a2d4e6b8c0e2f4a6c8e0b2d4f6a8c0e2b4d6f8a0c2e4b6d',
+      digital_signature: 'ECDSA-secp256k1:3046022100d4b8f4a2e1c9f3a7b2e8d1c4f6a3b9e2d7c1f4a8b3e6d9c2f5a1b4e7d0c3f6a9',
+      issued_date: '02/11/2026',
+      status: 'active',
+      provenance_chain: [
+        { owner: 'Nguyễn Gia Trí (Họa sĩ tác giả)', date: '15/03/2023', type: 'Sáng tác hoàn thiện tại xưởng' },
+        { owner: 'Hội đồng giám định Artisan Hub L3', date: '20/09/2024', type: 'Giám định bảo tàng & Niêm phong' },
+        { owner: 'Hợp đồng Escrow bảo chứng 72h (#AH-ORD-2024-8924)', date: '02/11/2026', type: 'Giao dịch bảo đảm' },
+        { owner: currentUser?.full_name || 'Nhà sưu tầm (Bạn)', date: '03/11/2026', type: 'Xác lập quyền sở hữu vĩnh viễn' },
+      ]
+    },
+    {
+      certificate_id: 'AH-CERT-2024-0015',
+      qr_verify_code: 'AH-CERT-2024-0015',
+      artwork_id: 'aw3',
+      orderId: 'AH-ORD-2024-7620',
+      title: 'Thiếu Nữ Bên Hoa Huệ',
+      artist_name: 'Tô Ngọc Vân',
+      image: '/gallery_3.png',
+      medium: 'Sơn mài phục dựng cao cấp',
+      dimensions: '75 x 95 cm',
+      creation_year: '2022',
+      current_price: 65000000,
+      ownership_hash: 'SHA-256:1f4a7c0d2e5b8a1c4e7b0d3f6a9c2e5b8d1f4a7c0e3b6d9f2a5c8e1b4d7f0a3',
+      digital_signature: 'ECDSA-secp256k1:2b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c',
+      issued_date: '25/10/2026',
+      status: 'active',
+      provenance_chain: [
+        { owner: 'Tô Ngọc Vân (Họa sĩ tác giả)', date: '10/05/2022', type: 'Sáng tác nguyên tác' },
+        { owner: 'Artisan Hub Gallery Archive', date: '15/08/2024', type: 'Lưu trữ & Bảo tồn' },
+        { owner: 'Hợp đồng Escrow (#AH-ORD-2024-7620)', date: '25/10/2026', type: 'Nghiệm thu hoàn tất' },
+        { owner: currentUser?.full_name || 'Nhà sưu tầm (Bạn)', date: '25/10/2026', type: 'Xác lập quyền sở hữu vĩnh viễn' },
+      ]
+    },
+    {
+      certificate_id: 'AH-CERT-2024-0089',
+      qr_verify_code: 'AH-CERT-2024-0089',
+      artwork_id: 'aw1',
+      orderId: 'AH-ORD-2024-9102',
+      title: 'Mùa Vàng Tây Bắc',
+      artist_name: 'Trần Văn Cẩn',
+      image: '/gallery_1.png',
+      medium: 'Sơn dầu trên toan (Oil on canvas)',
+      dimensions: '80 x 100 cm',
+      creation_year: '2024',
+      current_price: 28500000,
+      ownership_hash: 'SHA-256:3a5e7c9b1d3f5a7c9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f1a3c5e7b9d1f3a5',
+      digital_signature: 'ECDSA-secp256k1:9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b',
+      issued_date: '03/11/2026',
+      status: 'active',
+      provenance_chain: [
+        { owner: 'Trần Văn Cẩn (Họa sĩ tác giả)', date: '12/01/2024', type: 'Sáng tác hoàn thiện' },
+        { owner: 'Hội đồng giám định Artisan Hub L3', date: '18/09/2024', type: 'Niêm phong kiện gỗ bảo tàng' },
+        { owner: 'Hợp đồng chuyển nhượng (#AH-ORD-2024-9102)', date: '03/11/2026', type: 'Thanh toán hoàn tất' },
+        { owner: currentUser?.full_name || 'Nhà sưu tầm (Bạn)', date: '03/11/2026', type: 'Xác lập quyền sở hữu vĩnh viễn' },
+      ]
+    }
+  ];
+
+  // 2. Load custom orders from localStorage
+  try {
+    const stored = JSON.parse(localStorage.getItem('artisan_orders') || '[]');
+    const storedCerts = stored.map(o => ({
+      certificate_id: o.certificateId || `AH-CERT-2024-${Math.floor(1000 + Math.random() * 9000)}`,
+      qr_verify_code: o.certificateId || `AH-CERT-2024-${Math.floor(1000 + Math.random() * 9000)}`,
+      artwork_id: o.artworkId,
+      orderId: o.orderId,
+      title: o.title,
+      artist_name: o.artist_name,
+      image: o.image,
+      medium: o.medium,
+      dimensions: o.dimensions,
+      creation_year: o.creation_year,
+      current_price: o.grandTotal,
+      ownership_hash: o.hash ? `SHA-256:${o.hash.replace('0x', '')}` : 'SHA-256:7f9a1c3e5b7d9f1a3c5e7b9d1f3a5e7c9b1d3f5a7c9e1b3d5f7a9c1e3b5d',
+      digital_signature: `ECDSA-secp256k1:${(o.hash || '30460221').substring(0, 32)}...`,
+      issued_date: new Date(o.paidAt || Date.now()).toLocaleDateString('vi-VN'),
+      status: 'active',
+      provenance_chain: [
+        { owner: `${o.artist_name} (Họa sĩ tác giả)`, date: `${o.creation_year || '2024'}-04-10`, type: 'Sáng tác khởi tạo' },
+        { owner: 'Artisan Hub Curator & Authentication L3', date: '2024-09-20', type: 'Kiểm định & Cấp mã bảo chứng' },
+        { owner: `Đơn hàng thanh toán #${o.orderId}`, date: new Date(o.paidAt || Date.now()).toLocaleDateString('vi-VN'), type: 'Giao dịch hoàn tất' },
+        { owner: currentUser?.full_name || 'Nhà sưu tầm (Bạn)', date: new Date(o.paidAt || Date.now()).toLocaleDateString('vi-VN'), type: 'Xác lập quyền sở hữu vĩnh viễn' },
+      ]
+    }));
+
+    const existingOrderIds = new Set(storedCerts.map(c => c.orderId));
+    const rest = defaultList.filter(d => !existingOrderIds.has(d.orderId));
+    return [...storedCerts, ...rest];
+  } catch {
+    return defaultList;
+  }
+};
+
+const CertificatesTab = ({
+  addToast,
+  selectedCertTarget,
+  currentUser,
+  onNavigateToArtwork,
+  onNavigateToOrders
+}) => {
+  const allCertificates = React.useMemo(() => {
+    return getAllPurchasedCertificates(currentUser);
+  }, [currentUser]);
+
+  const [activeCertId, setActiveCertId] = useState(() => {
+    if (selectedCertTarget) {
+      const match = allCertificates.find(c =>
+        c.certificate_id === selectedCertTarget.certificateId ||
+        c.artwork_id === selectedCertTarget.artworkId ||
+        c.orderId === selectedCertTarget.orderId ||
+        c.title === selectedCertTarget.title
+      );
+      if (match) return match.certificate_id;
+    }
+    return allCertificates[0]?.certificate_id || 'AH-CERT-2024-0042';
+  });
+
+  React.useEffect(() => {
+    if (selectedCertTarget) {
+      const match = allCertificates.find(c =>
+        c.certificate_id === selectedCertTarget.certificateId ||
+        c.artwork_id === selectedCertTarget.artworkId ||
+        c.orderId === selectedCertTarget.orderId ||
+        c.title === selectedCertTarget.title
+      );
+      if (match) setActiveCertId(match.certificate_id);
+    }
+  }, [selectedCertTarget, allCertificates]);
+
+  const activeCert = allCertificates.find(c => c.certificate_id === activeCertId) || allCertificates[0];
+  const [copiedKey, setCopiedKey] = useState(null);
+
+  const handleCopy = (text, key, label) => {
+    navigator.clipboard?.writeText(text);
+    setCopiedKey(key);
+    addToast?.(`Đã sao chép ${label}!`, 'success');
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
 
   return (
     <div className={styles.tabContent}>
-      <h2 className={styles.tabTitle}>Thẻ chứng nhận số</h2>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+        <div>
+          <h2 className={styles.tabTitle} style={{ margin: '0 0 6px' }}>Thẻ chứng nhận số & Quyền sở hữu độc bản</h2>
+          <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-secondary)', maxWidth: 740, lineHeight: 1.5 }}>
+            Mỗi tác phẩm bạn mua trên Artisan Hub đều được cấp một Thẻ chứng nhận số SHA-256 bất biến, gắn liền với chữ ký nghệ sĩ và chuỗi lịch sử nguồn gốc xuất xứ trọn đời.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <span className="badge badge-gold" style={{ fontSize: '0.78rem', padding: '6px 12px' }}>
+            📜 {allCertificates.length} Thẻ chứng nhận đã cấp
+          </span>
+          <span className="badge badge-verified" style={{ fontSize: '0.78rem', padding: '6px 12px' }}>
+            🛡️ SHA-256 Verified
+          </span>
+        </div>
+      </div>
 
+      {/* Selector of purchased products */}
+      <div style={{ marginBottom: 10, fontSize: '0.82rem', fontWeight: 600, color: 'var(--gold-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Package size={14} /> Danh sách tác phẩm đã mua ({allCertificates.length}):
+      </div>
+      <div className={styles.certSelectorRow}>
+        {allCertificates.map(c => {
+          const isSelected = c.certificate_id === activeCert.certificate_id;
+          return (
+            <button
+              key={c.certificate_id}
+              type="button"
+              className={`${styles.certSelectorItem} ${isSelected ? styles.certSelectorItemActive : ''}`}
+              onClick={() => setActiveCertId(c.certificate_id)}
+            >
+              <img src={c.image} alt={c.title} className={styles.certThumb} />
+              <div className={styles.certSelectorInfo}>
+                <p className={styles.certSelectorTitle}>{c.title}</p>
+                <p className={styles.certSelectorArtist}>{c.artist_name}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                  <span className={styles.certSelectorCode}>#{c.certificate_id}</span>
+                  <span className="badge badge-verified" style={{ fontSize: '0.62rem', padding: '1px 5px' }}>Đã cấp</span>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Active Certificate Card */}
       <div className={styles.certCard}>
+        {/* Certificate Header */}
         <div className={styles.certHeader}>
           <div className={styles.certBrand}>
-            <span style={{ fontFamily: 'var(--font-brand)', color: 'var(--gold-primary)', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.1em' }}>
-              ARTISAN HUB
-            </span>
-            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '4px 0 0', letterSpacing: '0.03em' }}>Digital Certificate of Authenticity</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <span style={{ fontFamily: 'var(--font-brand)', color: 'var(--gold-primary)', fontSize: '1.25rem', fontWeight: 700, letterSpacing: '0.12em' }}>
+                ARTISAN HUB
+              </span>
+              <span className="badge badge-verified" style={{ background: 'rgba(46,204,113,0.18)', color: '#2ECC71', border: '1px solid rgba(46,204,113,0.4)' }}>
+                <CheckCircle2 size={11} /> ĐÃ KÍCH HOẠT QUYỀN SỞ HỮU
+              </span>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0, letterSpacing: '0.04em' }}>
+              Digital Certificate of Authenticity & Ownership (COA)
+            </p>
+            <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: '4px 0 0' }}>
+              Đơn vị bảo chứng: Hội đồng giám định mỹ thuật Artisan Hub (Cấp L3 Verified)
+            </p>
           </div>
+
           <div className={styles.certQr}>
-            <QrCode size={48} color="var(--gold-primary)" />
-            <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '4px' }}>{cert.qr_verify_code}</p>
+            <div style={{ background: '#fff', padding: 8, borderRadius: 8, display: 'inline-flex' }}>
+              <QrCode size={56} color="#121214" />
+            </div>
+            <p style={{ fontSize: '0.72rem', color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)', fontWeight: 600, textAlign: 'center', marginTop: '6px', margin: '4px 0 0' }}>
+              {activeCert.qr_verify_code}
+            </p>
           </div>
         </div>
 
+        {/* Artwork Snapshot */}
         <div className={styles.certArtwork}>
-          <img src={artwork?.image} alt={artwork?.title} className={styles.certImg} />
-          <div>
-            <h3 className={styles.certArtTitle}>{artwork?.title}</h3>
-            <p className={styles.certMeta}>{artwork?.medium} · {artwork?.dimensions} · {artwork?.creation_year}</p>
-            <p className={styles.certMeta} style={{ color: 'var(--gold-primary)' }}>By {artwork?.artist_name}</p>
+          <img src={activeCert.image} alt={activeCert.title} className={styles.certImg} style={{ width: 100, height: 75 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+              <h3 className={styles.certArtTitle} style={{ fontSize: '1.2rem', margin: 0 }}>{activeCert.title}</h3>
+              <span className="badge badge-gold" style={{ fontSize: '0.7rem' }}>✦ Độc bản 1/1</span>
+            </div>
+            <p className={styles.certMeta} style={{ color: 'var(--gold-light)', fontWeight: 500, margin: '4px 0' }}>
+              Sáng tác bởi Họa sĩ <strong>{activeCert.artist_name}</strong>
+            </p>
+            <p className={styles.certMeta}>
+              {activeCert.medium} · {activeCert.dimensions} · {activeCert.creation_year}
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              <span>Chủ sở hữu hiện tại: <strong style={{ color: 'var(--text-primary)' }}>{currentUser?.full_name || 'Bạn'}</strong></span>
+              {activeCert.current_price && (
+                <span>Giá trị bảo chứng: <strong style={{ color: 'var(--gold-primary)' }}>{formatPriceFull(activeCert.current_price)}</strong></span>
+              )}
+            </div>
           </div>
         </div>
 
+        {/* Cryptographic Fields */}
         <div className={styles.certFields}>
           {[
-            { label: 'Certificate ID', value: cert.certificate_id.toUpperCase() },
-            { label: 'Chữ ký số SHA-256', value: cert.ownership_hash.substring(0, 48) + '...' },
-            { label: 'Chữ ký nghệ sĩ', value: cert.digital_signature.substring(0, 40) + '...' },
-          ].map(({ label, value }) => (
+            { label: 'Mã định danh chứng chỉ (Certificate ID)', value: activeCert.certificate_id, key: 'id' },
+            { label: 'Mã băm toàn vẹn bản quyền (SHA-256 Ownership Hash)', value: activeCert.ownership_hash, key: 'hash' },
+            { label: 'Chữ ký điện tử Họa sĩ (ECDSA Digital Signature)', value: activeCert.digital_signature, key: 'sig' },
+            { label: 'Mã giao dịch / Hợp đồng đơn hàng đã mua', value: `#${activeCert.orderId || 'AH-ORD-2024-8924'}`, key: 'order' },
+          ].map(({ label, value, key }) => (
             <div key={label} className={styles.certField}>
-              <span className={styles.certLabel}>{label}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className={styles.certLabel}>{label}</span>
+                <button
+                  type="button"
+                  className={styles.copyIconBtn}
+                  onClick={() => handleCopy(value, key, label)}
+                  title="Sao chép"
+                  style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}
+                >
+                  {copiedKey === key ? <Check size={13} style={{ color: 'var(--success)' }} /> : <Copy size={13} />}
+                </button>
+              </div>
               <code className={styles.certValue}>{value}</code>
             </div>
           ))}
         </div>
 
+        {/* Provenance Chain */}
         <div className={styles.certProvenance}>
-          <h4 className={styles.provenanceTitle}>Lịch sử chuyển nhượng (Provenance Chain)</h4>
-          {cert.provenance_chain.map((item, i) => (
+          <h4 className={styles.provenanceTitle} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Clock size={16} /> Chuỗi nguồn gốc xuất xứ & Chuyển giao quyền sở hữu (Provenance Chain)
+          </h4>
+          {activeCert.provenance_chain.map((item, i) => (
             <div key={i} className={styles.provenanceRow}>
-              <div className={`${styles.provDot} ${i === cert.provenance_chain.length - 1 ? styles.provDotActive : ''}`} />
+              <div className={`${styles.provDot} ${i === activeCert.provenance_chain.length - 1 ? styles.provDotActive : ''}`} />
               <div>
-                <p className={styles.provOwner}>{item.owner}</p>
+                <p className={styles.provOwner} style={{ color: i === activeCert.provenance_chain.length - 1 ? 'var(--gold-primary)' : 'var(--text-primary)' }}>
+                  {item.owner}
+                </p>
                 <p className={styles.provMeta}>{item.date} · {item.type}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className={styles.certActions}>
-          <button className="btn btn-primary" onClick={() => addToast('Đã tải chứng chỉ PDF!', 'success')}>
-            <Download size={16} /> Tải chứng chỉ PDF
+        {/* Actions */}
+        <div className={styles.certActions} style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => addToast?.(`✦ Đã tải Thẻ chứng nhận số SHA-256 tác phẩm "${activeCert.title}" (PDF)!`, 'success', 5000)}
+          >
+            <Download size={16} /> Tải chứng chỉ PDF chính thức
           </button>
-          <button className="btn btn-secondary" onClick={() => addToast('Đã sao chép link xác thực!', 'info')}>
-            <ExternalLink size={16} /> Chia sẻ link xác thực
+          {/* <button
+            className="btn btn-secondary"
+            onClick={() => handleCopy(`https://artisanhub.art/verify/${activeCert.certificate_id}`, 'link', 'liên kết xác thực')}
+          >
+            <ExternalLink size={16} /> Sao chép link xác thực công khai
           </button>
+          {onNavigateToArtwork && (
+            <button
+              className="btn btn-ghost"
+              onClick={() => onNavigateToArtwork(activeCert.artwork_id)}
+            >
+              <Eye size={16} /> Xem trang tác phẩm 3D
+            </button>
+          )} */}
+          {/* {onNavigateToOrders && (
+            <button
+              className="btn btn-ghost"
+              onClick={onNavigateToOrders}
+            >
+              <Receipt size={16} /> Xem đơn hàng thanh toán
+            </button>
+          )} */}
         </div>
       </div>
     </div>
