@@ -1,0 +1,329 @@
+/* ============================================================================
+   ADMIN LOGIN PAGE - LUXURY DARK HIGH-SECURITY STYLES
+   Tông màu tối sang trọng, đồng bộ nhận diện Artisan Hub
+   ============================================================================ */
+
+.loginWrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, #171512 0%, #0c0c0e 65%, #070709 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  color: #E2E8F0;
+}
+
+/* Background atmospheric grids and golden glow */
+.bgAura {
+  position: absolute;
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197, 160, 89, 0.08) 0%, rgba(197, 160, 89, 0) 70%);
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Central Login Container */
+.loginCard {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(18, 18, 22, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 16px;
+  box-shadow: 
+    0 24px 64px -12px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 40px -10px rgba(197, 160, 89, 0.15);
+  padding: 40px 36px;
+  position: relative;
+  z-index: 10;
+  animation: fadeInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Brand Header */
+.cardHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logoBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.2) 0%, rgba(30, 30, 36, 0.8) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.5);
+  box-shadow: 0 8px 20px rgba(197, 160, 89, 0.2);
+  margin-bottom: 16px;
+  color: #C5A059;
+}
+
+.portalTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(197, 160, 89, 0.12);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  color: #C5A059;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.portalTitle {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.02em;
+}
+
+.portalDesc {
+  font-size: 0.82rem;
+  color: #94A3B8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Form Groups */
+.formGroup {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.formLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #CBD5E1;
+  letter-spacing: 0.02em;
+}
+
+.labelHelper {
+  font-size: 0.72rem;
+  color: #94A3B8;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: #C5A059;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.formInput {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  background: rgba(26, 26, 32, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.formInput:focus {
+  border-color: #C5A059;
+  background: rgba(30, 30, 38, 0.95);
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.18);
+}
+
+.formInput::placeholder {
+  color: #64748B;
+  font-size: 0.84rem;
+}
+
+/* 2FA Section */
+.twoFaBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.codeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 6px;
+  color: #10B981;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.codeBadge:hover {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+/* Security Notice Box */
+.securityNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(30, 30, 38, 0.6);
+  border: 1px dashed rgba(197, 160, 89, 0.3);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 0.74rem;
+  color: #94A3B8;
+  line-height: 1.5;
+}
+
+/* Primary Submit Button */
+.submitBtn {
+  width: 100%;
+  padding: 13px 20px;
+  background: linear-gradient(135deg, #C5A059 0%, #A37E3A 100%);
+  border: none;
+  border-radius: 10px;
+  color: #0D0D0F;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px -4px rgba(197, 160, 89, 0.4);
+}
+
+.submitBtn:hover {
+  background: linear-gradient(135deg, #D4AF67 0%, #B48F45 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -4px rgba(197, 160, 89, 0.6);
+}
+
+.submitBtn:active {
+  transform: translateY(0);
+}
+
+.submitBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Demo Fast Fill Button */
+.quickDemoBtn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #CBD5E1;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.quickDemoBtn:hover {
+  background: rgba(197, 160, 89, 0.1);
+  border-color: rgba(197, 160, 89, 0.3);
+  color: #C5A059;
+}
+
+/* Back Link */
+.backLinkRow {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #94A3B8;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #C5A059;
+}
+
+/* Footer security metadata */
+.securityFootnote {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: #64748B;
+}
+
+.footTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+

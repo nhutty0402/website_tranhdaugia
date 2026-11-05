@@ -2,38 +2,38 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Search, Bell, User, Menu, X, ChevronDown, LogOut,
-  Compass, Gavel, Palette, Landmark, Sun, Moon
+  Compass, Gavel, Palette, Landmark, Sun, Moon, ShieldCheck
 } from 'lucide-react';
 import VerificationBadge from './VerificationBadge';
 import Logo from './Logo';
 import styles from './Navbar.module.css';
 
 const NAV_LINKS = [
-  { 
-    label: 'Khám phá', 
+  {
+    label: 'Khám phá',
     // subLabel: 'GALLERY & TRIỂN LÃM',
     path: '/gallery',
     icon: Compass,
   },
-  { 
-    label: 'Đấu giá', 
+  {
+    label: 'Đấu giá',
     // subLabel: 'TRỰC TIẾP & ĐẤU KÍN',
     path: '/auction',
     icon: Gavel,
     isLive: true,
   },
-  { 
-    label: 'Họa sĩ', 
+  {
+    label: 'Họa sĩ',
     // subLabel: 'DANH MỤC NGHỆ THUẬT',
     path: '/artists',
     icon: Palette,
   },
-  { 
-    label: 'Về chúng tôi', 
-    // subLabel: 'BẢO CHỨNG & DI SẢN',
-    path: '/about',
-    icon: Landmark,
-  },
+  // { 
+  //   label: 'Về chúng tôi', 
+  //   // subLabel: 'BẢO CHỨNG & DI SẢN',
+  //   path: '/about',
+  //   icon: Landmark,
+  // },
 ];
 
 const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark', onToggleTheme }) => {
@@ -211,6 +211,16 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                       <span>Hồ sơ & Bộ sưu tập</span>
                     </Link>
 
+                    <Link
+                      to="/quan-tri"
+                      className={styles.dropdownItem}
+                      id="dropdown-quan-tri-link"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      <ShieldCheck size={15} color="var(--gold-primary)" />
+                      <span>Giao diện Quản trị viên</span>
+                    </Link>
+
                     <div className={styles.dropdownDivider} />
 
                     <button
@@ -368,15 +378,15 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
               </div>
             ) : (
               <div className={styles.mobileAuthRow}>
-                <button 
-                  className={styles.btnRegister} 
+                <button
+                  className={styles.btnRegister}
                   style={{ width: '100%', textAlign: 'center', padding: '10px' }}
                   onClick={() => { onRegisterClick(); setMobileOpen(false); }}
                 >
                   Đăng ký
                 </button>
-                <button 
-                  className={styles.btnLogin} 
+                <button
+                  className={styles.btnLogin}
                   style={{ width: '100%', textAlign: 'center' }}
                   onClick={() => { onLoginClick(); setMobileOpen(false); }}
                 >

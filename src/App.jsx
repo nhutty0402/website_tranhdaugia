@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import './index.css';
 import Navbar from './components/Navbar';
 import ToastContainer from './components/ToastContainer';
@@ -14,6 +14,8 @@ import AuctionPage from './pages/AuctionPage';
 import ArtistsPage from './pages/ArtistsPage';
 import ArtistDetailPage from './pages/ArtistDetailPage';
 import ProfilePage from './pages/ProfilePage';
+import QuanTriVienPage from './pages/QuanTriVienPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import AboutPage from './pages/AboutPage';
 import CheckoutPage from './pages/CheckoutPage';
 import Footer from './components/Footer';
@@ -21,31 +23,24 @@ import ScrollToTop from './components/ScrollToTop';
 import BackToTop from './components/BackToTop';
 import CommunityChatDrawer from './components/CommunityChatDrawer';
 
-const App = () => {
+const AppContent = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/quan-tri');
+
   const [currentUser, setCurrentUser] = useState(null);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [wishlisted, setWishlisted] = useState(new Set());
-  const [theme, setTheme] = useState(() => localStorage.getItem('artisan_theme') || 'dark');
+  const [theme, setTheme] = useState('dark');
   const { toasts, addToast, removeToast } = useToast();
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('artisan_theme', theme);
-  }, [theme]);
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.removeItem('artisan_theme');
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      addToast(
-        next === 'light'
-          ? '✦ Đã chuyển sang Giao diện Sáng (Museum Day Mode)!'
-          : '✦ Đã chuyển sang Giao diện Tối (Dark Luxury Gallery)!',
-        'gold',
-        3000
-      );
-      return next;
-    });
+    addToast('✦ Giao diện hiện tại: Dark Luxury Gallery chuẩn bảo tàng.', 'gold', 3000);
   };
 
   const handleWishlist = (artworkId) => {
@@ -64,14 +59,14 @@ const App = () => {
 
   const handleLogin = (user) => {
     setCurrentUser(user);
-    addToast(`Chào mừng trở lại, ${user.full_name.split(' ').slice(-1)[0]}! 🎨`, 'success');
+    addToast(`Chào mừng trở lại, ${user.full_name.split(' ').slice(-1)[0]}! ✨`, 'success');
   };
 
   const handleRegister = (user) => {
     setCurrentUser(user);
     const levelLabels = ['', 'L1 SĐT', 'L2 eKYC', 'L3 Họa sĩ'];
     const lvl = user.kyc_level || 0;
-    const levelText = lvl > 0 ? ` – Cấp ${levelLabels[lvl]} đã xác minh!` : '';
+    const levelText = lvl > 0 ? ` • Cấp ${levelLabels[lvl]} đã xác minh!` : '';
     addToast(`🎉 Chào mừng, ${user.full_name.split(' ').slice(-1)[0]}!${levelText}`, 'success', 5000);
   };
 
@@ -91,21 +86,25 @@ const App = () => {
   };
 
   return (
-    <BrowserRouter>
-      {/* Auto Reset Scroll on route change */}
+    <>
+      {/* Tự động Reset cuộn trang khi chuyển hướng */}
       <ScrollToTop />
 
-      <Navbar
-        user={currentUser}
-        onLoginClick={() => setLoginOpen(true)}
-        onRegisterClick={() => setRegisterOpen(true)}
-        onLogout={handleLogout}
-        addToast={addToast}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
+      {/* CHỈ HIỂN THỊ NAVBAR CHO KHÁCH HÀNG Ở ROUTE CÔNG CỘNG (ẨN HOÀN TOÀN TRÊN PHÂN HỆ QUẢN TRỊ) */}
+      {!isAdminRoute && (
+        <Navbar
+          user={currentUser}
+          onLoginClick={() => setLoginOpen(true)}
+          onRegisterClick={() => setRegisterOpen(true)}
+          onLogout={handleLogout}
+          addToast={addToast}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+      )}
 
       <Routes>
+        {/* TUYẾN ĐƯỜNG CÔNG CỘNG CHO KHÁCH HÀNG & HỌA SĨ */}
         <Route path="/" element={<HomePage {...sharedProps} />} />
         <Route path="/gallery" element={<GalleryPage {...sharedProps} />} />
         <Route path="/artwork/:id" element={<ArtworkDetailPage {...sharedProps} />} />
@@ -117,12 +116,20 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage {...sharedProps} />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/checkout/:artworkId" element={<CheckoutPage {...sharedProps} />} />
+
+        {/* TUYẾN ĐƯỜNG CHUYÊN BIỆT CHO PHÂN HỆ QUẢN TRỊ VIÊN (ADMIN PORTAL ĐỘC LẬP) */}
+        <Route path="/admin/login" element={<AdminLoginPage addToast={addToast} />} />
+        <Route path="/quan-tri/dang-nhap" element={<AdminLoginPage addToast={addToast} />} />
+        <Route path="/admin" element={<QuanTriVienPage {...sharedProps} />} />
+        <Route path="/quan-tri" element={<QuanTriVienPage {...sharedProps} />} />
+        <Route path="/admin/:tab" element={<QuanTriVienPage {...sharedProps} />} />
+        <Route path="/quan-tri/:tab" element={<QuanTriVienPage {...sharedProps} />} />
       </Routes>
 
-      {/* Global Luxury Art Footer */}
-      <Footer />
+      {/* CHỈ HIỂN THỊ FOOTER CHO KHÁCH HÀNG (ẨN HOÀN TOÀN TRÊN PHÂN HỆ QUẢN TRỊ) */}
+      {!isAdminRoute && <Footer />}
 
-      {/* Login Modal */}
+      {/* Modal Đăng nhập Khách hàng */}
       {loginOpen && (
         <LoginModal
           onClose={() => setLoginOpen(false)}
@@ -132,7 +139,7 @@ const App = () => {
         />
       )}
 
-      {/* Register Modal (multi-step) */}
+      {/* Modal Đăng ký Khách hàng / Họa sĩ */}
       {registerOpen && (
         <RegisterModal
           onClose={() => setRegisterOpen(false)}
@@ -141,17 +148,27 @@ const App = () => {
         />
       )}
 
-      {/* Toast notifications */}
+      {/* Thông báo Toast toàn cục */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
-      {/* Advisory & Appraisal Consultation Drawer */}
-      <CommunityChatDrawer
-        currentUser={currentUser}
-        onLoginClick={() => setLoginOpen(true)}
-      />
+      {/* WIDGET TƯ VẤN KHÁCH HÀNG (ẨN HOÀN TOÀN TRÊN PHÂN HỆ QUẢN TRỊ VIÊN) */}
+      {!isAdminRoute && (
+        <CommunityChatDrawer
+          currentUser={currentUser}
+          onLoginClick={() => setLoginOpen(true)}
+        />
+      )}
 
-      {/* Floating Back to Top Button */}
-      <BackToTop />
+      {/* Nút BackToTop (Ẩn trên phân hệ Quản trị viên) */}
+      {!isAdminRoute && <BackToTop />}
+    </>
+  );
+};
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 };

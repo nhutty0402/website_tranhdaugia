@@ -1,0 +1,2491 @@
+/* ============================================================================
+   ARTISAN HUB - QUẢN TRỊ VIÊN PORTAL (RESPONSIVE MASTER ARCHITECTURE)
+   100% Anti-Overflow Shell, Adaptive Sidebar & Topbar (Drawer on < 1024px),
+   Dual Display Pattern: Desktop Table (>= 1024px) / Card Grid (< 1024px),
+   Failsafe Truncate & Aspect-Ratio Image Containment.
+   ============================================================================ */
+
+/* 1. KHUNG BAO TOÀN CỤC CHỐNG TRÀN (ROOT SHELL & ANTI-OVERFLOW) */
+.adminPortal {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  background-color: #F8FAFC; /* bg-slate-50 */
+  color: #0F172A; /* text-slate-900 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow: hidden; /* Khóa cứng toàn khung hình, triệt tiêu cuộn cửa sổ */
+}
+
+@media (max-width: 1023px) {
+  .adminPortal {
+    flex-direction: column;
+    height: 100vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .adminPortal {
+    flex-direction: row;
+    height: 100vh;
+  }
+}
+
+/* 2. THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR SLATE-900) */
+.sidebar {
+  width: 260px; /* Khung rộng rãi, đảm bảo hiển thị trọn vẹn danh tính QTV */
+  background: #0d131f;
+  border-right: 1px solid #1E293B;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;        /* Khóa cứng 100vh */
+  min-height: 100vh;    /* Chống hụt chân */
+  z-index: 100;
+  overflow: hidden;     /* Khóa cứng khung ngoài Sidebar, không trôi dạt theo trang */
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebarBrand {
+  padding: 20px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.brandBrandLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brandLogoBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.35) 0%, rgba(30, 41, 59, 0.9) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C5A059;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.brandTextWrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.brandTitle {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.brandSubtitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #E2BA6E;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.drawerCloseBtn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.drawerCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.sidebarNav {
+  flex: 1 1 0%;  /* flex-1 với min-height: 0 để cho phép shrink */
+  min-height: 0; /* QUAN TRỌNG: cho phép overflow-y hoạt động bên trong flex column */
+  padding: 18px 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.navSectionLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #94A3B8; /* Slate-400 */
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 8px 4px;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #CBD5E1; /* Slate-300 */
+  font-size: 0.88rem; /* 14px */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.navItemContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.navItemText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navItemIcon {
+  color: #CBD5E1;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+}
+
+.navItem:hover .navItemIcon {
+  color: #FFFFFF;
+}
+
+.navItemActive {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(197, 160, 89, 0.6);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.navItemActive .navItemIcon {
+  color: #C5A059;
+}
+
+.navBadge {
+  padding: 2px 7px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.navBadgeActive {
+  background: rgba(197, 160, 89, 0.35);
+  color: #FEF3C7;
+}
+
+.navBadgeAlert {
+  background: #E11D48;
+  color: #FFFFFF;
+}
+
+.sidebarFooter {
+  margin-top: auto;
+  padding: 12px 10px;
+  border-top: 1px solid rgba(197, 160, 89, 0.25);
+  background: #080c14;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1.5px solid rgba(197, 160, 89, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarTc {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4AF37 0%, #9E7D3B 100%);
+  border: 2px solid #FDE68A;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  user-select: none;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+}
+
+.avatarOnlineDot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 1.5px solid #0f172a;
+  box-shadow: 0 0 6px #10B981;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-left: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.userName {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.userRoleRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.adminStatusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #34D399;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 1.5px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.adminPulseDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 4px #10B981;
+  flex-shrink: 0;
+}
+
+.adminCode {
+  font-size: 0.65rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 600;
+  color: #94A3B8;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.footerBellBtn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: #CBD5E1;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.footerBellBtn:hover {
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.6);
+  background: rgba(51, 65, 85, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.footerBellBadge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #F43F5E;
+  color: #FFFFFF;
+  border-radius: 10px;
+  border: 1.5px solid #090d16;
+  font-size: 0.62rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.sidebarActionGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(244, 63, 94, 0.16);
+  border: 1.5px solid rgba(244, 63, 94, 0.5);
+  color: #FDA4AF;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.logoutBtn:hover {
+  background: #E11D48;
+  color: #FFFFFF;
+  border-color: #F43F5E;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
+  transform: translateY(-1px);
+}
+
+.viewClientBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(51, 65, 85, 0.55);
+  border: 1.5px solid rgba(100, 116, 139, 0.5);
+  color: #F1F5F9;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.viewClientBtn:hover {
+  background: #334155;
+  color: #FFFFFF;
+  border-color: #94A3B8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+/* 3. VÙNG NỘI DUNG CHÍNH (MAIN CONTENT AREA) */
+.mainArea {
+  flex: 1 1 0%;
+  min-width: 0; /* BẮT BUỘC để ngăn flex-item bị phình ngang */
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #F8FAFC;
+  overflow-y: auto; /* Toàn bộ cuộn nội dung độc lập diễn ra ở đây */
+  overflow-x: hidden;
+}
+
+/* 4. TOPBAR THÍCH ỨNG ĐA THIẾT BỊ */
+.topbar {
+  height: 56px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  flex-shrink: 0;
+}
+
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.mobileMenuBtn {
+  display: none;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  color: #0F172A;
+  cursor: pointer;
+  padding: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.mobileMenuBtn:hover {
+  background: #E2E8F0;
+}
+
+.liveClockBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #1E293B;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #059669;
+  box-shadow: 0 0 6px rgba(5, 150, 105, 0.6);
+  animation: pulseDot 2s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.breadcrumb {
+  font-size: 0.86rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breadcrumbCurrent {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.urgentNoticeBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  color: #1E293B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.urgentNoticeBtn:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+}
+
+.urgentBadgePill {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #E11D48;
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+.adminDutyPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #78350F;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 5. VÙNG NỘI DUNG (CONTENT WRAPPER) - PADDING LINH HOẠT */
+.contentWrapper {
+  flex: 1;
+  padding: 16px; /* p-4 */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (min-width: 640px) {
+  .contentWrapper {
+    padding: 20px; /* sm/md/tablet: padding 20px để tiết kiệm diện tích cho iPad/Tablet */
+  }
+}
+
+@media (min-width: 1280px) {
+  .contentWrapper {
+    padding: 32px; /* xl: màn hình desktop lớn padding 32px rộng rãi */
+  }
+}
+
+/* 6. BANNER AI NHỎ GỌN TRÊN TRANG TỔNG QUAN */
+.compactAiWidget {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  flex-wrap: wrap;
+}
+
+.compactAiWidgetLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.aiPulseIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #92400E;
+  flex-shrink: 0;
+}
+
+.compactAiTitle {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.compactAiSubtitle {
+  font-size: 0.86rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.compactAiBadge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #064E3B;
+  background: #D1FAE5;
+  border: 1px solid #6EE7B7;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* 7. LƯỚI THẺ CHỈ SỐ TỔNG QUAN (4 STATS CARDS) */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  min-height: 125px;
+}
+
+.statCard:hover {
+  border-color: #94A3B8;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.statCardActive {
+  background: #FFFDF9;
+  border-color: #B45309;
+  box-shadow: 0 4px 16px -2px rgba(180, 83, 9, 0.2), 0 0 0 1.5px #B45309;
+}
+
+.statCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.statIconBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid;
+  flex-shrink: 0;
+}
+
+.statPill {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 16px;
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statCardBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.statVal {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1;
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+}
+
+.statLabel {
+  font-size: 0.88rem; /* 14px */
+  color: #334155; /* Slate-700 */
+  margin: 6px 0 2px 0;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statSubText {
+  font-size: 0.76rem;
+  color: #64748B;
+  margin: 0;
+}
+
+/* 8. BỐ CỤC KHỐI SECTION & HEADER */
+.sectionCard {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.sectionHeader {
+  padding: 18px 22px;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: #FFFFFF;
+}
+
+.sectionTitleWrap h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitleWrap p {
+  font-size: 0.86rem; /* 14px */
+  color: #475569;
+  margin: 0;
+  font-weight: 500;
+}
+
+.searchFilterRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchInputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  color: #64748B;
+  pointer-events: none;
+}
+
+.searchInput {
+  padding: 8px 14px 8px 36px;
+  background: #F8FAFC;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 8px;
+  color: #0F172A;
+  font-size: 0.86rem;
+  font-weight: 500;
+  outline: none;
+  width: 240px;
+  transition: all 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #B45309;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.12);
+  width: 280px;
+}
+
+/* 9. CHẾ ĐỘ 1: BẢNG DỮ LIỆU DESKTOP (HIDDEN LG:BLOCK) */
+.desktopTableView {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .desktopTableView {
+    display: block;
+  }
+}
+
+.tableResponsive {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* BẢNG 4 CỘT CHUẨN TABLE-FIXED KHÔNG TRÀN CHO KHIẾU NẠI */
+.disputesTableFixed {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.disputesTableFixed th {
+  padding: 12px 16px;
+  background: #F1F5F9;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #CBD5E1;
+  white-space: nowrap;
+}
+
+.disputesTableFixed td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #E2E8F0;
+  color: #1E293B;
+  vertical-align: middle;
+}
+
+.disputesTableFixed tr:hover td {
+  background: #F8FAFC;
+}
+
+/* THẺ CARD CHO KHIẾU NẠI TRÊN IPAD / SMARTPHONE (< 1024PX) */
+.disputeCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.disputeCardItem {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+
+.disputeCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid #F1F5F9;
+  padding-bottom: 10px;
+}
+
+.disputeCardMid {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.disputeCardThumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  flex-shrink: 0;
+}
+
+.disputeCardBtnGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.adminTable {
+  width: 100%;
+  min-width: 860px; /* BẢO ĐẢM CÁC CỘT KHÔNG BỊ CO BÉP DƯỚI 860PX TRÊN IPAD */
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  font-size: 0.86rem; /* 14px */
+}
+
+.adminTable th {
+  padding: 12px 10px;
+  background: #F1F5F9;
+  color: #334155; /* Slate-700 */
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border-bottom: 2px solid #CBD5E1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminTable td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #E2E8F0;
+  color: #1E293B; /* Slate-800 */
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.adminTable tr:hover td {
+  background: #F8FAFC;
+}
+
+/* CỘT HÀNH ĐỘNG: KHÔNG STICKY, KHÔNG ĐÈ LÊN CỘT KHÁC, KHÔNG TRÀN */
+.actionStickyTh,
+.actionStickyTd {
+  position: static;
+  text-align: right;
+  white-space: nowrap;
+  box-shadow: none;
+  z-index: auto;
+  min-width: 140px; /* BẢO ĐẢM NÚT THAO TÁC LUÔN ĐỦ KHÔNG GIAN, KHÔNG ĐÈ LÊN CỘT TRẠNG THÁI */
+}
+
+.adminTable th.actionStickyTh {
+  background: #F1F5F9;
+  text-align: right;
+}
+
+.adminTable tr:hover .actionStickyTd {
+  background: #F8FAFC;
+}
+
+/* 10. CHẾ ĐỘ 2: CARD GRID CHO TABLET & MOBILE (< 1024px - BLOCK LG:HIDDEN) */
+.mobileCardList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .mobileCardList {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* md:grid-cols-2 */
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobileCardList {
+    display: none; /* hidden lg:block */
+  }
+}
+
+.mobileCard {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.mobileCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mobileCardTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 2px 0;
+}
+
+.mobileCardSubtitle {
+  font-size: 0.84rem;
+  color: #B45309;
+  font-weight: 700;
+  margin: 0;
+}
+
+.mobileCardMeta {
+  font-size: 0.82rem;
+  color: #475569;
+  margin: 2px 0 0 0;
+}
+
+.mobileCardBody {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.84rem;
+}
+
+.mobileCardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileCardLabel {
+  color: #64748B;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.mobileCardValue {
+  color: #0F172A;
+  font-weight: 700;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobileCardFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.mobileCardFooter button,
+.mobileCardFooter a {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-height: 38px;
+}
+
+/* 11. KHUNG CHỨA ẢNH CHỐNG GIẬT KHUNG & CHỐNG MÉO (ASPECT RATIO 1/1) */
+.artThumb {
+  width: 48px; /* w-12 */
+  height: 48px; /* h-12 */
+  border-radius: 8px; /* rounded-lg */
+  object-fit: cover;
+  background-color: #F1F5F9; /* bg-slate-100 */
+  border: 1px solid #E2E8F0; /* border-slate-200 */
+  flex-shrink: 0;
+  display: block;
+  aspect-ratio: 1 / 1;
+}
+
+.artistThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #F1F5F9;
+  border: 1.5px solid #CBD5E1;
+  flex-shrink: 0;
+  display: block;
+  aspect-ratio: 1 / 1;
+}
+
+.artThumbMobile {
+  width: 64px; /* w-16 */
+  height: 64px; /* h-16 */
+  border-radius: 12px; /* rounded-xl */
+  object-fit: cover;
+  background-color: #F1F5F9; /* bg-slate-100 */
+  border: 1px solid #CBD5E1;
+  flex-shrink: 0;
+  display: block;
+  aspect-ratio: 1 / 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.artistThumbMobile {
+  width: 64px; /* w-16 */
+  height: 64px; /* h-16 */
+  border-radius: 12px; /* rounded-xl */
+  object-fit: cover;
+  background-color: #F1F5F9;
+  border: 1.5px solid #CBD5E1;
+  flex-shrink: 0;
+  display: block;
+  aspect-ratio: 1 / 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* 12. CỤM NÚT BẤM HÀNH ĐỘNG (FLEX WRAP, KHÔNG CỨNG CHIỀU RỘNG) */
+.compactActionGroup {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.btnApproveMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: #047857; /* Emerald-700 */
+  border: none;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btnApproveMini:hover {
+  background: #065F46;
+  transform: translateY(-1px);
+}
+
+.btnRejectMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  background: #FFE4E6;
+  border: 1px solid #FDA4AF;
+  border-radius: 6px;
+  color: #9F1239;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btnRejectMini:hover {
+  background: #FECDD3;
+}
+
+.btnViewMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  color: #1E293B;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btnViewMini:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.btnAiMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  background: #0F172A;
+  border: none;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btnAiMini:hover {
+  background: #1E293B;
+  transform: translateY(-1px);
+}
+
+/* 13. KHỐI TINH GIẢN AI COPILOT TRONG BẢNG (TRUNCATE & TOOLTIP) */
+.aiTableBlock {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  line-height: 1.45;
+  overflow: hidden;
+}
+
+.aiBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.aiMatchPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #064E3B;
+  background: #D1FAE5;
+  border: 1px solid #6EE7B7;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.aiTrustPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #78350F;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.aiSummaryTruncate {
+  font-size: 0.78rem;
+  color: #334155;
+  margin: 4px 0 3px 0;
+  line-height: 1.45;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.aiAuditLinkBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 4px;
+  color: #4338CA;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: underline;
+}
+
+.aiAuditLinkBtn:hover {
+  color: #312E81;
+}
+
+/* 14. STATUS BADGES */
+.badgeApproved {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #D1FAE5;
+  border: 1px solid #6EE7B7;
+  color: #064E3B;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgePending {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  color: #78350F;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgeRejected {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #FFE4E6;
+  border: 1px solid #FDA4AF;
+  color: #881337;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 15. KHỐI TỔNG HỢP TRANH CHẤP AI */
+.disputeAiCard {
+  background: #EEF2FF;
+  border: 1.5px solid #C7D2FE;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.disputeAiHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #C7D2FE;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.disputeAiTitle {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #1E1B4B;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.disputeAiBody {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .disputeAiBody {
+    grid-template-columns: 1.3fr 1.5fr auto;
+  }
+}
+
+.disputeAiConclusionBox {
+  background: #FFFFFF;
+  border-left: 4px solid #E11D48;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+}
+
+.disputeAiConclusionLabel {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #9F1239;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.disputeAiConclusionText {
+  font-size: 0.84rem;
+  color: #1E293B;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.disputeAiProposalBox {
+  background: #FFFFFF;
+  border-left: 4px solid #059669;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+}
+
+.disputeAiProposalLabel {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #064E3B;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.disputeAiProposalText {
+  font-size: 0.84rem;
+  color: #0F172A;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+/* 16. MODALS */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modalBox {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.25);
+  color: #0F172A;
+}
+
+.modalBoxWide {
+  max-width: 680px;
+}
+
+.modalHeader {
+  padding: 18px 22px;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+}
+
+.modalBody {
+  padding: 22px;
+}
+
+.modalFooter {
+  padding: 16px 22px;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #F8FAFC;
+}
+
+.modalCloseBtn {
+  background: transparent;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.modalCloseBtn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.textareaField {
+  width: 100%;
+  min-height: 100px;
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 12px;
+  color: #0F172A;
+  font-size: 0.88rem;
+  font-weight: 500;
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.textareaField:focus {
+  border-color: #B45309;
+  box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.12);
+}
+
+.aiCheckItem {
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* 17. QUY TẮC MEDIA QUERIES ĐỒNG BỘ TAILWIND LG (1024PX) */
+@media (max-width: 1023px) {
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    z-index: 150 !important;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.4);
+    overflow: visible !important;
+    overflow-x: hidden !important;
+  }
+
+  .sidebarMobileOpen {
+    transform: translateX(0) !important;
+  }
+
+  .drawerCloseBtn {
+    display: inline-flex;
+  }
+
+  .mobileMenuBtn {
+    display: inline-flex;
+  }
+
+  .liveClockBadge {
+    display: none;
+  }
+
+  .adminDutyPill {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .searchFilterRow {
+    width: 100%;
+  }
+
+  .searchInputWrap {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    position: relative !important;
+    transform: none !important;
+    display: flex !important;
+    overflow: hidden !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mainArea {
+    height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .mobileMenuBtn {
+    display: none !important;
+  }
+}
+
+
+/* ============================================================================
+   MÔ HÌNH PHÁN QUYẾT 2 CỘT (SPLIT-VIEW / MASTER-DETAIL WORKSPACE)
+   ============================================================================ */
+.disputeWorkspaceWrapper {
+  width: 100%;
+  height: calc(100vh - 6.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.disputeWorkspaceSplit {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 1279px) {
+  .disputeWorkspaceWrapper {
+    height: auto;
+    overflow-y: visible;
+  }
+  .disputeWorkspaceSplit {
+    flex-direction: column;
+    overflow-y: visible;
+    gap: 16px;
+  }
+}
+
+.disputeMasterList {
+  width: 360px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 1279px) {
+  .disputeMasterList {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    padding-right: 0;
+  }
+}
+
+.disputeMasterCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.disputeMasterCard:hover {
+  border-color: #f59e0b;
+  background: #fafafa;
+}
+
+.disputeMasterCardActive {
+  background: #fffbeb !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 1px 4px rgba(245, 158, 11, 0.2) !important;
+}
+
+.disputeDetailWorkspace {
+  flex: 1;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.comparisonImg {
+  width: 176px;
+  height: 176px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   ESCROW PAYOUT CONFIRMATION MODAL - LUXURY FINTECH STYLE
+   ============================================================================ */
+.payoutModalBox {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.payoutModalHeader {
+  padding: 16px 20px;
+  background: #0d131f;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.payoutModalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.payoutShieldIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34D399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.payoutModalTitle {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.payoutModalSub {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  font-family: var(--font-mono, monospace);
+  margin: 2px 0 0 0;
+}
+
+.payoutModalClose {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.payoutModalClose:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.payoutModalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: calc(85vh - 130px);
+  overflow-y: auto;
+}
+
+/* Artwork preview media card */
+.payoutArtCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+}
+
+.payoutArtThumb {
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #CBD5E1;
+  background: #E2E8F0;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
+}
+
+.payoutArtMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.payoutArtBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #065F46;
+  background: #D1FAE5;
+  border: 1px solid #A7F3D0;
+  padding: 2px 7px;
+  border-radius: 20px;
+  width: fit-content;
+  margin-bottom: 4px;
+}
+
+.payoutArtTitle {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.payoutArtArtist {
+  font-size: 0.78rem;
+  color: #B45309;
+  font-weight: 700;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Receipt breakdown */
+.payoutReceiptCard {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payoutReceiptRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.payoutReceiptLabel {
+  color: #64748B;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.payoutReceiptVal {
+  color: #0F172A;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.payoutReceiptBankVal {
+  font-family: var(--font-mono, monospace);
+  color: #1E293B;
+  font-weight: 700;
+  font-size: 0.8rem;
+  background: #F1F5F9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+.payoutReceiptDivider {
+  height: 1px;
+  background: #E2E8F0;
+  margin: 4px 0;
+}
+
+.payoutReceiptTotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 2px solid #E2E8F0;
+}
+
+.payoutTotalLabel {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0F172A;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.payoutTotalAmount {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #047857;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: -0.02em;
+}
+
+/* Security statement & awareness checkbox */
+.payoutSecurityBox {
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payoutWarningNote {
+  font-size: 0.76rem;
+  color: #92400E;
+  line-height: 1.45;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+}
+
+.payoutWarningNote strong {
+  color: #78350F;
+  font-weight: 800;
+}
+
+.payoutCheckboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  background: #FFFFFF;
+  border: 1.5px solid #FCD34D;
+  border-radius: 9px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.payoutCheckboxLabel:hover {
+  background: #FFFDF5;
+  border-color: #F59E0B;
+}
+
+.payoutCheckboxInput {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #047857;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.payoutCheckboxText {
+  font-size: 0.78rem;
+  color: #1E293B;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+/* Modal action footer */
+.payoutModalFooter {
+  padding: 14px 20px;
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.payoutCancelBtn {
+  padding: 9px 16px;
+  border-radius: 9px;
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.payoutCancelBtn:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+  border-color: #94A3B8;
+}
+
+.payoutSubmitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 9px;
+  background: #047857;
+  border: none;
+  color: #FFFFFF;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+  flex: 1;
+}
+
+.payoutSubmitBtn:hover:not(:disabled) {
+  background: #065F46;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(4, 120, 87, 0.35);
+}
+
+.payoutSubmitBtn:disabled {
+  background: #CBD5E1;
+  color: #94A3B8;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ============================================================================
+   FINE ART BRUSHSTROKE & MATERIAL INSPECTION MODAL (EXAMINATION SUITE)
+   ============================================================================ */
+.brushModalBox {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 960px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
+  color: #0F172A;
+  display: flex;
+  flex-direction: column;
+}
+
+.brushModalHeader {
+  padding: 16px 24px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brushModalBody {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 860px) {
+  .brushModalBody {
+    grid-template-columns: 1.15fr 0.85fr;
+  }
+}
+
+.brushViewerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.brushCanvasWrap {
+  position: relative;
+  background: #070A10;
+  border: 1px solid #1E293B;
+  border-radius: 14px;
+  overflow: hidden;
+  height: 390px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.6);
+  cursor: crosshair;
+  user-select: none;
+  touch-action: none;
+}
+
+.brushCanvasInner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.brushCanvasImg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.brushMacroBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #FBBF24;
+  font-size: 0.72rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.brushHudBar {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #94A3B8;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.brushHudDivider {
+  color: #475569;
+}
+
+/* Kính lúp quang học di động */
+.loupeLens {
+  position: absolute;
+  width: 164px;
+  height: 164px;
+  border-radius: 50%;
+  border: 3px solid #D4AF37;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 14px 34px rgba(0, 0, 0, 0.75),
+    inset 0 0 20px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  background-repeat: no-repeat;
+  z-index: 30;
+  overflow: hidden;
+}
+
+.loupeCrosshairH {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(212, 175, 55, 0.5);
+  transform: translateY(-50%);
+}
+
+.loupeCrosshairV {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(212, 175, 55, 0.5);
+  transform: translateX(-50%);
+}
+
+.loupeReticleCircle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.8);
+  transform: translate(-50%, -50%);
+}
+
+.loupeScaleTag {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.7);
+  color: #FBBF24;
+  font-size: 0.64rem;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.brushControlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.brushViewToggleBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: #F1F5F9;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  width: fit-content;
+}
+
+.brushToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.brushToggleBtn:hover {
+  color: #0F172A;
+}
+
+.brushToggleBtnActive {
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.brushZoomToolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.loupeToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.loupeToggleBtn:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
+  color: #0F172A;
+}
+
+.loupeToggleBtnActive {
+  background: #FFFBEB;
+  border-color: #F59E0B;
+  color: #B45309;
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.15);
+}
+
+.zoomButtonGroup {
+  display: inline-flex;
+  align-items: center;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.zoomBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zoomBtn:hover:not(:disabled) {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.zoomBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.zoomLevelPill {
+  padding: 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0F172A;
+  min-width: 42px;
+  text-align: center;
+  border-left: 1px solid #CBD5E1;
+  border-right: 1px solid #CBD5E1;
+  line-height: 28px;
+  user-select: none;
+}
+
+.brushGuideHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #FFFBEB;
+  border: 1px dashed #FDE68A;
+  border-radius: 8px;
+  font-size: 0.73rem;
+  color: #92400E;
+  line-height: 1.4;
+}
+
+.brushInfoCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brushMetaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.brushMetaCell {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brushAiVerdictBox {
+  background: #F0FDF4;
+  border: 1.5px solid #86EFAC;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brushModalFooter {
+  padding: 16px 24px;
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+

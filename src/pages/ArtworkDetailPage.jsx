@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield, Clock, Zap, Heart, Share2, Eye, ZoomIn,
   ArrowLeft, Award, AlertTriangle, Check, ChevronLeft, ChevronRight,
-  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare, ShieldCheck,
+  Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare, ShieldCheck, ShieldAlert,
   CheckCircle2, Download, CheckCircle, FileText
 } from 'lucide-react';
 import {
@@ -49,6 +49,9 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
   const [selectedRoom, setSelectedRoom] = useState(ROOM_TYPES[0]);
   const [selectedLight, setSelectedLight] = useState(LIGHT_MODES[0]);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [testRole, setTestRole] = useState(null); // 'ARTIST' | 'COLLECTOR' | null
+  const effectiveRole = testRole || (currentUser?.role?.toUpperCase() === 'ARTIST' ? 'ARTIST' : 'COLLECTOR');
+  const isArtist = effectiveRole === 'ARTIST';
   const [bids, setBids] = useState(BID_HISTORY.filter(b => b.session_id === session?.session_id));
   const [currentPrice, setCurrentPrice] = useState(session?.current_highest_price || artwork.current_price);
   const [countdown, setCountdown] = useState(session ? formatCountdown(session.end_time) : null);
@@ -318,6 +321,8 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   isSealed={isSealedAuction}
                   isArtist={isArtistOwner}
                   currentUser={currentUser}
+                  isArtist={isArtist}
+                  onOpenArtistDashboard={() => setArtistDashboardOpen(true)}
                 />
               )}
             </div>
@@ -363,6 +368,49 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
 
             <hr className="divider" style={{ margin: '20px 0' }} />
 
+            {/* Role Demo Simulator Bar for UX Evaluation */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 10,
+              padding: '8px 12px',
+              marginBottom: 16,
+              fontSize: '0.75rem',
+              color: 'var(--text-muted)'
+            }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Shield size={12} color="var(--gold-primary)" />
+                <span>Mô phỏng vai trò:</span>
+              </span>
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${effectiveRole === 'COLLECTOR' ? 'btn-primary' : 'btn-ghost'}`}
+                  style={{ fontSize: '0.7rem', padding: '4px 10px', minHeight: 26 }}
+                  onClick={() => {
+                    setTestRole('COLLECTOR');
+                    addToast?.('✦ Chuyển sang góc nhìn: Khách hàng (COLLECTOR) – Đầy đủ quyền đặt giá', 'info', 3000);
+                  }}
+                >
+                  Khách hàng (COLLECTOR)
+                </button>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${effectiveRole === 'ARTIST' ? 'btn-primary' : 'btn-ghost'}`}
+                  style={{ fontSize: '0.7rem', padding: '4px 10px', minHeight: 26 }}
+                  onClick={() => {
+                    setTestRole('ARTIST');
+                    addToast?.('✦ Chuyển sang góc nhìn: Họa sĩ (ARTIST) – Đã khóa quyền mua', 'warning', 3000);
+                  }}
+                >
+                  Họa sĩ (ARTIST)
+                </button>
+              </div>
+            </div>
+
             {/* Auction Box vs Buy Box OR Owned Artwork Info Box */}
             {isOwned ? (
               <OwnedArtworkBox
@@ -385,6 +433,7 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   bids={bids}
                   currentUser={currentUser}
                   isArtistOwner={isArtistOwner}
+                  isArtist={isArtist}
                   mySealedBid={mySealedBid}
                   onOpenSealedBid={() => {
                     if (!currentUser) { addToast('Vui lòng đăng nhập để ra giá kín!', 'warning'); return; }
@@ -413,10 +462,12 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   onOpenDeposit={() => setDepositModalOpen(true)}
                   navigate={navigate}
                   currentUser={currentUser}
+                  isArtist={isArtist}
+                  onOpenArtistDashboard={() => setArtistDashboardOpen(true)}
                 />
               )
             ) : (
-              <BuyBox artwork={artwork} addToast={addToast} navigate={navigate} />
+              <BuyBox artwork={artwork} addToast={addToast} navigate={navigate} isArtist={isArtist} />
             )}
 
             {/* Action buttons */}
@@ -720,7 +771,7 @@ const BidHistoryTab = ({ bids, bidListRef, isSealed, isArtist, currentUser }) =>
 const AuctionBox = ({
   session, currentPrice, countdown, urgent, bids, onBid, placing,
   artwork, addToast, outbidAlert, depositLocked, escrowPass, onOpenDeposit,
-  navigate, currentUser
+  navigate, currentUser, isArtist, onOpenArtistDashboard
 }) => {
   const isLiveEnded = session.status !== 'live' || (countdown && countdown.total <= 0);
   const isUserWinning = currentUser && bids.length > 0 && bids[0]?.bidder_id === currentUser.user_id;
@@ -746,65 +797,25 @@ const AuctionBox = ({
         <p className={styles.bidCount}>{bids.length} lượt đặt giá</p>
       </div>
 
-      {/* Deposit Escrow Status & Callout (Friction with Purpose) */}
-      {!depositLocked ? (
-        <div className={styles.depositBanner}>
-          <div className={styles.depositBannerHeader}>
-            <span className="badge badge-gold" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-              <Shield size={12} /> YÊU CẦU KÝ QUỸ ĐẶT CỌC 15%
-            </span>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Friction with Purpose</span>
-          </div>
-          <p className={styles.depositBannerDesc}>
-            Ký quỹ tạm khóa <strong>{formatPriceFull(Math.round(currentPrice * 0.15))}</strong> trong ví Escrow (hoàn trả 100% tự động nếu không trúng thầu) để kích hoạt quyền đặt giá.
-          </p>
-          <button
-            id="open-deposit-btn"
-            type="button"
-            className={`btn btn-primary btn-sm ${styles.depositBtn}`}
-            onClick={onOpenDeposit}
-          >
-            <Shield size={14} style={{ flexShrink: 0 }} />
-            <span>Ký quỹ bảo chứng 15% & Mở quyền phòng đấu</span>
-          </button>
-        </div>
-      ) : (
-        <div className={styles.depositUnlockedBanner}>
-          <div className={styles.depositUnlockedRow}>
-            <div className={styles.depositUnlockedBadgeCol}>
-              <div className={styles.unlockedIconBadge}>
-                <ShieldCheck size={18} color="#2ECC71" />
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <span className="badge badge-verified" style={{ fontSize: '0.7rem', display: 'inline-flex' }}>
-                  ✦ ĐÃ KHÓA CỌC KÝ QUỸ ESCROW 15%
-                </span>
-                <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)', wordBreak: 'break-word' }}>
-                  Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp VIP
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              className={`btn btn-ghost btn-sm ${styles.viewPassBtn}`}
-              onClick={onOpenDeposit}
-            >
-              Xem thẻ Pass
-            </button>
-          </div>
-        </div>
-      )}
-
+      {/* Quick Bid Grid: KHÓA HOÀN TOÀN KHI LÀ HỌA SĨ */}
       <div className={styles.quickBids}>
-        <p className={styles.controlLabel}>Đặt giá nhanh</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <p className={styles.controlLabel}>Đặt giá nhanh</p>
+          {isArtist && (
+            <span style={{ fontSize: '0.72rem', color: 'var(--gold-dim)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Lock size={12} /> Đã khóa vùng nhập tiền
+            </span>
+          )}
+        </div>
         <div className={styles.quickBidGrid}>
           {QUICK_BID_STEPS.map(step => (
             <button
               key={step}
               id={`quick-bid-${step}`}
               className={`btn btn-secondary ${styles.quickBidBtn}`}
-              onClick={() => onBid(step)}
-              disabled={placing || session.status !== 'live'}
+              onClick={() => !isArtist && onBid(step)}
+              disabled={isArtist || placing || session.status !== 'live'}
+              style={isArtist ? { opacity: 0.35, cursor: 'not-allowed', filter: 'grayscale(0.5)', pointerEvents: 'none' } : {}}
             >
               +{formatPrice(step)}
             </button>
@@ -812,18 +823,97 @@ const AuctionBox = ({
         </div>
       </div>
 
-      <button
-        id="confirm-bid-btn"
-        className={`btn btn-primary ${styles.confirmBidBtn}`}
-        onClick={() => onBid(QUICK_BID_STEPS[1])}
-        disabled={placing || session.status !== 'live'}
-      >
-        {placing ? (
-          <><span className={styles.spinner} /> Đang xử lý...</>
-        ) : (
-          <><Zap size={16} /> Xác nhận đặt giá +{formatPrice(QUICK_BID_STEPS[1])}</>
-        )}
-      </button>
+      {/* Hành động đặt giá vs Khung cảnh báo chặn Họa sĩ */}
+      {isArtist ? (
+        <div className={styles.artistRestrictionCard}>
+          <div className={styles.restrictionHeader}>
+            <div className={styles.restrictionIconBox}>
+              <ShieldAlert size={18} />
+            </div>
+            <span className={styles.restrictionTitle}>Quy chế định danh Họa sĩ</span>
+          </div>
+          <p className={styles.restrictionDesc}>
+            Tài khoản Họa sĩ không hỗ trợ tính năng mua hoặc đấu giá tác phẩm.
+          </p>
+          <span className={styles.restrictionSub}>
+            Theo chuẩn thẩm định mỹ thuật ICOM và cơ chế bảo chứng minh bạch của Artisan Hub, tác giả tranh và các tài khoản Họa sĩ được bảo lưu tính độc lập, không tham gia đặt giá trong các phiên đấu thầu.
+          </span>
+          {onOpenArtistDashboard && (
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              style={{ marginTop: 8, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, borderColor: 'var(--border-gold)' }}
+              onClick={onOpenArtistDashboard}
+            >
+              <LayoutDashboard size={14} color="var(--gold-primary)" /> Bảng điều khiển quản trị phiên
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          {/* Deposit Escrow Status & Callout (Friction with Purpose) */}
+          {!depositLocked ? (
+            <div className={styles.depositBanner}>
+              <div className={styles.depositBannerHeader}>
+                <span className="badge badge-gold" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                  <Shield size={12} /> YÊU CẦU KÝ QUỸ ĐẶT CỌC 15%
+                </span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Friction with Purpose</span>
+              </div>
+              <p className={styles.depositBannerDesc}>
+                Ký quỹ tạm khóa <strong>{formatPriceFull(Math.round(currentPrice * 0.15))}</strong> trong ví Escrow (hoàn trả 100% tự động nếu không trúng thầu) để kích hoạt quyền đặt giá.
+              </p>
+              <button
+                id="open-deposit-btn"
+                type="button"
+                className={`btn btn-primary btn-sm ${styles.depositBtn}`}
+                onClick={onOpenDeposit}
+              >
+                <Shield size={14} style={{ flexShrink: 0 }} />
+                <span>Ký quỹ bảo chứng 15% & Mở quyền phòng đấu</span>
+              </button>
+            </div>
+          ) : (
+            <div className={styles.depositUnlockedBanner}>
+              <div className={styles.depositUnlockedRow}>
+                <div className={styles.depositUnlockedBadgeCol}>
+                  <div className={styles.unlockedIconBadge}>
+                    <ShieldCheck size={18} color="#2ECC71" />
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <span className="badge badge-verified" style={{ fontSize: '0.7rem', display: 'inline-flex' }}>
+                      ✦ ĐÃ KHÓA CỌC KÝ QUỸ ESCROW 15%
+                    </span>
+                    <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--gold-light)', wordBreak: 'break-word' }}>
+                      Mã thẻ: <strong>{escrowPass?.passId || 'VIP-ESCROW-8942'}</strong> · Cấp VIP
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className={`btn btn-ghost btn-sm ${styles.viewPassBtn}`}
+                  onClick={onOpenDeposit}
+                >
+                  Xem thẻ Pass
+                </button>
+              </div>
+            </div>
+          )}
+
+          <button
+            id="confirm-bid-btn"
+            className={`btn btn-primary ${styles.confirmBidBtn}`}
+            onClick={() => onBid(QUICK_BID_STEPS[1])}
+            disabled={placing || session.status !== 'live'}
+          >
+            {placing ? (
+              <><span className={styles.spinner} /> Đang xử lý...</>
+            ) : (
+              <><Zap size={16} /> Xác nhận đặt giá +{formatPrice(QUICK_BID_STEPS[1])}</>
+            )}
+          </button>
+        </>
+      )}
 
       {/* Checkout CTA when user is the current winner */}
       {isUserWinning && navigate && (
@@ -1029,23 +1119,40 @@ const SealedAuctionBox = ({
   );
 };
 
-const BuyBox = ({ artwork, addToast, navigate }) => (
+const BuyBox = ({ artwork, addToast, navigate, isArtist }) => (
   <div className={styles.buyBox}>
     <div className={styles.currentPrice}>
-      <p className={styles.priceLabel}>Giá khởi điểm</p>
+      <p className={styles.priceLabel}>Giá niêm yết</p>
       <p className={styles.priceValue}>{formatPriceFull(artwork.current_price)}</p>
     </div>
-    <button
-      id="buy-now-btn"
-      className={`btn btn-primary ${styles.confirmBidBtn}`}
-      style={{ width: '100%', padding: '14px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-      onClick={() => {
-        if (navigate) navigate(`/checkout/${artwork.artwork_id}`);
-        else addToast('Vui lòng đăng nhập để mua tác phẩm!', 'info');
-      }}
-    >
-      💳 Thanh toán ngay
-    </button>
+    {isArtist ? (
+      <div className={styles.artistRestrictionCard}>
+        <div className={styles.restrictionHeader}>
+          <div className={styles.restrictionIconBox}>
+            <ShieldAlert size={18} />
+          </div>
+          <span className={styles.restrictionTitle}>Quy chế định danh Họa sĩ</span>
+        </div>
+        <p className={styles.restrictionDesc}>
+          Tài khoản Họa sĩ không hỗ trợ tính năng mua hoặc đấu giá tác phẩm.
+        </p>
+        <span className={styles.restrictionSub}>
+          Để sở hữu tác phẩm độc bản này, vui lòng đăng nhập bằng tài khoản Nhà sưu tầm (Collector).
+        </span>
+      </div>
+    ) : (
+      <button
+        id="buy-now-btn"
+        className={`btn btn-primary ${styles.confirmBidBtn}`}
+        style={{ width: '100%', padding: '14px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+        onClick={() => {
+          if (navigate) navigate(`/checkout/${artwork.artwork_id}`);
+          else addToast?.('Vui lòng đăng nhập để mua tác phẩm!', 'info');
+        }}
+      >
+        💳 Thanh toán ngay
+      </button>
+    )}
   </div>
 );
 
