@@ -7,7 +7,7 @@
    ========================================================================== */
 
 .modalCard {
-  max-width: 920px;
+  max-width: 1000px;
   width: 95%;
   max-height: 90vh;
   overflow-y: auto;
@@ -15,7 +15,7 @@
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-xl);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), var(--shadow-glow);
-  padding: 30px;
+  padding: 26px 30px;
   box-sizing: border-box;
 }
 
@@ -74,16 +74,53 @@
 /* Metrics */
 .metricsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.marketInsightBanner {
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px dashed var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
   gap: 14px;
   margin-bottom: 22px;
+}
+
+.marketInsightIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.marketInsightTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  margin: 0 0 4px 0;
+}
+
+.marketInsightText {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .metricCard {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 16px 18px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -239,59 +276,38 @@
 
 /* Desktop & Tablet Table */
 .desktopTableWrap {
-  overflow-x: auto;
+  overflow-x: hidden;
   display: block;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
-}
-
-.desktopTableWrap::-webkit-scrollbar {
-  height: 6px;
-}
-
-.desktopTableWrap::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 4px;
-}
-
-.desktopTableWrap::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.25);
-  border-radius: 4px;
-}
-
-.desktopTableWrap::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-primary);
+  width: 100%;
 }
 
 .bidsTable {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
 }
 
-/* Column proportional widths */
+/* 5 Column proportional widths: 100% total, fits perfectly with generous breathing room */
 .colRank {
-  width: 11%;
+  width: 13%;
 }
 .colCollector {
-  width: 22%;
+  width: 24%;
 }
 .colPrice {
   width: 18%;
 }
-.colTime {
-  width: 17%;
-}
 .colNote {
-  width: 16%;
+  width: 24%;
 }
 .colActions {
-  width: 16%;
+  width: 21%;
 }
 
 .bidsTable th {
-  padding: 12px 14px;
-  font-size: 0.75rem;
+  padding: 12px 12px;
+  font-size: 0.74rem;
   text-transform: uppercase;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-default);
@@ -301,9 +317,18 @@
 }
 
 .bidsTable td {
-  padding: 13px 14px;
+  padding: 13px 12px;
   border-bottom: 1px solid var(--border-subtle);
   vertical-align: middle;
+}
+
+.tdNote {
+  vertical-align: middle;
+}
+
+.tdActions {
+  text-align: right;
+  white-space: nowrap;
 }
 
 .bidTableRow {
@@ -330,10 +355,11 @@
   color: #0b0b10;
   font-size: 0.7rem;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 3px 7px;
   border-radius: 12px;
   letter-spacing: 0.02em;
   box-shadow: 0 2px 6px rgba(212, 175, 55, 0.25);
+  white-space: nowrap;
 }
 
 .rankBadge {
@@ -346,7 +372,15 @@
 .bidderCell {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  min-width: 0;
+}
+
+.bidderNameRow {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
 }
 
 .bidderName {
@@ -354,20 +388,49 @@
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bidderId {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
   font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.bidderTime {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.71rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.priceCell {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.leadingPill {
+  display: inline-block;
+  font-size: 0.62rem;
+  color: var(--gold-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .priceTop {
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   font-weight: 700;
   color: var(--gold-primary);
   font-family: var(--font-mono);
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .priceNormal {
@@ -375,6 +438,7 @@
   font-weight: 600;
   color: var(--text-secondary);
   font-family: var(--font-mono);
+  white-space: nowrap;
 }
 
 .timeText {
@@ -384,12 +448,13 @@
 }
 
 .noteText {
-  font-size: 0.75rem;
+  margin: 0;
+  font-size: 0.8rem;
   color: var(--text-secondary);
-  max-width: 170px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.45;
+  white-space: normal; /* Full notes naturally wrapped - NO ellipsis */
+  word-break: break-word;
+  overflow-wrap: break-word;
   display: block;
 }
 
@@ -401,13 +466,19 @@
 }
 
 .tblActionBtn {
-  padding: 6px 10px;
-  font-size: 0.75rem;
+  padding: 5px 9px;
+  font-size: 0.73rem;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
-  min-height: 32px;
+  min-height: 28px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  text-transform: none; /* Keep clean sentence case: 'Liên hệ', 'Tạo HĐ' */
+  letter-spacing: normal;
+  flex-shrink: 0;
 }
 
 /* Mobile Card List View (hidden on desktop/tablet) */
@@ -537,7 +608,8 @@
   }
 
   .metricsGrid {
-    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
     margin-bottom: 18px;
   }
 
@@ -576,28 +648,27 @@
     font-size: 0.95rem;
   }
 
-  /* Table column proportions for iPad 768px */
+  /* Table column proportions for iPad 768px: fits 100% with no scroll */
   .bidsTable {
-    min-width: 630px;
+    width: 100%;
+    table-layout: fixed;
+    min-width: 0;
   }
 
   .colRank {
-    width: 12%;
+    width: 13%;
   }
   .colCollector {
-    width: 21%;
+    width: 24%;
   }
   .colPrice {
     width: 18%;
   }
-  .colTime {
-    width: 17%;
-  }
   .colNote {
-    width: 14%;
+    width: 23%;
   }
   .colActions {
-    width: 18%;
+    width: 22%;
   }
 
   .bidsTable th {

@@ -4,7 +4,7 @@ import {
   Shield, Clock, Zap, Heart, Share2, Eye, ZoomIn,
   ArrowLeft, Award, AlertTriangle, Check, ChevronLeft, ChevronRight,
   Lock, EyeOff, LayoutDashboard, Trophy, MessageSquare, ShieldCheck, ShieldAlert,
-  CheckCircle2, Download, CheckCircle, FileText
+  CheckCircle2, Download, CheckCircle, FileText, Sparkles, ArrowDownRight, ArrowUpRight, Info
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY,
@@ -968,12 +968,17 @@ const SealedAuctionBox = ({
   const isEnded = session.status === 'ended' || new Date(session.end_time) <= now || (countdown && countdown.total <= 0);
   const totalBidders = new Set(bids.map(b => b.bidder_id || b.bidder_name)).size;
 
+  // Tính toán mức giá đề xuất tối thiểu và tối đa từ các lượt tự do định giá
+  const validBids = (bids || []).filter(b => b.bid_amount && b.bid_amount > 0);
+  const minBidAmount = validBids.length > 0 ? Math.min(...validBids.map(b => b.bid_amount)) : null;
+  const maxBidAmount = validBids.length > 0 ? Math.max(...validBids.map(b => b.bid_amount)) : null;
+
   return (
     <div className={styles.sealedBox}>
       {/* Badge khóa & Trạng thái (Mục 8.3) */}
       <div className={styles.sealedBadgeHeader}>
         <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          <Lock size={12} /> ĐẤU GIÁ KÍN
+          <Lock size={12} /> ĐẤU GIÁ KÍN (SEALED-BID)
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {isEnded ? (
@@ -985,7 +990,7 @@ const SealedAuctionBox = ({
               <Clock size={10} /> SẮP MỞ
             </span>
           ) : (
-            <span className="badge badge-live">ĐANG DIỄN RA</span>
+            <span className="badge badge-live">ĐANG NHẬN GIÁ</span>
           )}
         </div>
       </div>
@@ -1020,21 +1025,76 @@ const SealedAuctionBox = ({
         </div>
       )}
 
-      {/* KHÔNG hiển thị giá hiện tại - Chỉ hiển thị Card bảo mật và Giá khởi điểm */}
+      {/* THẺ KHÁM PHÁ GIÁ: KHÔNG CÓ GIÁ KHỞI ĐIỂM - TỰ DO ĐƯA GIÁ */}
       <div className={styles.hiddenPriceCard}>
         <div className={styles.hiddenIconWrap}>
-          <EyeOff size={22} color="var(--gold-primary)" />
+          <Sparkles size={22} color="var(--gold-primary)" />
         </div>
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <h4 className={styles.hiddenMainText}>
-            Giá thầu bảo mật tuyệt đối
+            Định giá tự do (Không có giá khởi điểm)
           </h4>
           <p className={styles.hiddenSubText}>
-            Giá hiện tại được ẩn với công chúng. Giá khởi điểm: <strong>{formatPriceFull(session.min_bid || artwork.reserve_price)}</strong>.
-            Hiện có <strong>{totalBidders} nhà sưu tầm</strong> đã gửi hồ sơ.
+            Họa sĩ mở phiên cho cộng đồng tự do đưa giá. Hiện có <strong>{totalBidders} nhà sưu tầm</strong> đã gửi hồ sơ đề xuất.
           </p>
         </div>
       </div>
+
+      {/* KHỐI BIÊN ĐỘ GIÁ THỊ TRƯỜNG: TỐI THIỂU & TỐI ĐA */}
+      {validBids.length > 0 ? (
+        <div className={styles.priceDiscoveryBox}>
+          <div className={styles.discoveryHeader}>
+            <span className={styles.discoveryHeaderTitle}>
+              Biên độ giá đề xuất từ cộng đồng
+            </span>
+            <span className="badge badge-gold" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+              {validBids.length} lượt đề xuất
+            </span>
+          </div>
+
+          <div className={styles.rangeMetricsRow}>
+            {/* Giá tối thiểu */}
+            <div className={styles.rangeCol}>
+              <span className={styles.rangeColLabel}>
+                <ArrowDownRight size={13} style={{ color: '#2ECC71' }} /> Giá TỐI THIỂU (Min)
+              </span>
+              <strong className={styles.rangeColVal} style={{ color: '#2ECC71' }}>
+                {formatPriceFull(minBidAmount)}
+              </strong>
+              <span className={styles.rangeColSub}>Mức sàn đề xuất</span>
+            </div>
+
+            <div className={styles.rangeDividerWrap}>
+              <span className={styles.rangeSpreadText}>
+                Biên độ: {formatPriceFull(maxBidAmount - minBidAmount)}
+              </span>
+              <div className={styles.rangeBarProgress}>
+                <div className={styles.rangeBarGlow} />
+              </div>
+            </div>
+
+            {/* Giá tối đa */}
+            <div className={styles.rangeCol}>
+              <span className={styles.rangeColLabel}>
+                <ArrowUpRight size={13} style={{ color: 'var(--gold-primary)' }} /> Giá TỐI ĐA (Max)
+              </span>
+              <strong className={styles.rangeColVal} style={{ color: 'var(--gold-primary)' }}>
+                {formatPriceFull(maxBidAmount)}
+              </strong>
+              <span className={styles.rangeColSub}>Mức trần cao nhất</span>
+            </div>
+          </div>
+
+          <p className={styles.discoveryNote}>
+            💡 Người mua tự do đề xuất mức giá mới để xác định giá trị tranh hoặc nâng cao cơ hội sở hữu.
+          </p>
+        </div>
+      ) : (
+        <div className={styles.emptyValuationAlert}>
+          <Info size={15} color="var(--gold-primary)" />
+          <span>Chưa có lượt đề xuất giá nào. Bạn hãy là người đầu tiên tự do định giá cho tác phẩm này!</span>
+        </div>
+      )}
 
       {/* Collector has already bid */}
       {mySealedBid && (

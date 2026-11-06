@@ -1524,7 +1524,7 @@ export default function QuanTriVienPage({ addToast }) {
                             {/* Cột 2: Thông số & Giá */}
                             <td>
                               <div className="text-sm font-extrabold text-emerald-700">
-                                {formatVND(artw.starting_price)}
+                                {artw.starting_price ? formatVND(artw.starting_price) : 'Đấu giá kín (Tự do ra giá)'}
                               </div>
                               <div className="text-xs text-slate-600 mt-1 truncate" title={`${artw.dimensions} • ${artw.medium}`}>
                                 {artw.dimensions} • {artw.medium}
@@ -2623,7 +2623,7 @@ export default function QuanTriVienPage({ addToast }) {
                       <div className={styles.brushMetaCell}>
                         <span className="text-[10px] text-slate-400 uppercase font-bold">Khởi điểm</span>
                         <strong className="text-sm font-extrabold text-emerald-700">
-                          {formatVND(detailModal.item?.starting_price)}
+                          {detailModal.item?.starting_price ? formatVND(detailModal.item?.starting_price) : 'Đấu giá kín (Tự do ra giá)'}
                         </strong>
                       </div>
                       <div className={styles.brushMetaCell}>

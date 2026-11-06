@@ -339,11 +339,12 @@ export const AUCTION_SESSIONS = [
     session_id: 'as4_sealed',
     artwork_id: 'aw3',
     auction_type: 'sealed', // Phiên đấu giá kín (Sealed-bid)
-    min_bid: 18000000,
+    min_bid: 0, // Không có giá khởi điểm, người mua tự do đề xuất giá
+    has_no_starting_price: true,
     is_bid_visible_public: false,
     start_time: new Date(Date.now() - 86400000 * 2).toISOString(),
     end_time: new Date(Date.now() + 14400000).toISOString(), // Còn 4 tiếng
-    bid_increment: 500000,
+    bid_increment: 0,
     current_highest_price: 26000000,
     winner_id: null,
     winner_contacted_at: null,

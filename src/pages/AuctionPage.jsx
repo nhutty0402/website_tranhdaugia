@@ -389,10 +389,10 @@ const SealedAuctionCard = ({ session, artwork, currentUser, addToast }) => {
           <EyeOff size={18} color="var(--gold-primary)" />
           <div>
             <p style={{ margin: 0, fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-              Giá khởi điểm: {formatPriceFull(session.min_bid || artwork.reserve_price)}
+              Không có giá khởi điểm • Người mua tự do đưa giá
             </p>
             <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-              Giá thầu được bảo mật bí mật cho tới khi đóng phiên
+              Cộng đồng tự do đề xuất giá để xác định khoảng giá tối thiểu và tối đa
             </p>
           </div>
         </div>

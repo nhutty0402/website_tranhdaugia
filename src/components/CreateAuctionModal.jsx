@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   X, Lock, Globe, Shield, Calendar, DollarSign,
-  AlertCircle, CheckCircle, ArrowRight, Eye, Info
+  AlertCircle, CheckCircle, ArrowRight, Eye, Info, Sparkles
 } from 'lucide-react';
 import { ARTWORKS, formatPriceFull } from '../data/mockData';
 import styles from './CreateAuctionModal.module.css';
@@ -36,6 +36,16 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
 
   const handleNextToPreview = (e) => {
     e.preventDefault();
+    if (auctionType === 'live') {
+      if (!minBid || Number(minBid) <= 0) {
+        alert('Vui lòng nhập giá khởi điểm hợp lệ cho phiên công khai!');
+        return;
+      }
+      if (!bidIncrement || Number(bidIncrement) <= 0) {
+        alert('Vui lòng nhập bước giá hợp lệ!');
+        return;
+      }
+    }
     if (new Date(endTime) <= new Date(startTime)) {
       alert('Thời gian kết thúc phải diễn ra sau thời gian bắt đầu!');
       return;
@@ -46,16 +56,18 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
   const handleConfirmCreate = () => {
     setSubmitting(true);
     setTimeout(() => {
+      const isSealed = auctionType === 'sealed';
       const newSession = {
         session_id: `as_${Date.now()}`,
         artwork_id: selectedArtwork.artwork_id,
         auction_type: auctionType,
-        min_bid: Number(minBid),
-        bid_increment: Number(bidIncrement),
-        is_bid_visible_public: auctionType === 'live' ? true : isBidVisiblePublic,
+        min_bid: isSealed ? 0 : Number(minBid),
+        has_no_starting_price: isSealed,
+        bid_increment: isSealed ? 0 : Number(bidIncrement),
+        is_bid_visible_public: isSealed ? false : true,
         start_time: new Date(startTime).toISOString(),
         end_time: new Date(endTime).toISOString(),
-        current_highest_price: Number(minBid),
+        current_highest_price: isSealed ? 0 : Number(minBid),
         winner_id: null,
         winner_contacted_at: null,
         status: new Date(startTime) <= new Date() ? 'live' : 'upcoming',
@@ -144,7 +156,9 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                       {selectedArtwork.artist_name || currentUser?.full_name} · {selectedArtwork.medium} · {selectedArtwork.dimensions}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 600, marginTop: 2 }}>
-                      Giá khởi điểm đề xuất: {formatPriceFull(selectedArtwork.reserve_price || selectedArtwork.current_price || 0)}
+                      {auctionType === 'sealed'
+                        ? 'Đấu giá kín: Không áp dụng giá khởi điểm • Người mua tự do đề xuất giá'
+                        : `Giá khởi điểm đề xuất: ${formatPriceFull(selectedArtwork.reserve_price || selectedArtwork.current_price || 0)}`}
                     </div>
                   </div>
                 </div>
@@ -174,7 +188,7 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                     </div>
                   </div>
                   <p className={styles.typeDesc}>
-                    Các nhà sưu tầm ra giá bí mật một lần duy nhất. Giá thầu được bảo mật tuyệt đối, chỉ họa sĩ mới có quyền mở bảng xếp hạng thầu và lựa chọn liên hệ người thắng.
+                    Không có giá khởi điểm. Các nhà sưu tầm tự do đề xuất giá bí mật để giúp họa sĩ xác định biên độ giá tối thiểu và tối đa của tác phẩm.
                   </p>
                 </div>
 
@@ -197,46 +211,63 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                     </div>
                   </div>
                   <p className={styles.typeDesc}>
-                    Mọi người đều nhìn thấy giá cao nhất theo thời gian thực và tự do nâng giá theo bước thầu.
+                    Có giá khởi điểm và bước giá cố định. Mọi người đều nhìn thấy giá cao nhất theo thời gian thực và nâng giá tự do.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Giá khởi điểm & Bước giá */}
-            <div className={styles.gridTwo}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>
-                  <DollarSign size={14} /> Giá khởi điểm (VND)
-                </label>
-                <input
-                  id="input-min-bid"
-                  type="number"
-                  className="input"
-                  min={1000000}
-                  step={500000}
-                  value={minBid}
-                  onChange={e => setMinBid(e.target.value)}
-                  required
-                />
-                <span className={styles.helperText}>{formatPriceFull(Number(minBid) || 0)}</span>
+            {/* Thiết lập giá: Phiên kín không có giá khởi điểm vs Phiên công khai có giá khởi điểm */}
+            {auctionType === 'sealed' ? (
+              <div className={styles.sealedNoStartPriceBox}>
+                <div className={styles.sealedNoStartPriceHeader}>
+                  <Sparkles size={16} color="var(--gold-primary)" />
+                  <span>Định giá tự do từ cộng đồng (Không có giá khởi điểm)</span>
+                </div>
+                <p className={styles.sealedNoStartPriceDesc}>
+                  Họa sĩ không cần thiết lập giá khởi điểm. Người mua sẽ tự do đưa ra mức giá theo đánh giá cá nhân để hệ thống thống kê chính xác <strong>giá tranh tối thiểu (Min) bao nhiêu</strong> và <strong>giá tranh tối đa (Max) bao nhiêu</strong>.
+                </p>
+                <div className={styles.sealedNoStartPricePills}>
+                  <span className="badge badge-gold">✓ Tự do ra giá</span>
+                  <span className="badge badge-verified">✓ Thống kê Min ~ Max</span>
+                  <span className="badge badge-gold">✓ Bảo mật thầu 100%</span>
+                </div>
               </div>
+            ) : (
+              <div className={styles.gridTwo}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>
+                    <DollarSign size={14} /> Giá khởi điểm (VND)
+                  </label>
+                  <input
+                    id="input-min-bid"
+                    type="number"
+                    className="input"
+                    min={1000000}
+                    step={500000}
+                    value={minBid}
+                    onChange={e => setMinBid(e.target.value)}
+                    required
+                  />
+                  <span className={styles.helperText}>{formatPriceFull(Number(minBid) || 0)}</span>
+                </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Bước giá tối thiểu (VND)</label>
-                <input
-                  id="input-bid-increment"
-                  type="number"
-                  className="input"
-                  min={100000}
-                  step={100000}
-                  value={bidIncrement}
-                  onChange={e => setBidIncrement(e.target.value)}
-                  required
-                />
-                <span className={styles.helperText}>{formatPriceFull(Number(bidIncrement) || 0)}</span>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Bước giá tối thiểu (VND)</label>
+                  <input
+                    id="input-bid-increment"
+                    type="number"
+                    className="input"
+                    min={100000}
+                    step={100000}
+                    value={bidIncrement}
+                    onChange={e => setBidIncrement(e.target.value)}
+                    required
+                  />
+                  <span className={styles.helperText}>{formatPriceFull(Number(bidIncrement) || 0)}</span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Thời gian Bắt đầu & Kết thúc */}
             <div className={styles.gridTwo}>
@@ -321,11 +352,29 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                 <div className={styles.previewGrid}>
                   <div className={styles.previewMetric}>
                     <span className={styles.metricLabel}>Giá khởi điểm</span>
-                    <span className={styles.metricValue}>{formatPriceFull(Number(minBid))}</span>
+                    <span className={styles.metricValue}>
+                      {auctionType === 'sealed' ? (
+                        <span style={{ color: 'var(--gold-primary)', fontSize: '0.85rem' }}>
+                          Không có (Tự do ra giá)
+                        </span>
+                      ) : (
+                        formatPriceFull(Number(minBid))
+                      )}
+                    </span>
                   </div>
                   <div className={styles.previewMetric}>
-                    <span className={styles.metricLabel}>Bước giá</span>
-                    <span className={styles.metricValue}>+{formatPriceFull(Number(bidIncrement))}</span>
+                    <span className={styles.metricLabel}>
+                      {auctionType === 'sealed' ? 'Mục tiêu phiên' : 'Bước giá'}
+                    </span>
+                    <span className={styles.metricValue}>
+                      {auctionType === 'sealed' ? (
+                        <span style={{ fontSize: '0.8rem', color: '#2ECC71' }}>
+                          Khám phá Min ~ Max
+                        </span>
+                      ) : (
+                        `+${formatPriceFull(Number(bidIncrement))}`
+                      )}
+                    </span>
                   </div>
                   <div className={styles.previewMetric}>
                     <span className={styles.metricLabel}>Mở lúc</span>

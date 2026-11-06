@@ -8,11 +8,11 @@ import styles from './SealedBidModal.module.css';
 
 const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, currentUser }) => {
   const [step, setStep] = useState(1); // 1: Input Bid, 2: Commitment & Confirmation
-  const reservePrice = session?.min_bid || artwork.reserve_price || 18000000;
   
-  // Rule 8.2: Giá đặt phải >= reserve_price. Nếu đã đặt trước đó, chỉ được tăng giá (> existingBid.bid_amount), không được hạ hoặc rút.
-  const minRequired = existingBid ? existingBid.bid_amount + (session?.bid_increment || 500000) : reservePrice;
-  const [bidAmount, setBidAmount] = useState(existingBid ? minRequired : reservePrice);
+  // Đấu giá kín không có giá khởi điểm. Người mua tự do đề xuất giá để khám phá biên độ Min ~ Max.
+  // Nếu đã nộp trước đó, chỉ được tăng giá (> existingBid.bid_amount), không được hạ hoặc rút.
+  const minRequired = existingBid ? existingBid.bid_amount + 500000 : 1000000;
+  const [bidAmount, setBidAmount] = useState(existingBid ? minRequired : 20000000);
   const [note, setNote] = useState(existingBid?.notes || '');
   const [agreementChecked, setAgreementChecked] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -30,7 +30,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
       if (existingBid) {
         alert(`Quy tắc phiên kín: Bạn chỉ được TĂNG GIÁ, không được hạ giá hoặc rút. Mức giá mới phải từ ${formatPriceFull(minRequired)} trở lên.`);
       } else {
-        alert(`Giá thầu kín phải tối thiểu bằng giá khởi điểm (${formatPriceFull(minRequired)})`);
+        alert(`Vui lòng nhập mức giá đề xuất tối thiểu từ ${formatPriceFull(minRequired)} trở lên.`);
       }
       return;
     }
@@ -77,7 +77,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
             <h4 className={styles.artTitle}>{artwork.title}</h4>
             <p className={styles.artArtist}>Họa sĩ: {artwork.artist_name}</p>
             <p className={styles.artMinBid}>
-              Giá khởi điểm sàn: <strong>{formatPriceFull(minRequired)}</strong>
+              Định giá tự do: <strong style={{ color: 'var(--gold-primary)' }}>Không có giá khởi điểm</strong>
             </p>
           </div>
         </div>
@@ -86,9 +86,14 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
         {step === 1 && (
           <form onSubmit={handleNextStep} className={styles.formContent}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel} htmlFor="sealed-bid-amount">
-                <DollarSign size={16} /> Mức giá bạn muốn đặt (VND)
-              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className={styles.fieldLabel} htmlFor="sealed-bid-amount">
+                  <DollarSign size={16} /> Mức giá bạn muốn đề xuất (VND)
+                </label>
+                <span style={{ fontSize: '0.72rem', color: '#2ECC71', fontWeight: 600 }}>
+                  ✓ Tự do định giá
+                </span>
+              </div>
               <div className={styles.inputWrap}>
                 <input
                   id="sealed-bid-amount"
@@ -98,6 +103,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
                   step={500000}
                   value={bidAmount}
                   onChange={e => setBidAmount(e.target.value)}
+                  placeholder="Nhập mức giá bạn định giá cho tác phẩm..."
                   required
                 />
               </div>
@@ -106,18 +112,18 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
               </p>
             </div>
 
-            {/* Quick Increment suggestions */}
+            {/* Quick choices suggestions */}
             <div className={styles.quickStepsWrap}>
-              <span className={styles.quickLabel}>Gợi ý nhanh trên mức khởi điểm:</span>
+              <span className={styles.quickLabel}>Mức giá gợi ý nhanh:</span>
               <div className={styles.quickButtons}>
-                {[1000000, 3000000, 5000000, 10000000].map(add => (
+                {[15000000, 20000000, 25000000, 35000000, 50000000].map(val => (
                   <button
-                    key={add}
+                    key={val}
                     type="button"
                     className="btn btn-secondary btn-sm"
-                    onClick={() => setBidAmount(minRequired + add)}
+                    onClick={() => setBidAmount(val)}
                   >
-                    +{formatPrice(add)}
+                    {formatPrice(val)}
                   </button>
                 ))}
               </div>
@@ -141,9 +147,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
             <div className={styles.secrecyNotice}>
               <EyeOff size={16} color="var(--gold-primary)" />
               <p>
-                <strong>Quy chế bảo mật giá:</strong> Mức giá này được mã hóa và lưu trữ bí mật. 
-                Không có bất kỳ người tham gia nào khác nhìn thấy giá của bạn. Chỉ khi phiên kết thúc, 
-                Họa sĩ mới mở bảng xếp hạng giá thầu.
+                <strong>Khám phá giá tự do:</strong> Họa sĩ không đặt giá khởi điểm. Mức giá này được mã hóa bảo mật. Mọi người tự do đề xuất giá để cùng xác định <strong>khoảng giá tối thiểu (Min) và tối đa (Max)</strong> của tác phẩm.
               </p>
             </div>
 

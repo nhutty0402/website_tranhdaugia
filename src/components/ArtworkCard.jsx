@@ -95,10 +95,10 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
         <div className={styles.footer}>
           <div>
             <p className={styles.priceLabel}>
-              {isSealed ? 'Giá khởi điểm (Kín)' : isLive ? 'Giá hiện tại' : 'Giá khởi điểm'}
+              {isSealed ? 'Đấu giá kín (Không giá khởi điểm)' : isLive ? 'Giá hiện tại' : 'Giá khởi điểm'}
             </p>
             <p className={styles.price}>
-              {isSealed ? formatPrice(session?.min_bid || artwork.reserve_price) : formatPrice(artwork.current_price)}
+              {isSealed ? 'Tự do đề xuất giá' : formatPrice(artwork.current_price)}
             </p>
           </div>
           <div className={styles.trustBadge}>
