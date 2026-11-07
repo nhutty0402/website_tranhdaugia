@@ -84,6 +84,12 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   }, [location.search, isArtist]);
 
   React.useEffect(() => {
+    const handleOpenUpload = () => setUploadArtworkOpen(true);
+    window.addEventListener('open-artist-upload', handleOpenUpload);
+    return () => window.removeEventListener('open-artist-upload', handleOpenUpload);
+  }, []);
+
+  React.useEffect(() => {
     if (location.state?.tab) {
       if (isArtist) {
         if (location.state.tab === 'Quản lý tác phẩm' || location.state.tab === 'Quản lý bài đăng' || location.state.tab === 'Tác phẩm & Phiên đấu giá') setActiveTab('Quản lý bài đăng');
@@ -200,16 +206,21 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
             {/* Quick Actions: Strictly separated by role */}
             <div className={styles.profileHeroActions}>
               {isArtist ? (
-                <>
-                  <button
-                    id="profile-upload-artwork-btn"
-                    className="btn btn-primary"
-                    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                    onClick={() => setUploadArtworkOpen(true)}
-                  >
-                    <PlusCircle size={16} /> Đăng bài mới
-                  </button>
-                </>
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '6px 14px',
+                  background: 'rgba(34, 197, 94, 0.08)',
+                  border: '1px solid rgba(34, 197, 94, 0.22)',
+                  borderRadius: 20,
+                  fontSize: '0.8rem',
+                  fontWeight: 500,
+                  color: '#4ade80'
+                }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)' }} />
+                  <span>Kênh họa sĩ đang hoạt động</span>
+                </div>
               ) : (
                 <>
                   <Link
@@ -241,7 +252,25 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
               key={tab}
               id={`profile-tab-${tab.replace(/\s+/g, '-').toLowerCase()}`}
               className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => {
+                setActiveTab(tab);
+                if (isArtist) {
+                  const tabMap = {
+                    'Quản lý bài đăng': 'artworks',
+                    'Quản lý đơn hàng': 'orders',
+                    'Vận chuyển': 'shipping',
+                    'Hồ sơ họa sĩ': 'profile',
+                  };
+                  navigate(`/profile?tab=${tabMap[tab] || 'artworks'}`, { replace: true });
+                } else {
+                  const tabMap = {
+                    'Bộ sưu tập & Chứng chỉ số': 'collection',
+                    'Đơn hàng & Ký quỹ': 'orders',
+                    'Hồ sơ & Bảo mật': 'settings',
+                  };
+                  navigate(`/profile?tab=${tabMap[tab] || 'collection'}`, { replace: true });
+                }
+              }}
               style={{ whiteSpace: 'nowrap' }}
             >
               {tab}
@@ -2362,28 +2391,12 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
     <div className={styles.tabContent}>
       {/* Header */}
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: 16,
-        flexWrap: 'wrap',
-        marginBottom: 24
+        marginBottom: 20
       }}>
-        <div>
-          <h2 className={styles.tabTitle} style={{ margin: 0 }}>Quản lý bài đăng tác phẩm</h2>
-          <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Đăng bài sáng tác mới, theo dõi lượt xem, quản lý trạng thái niêm yết và chỉnh sửa thông tin tranh.
-          </p>
-        </div>
-        <button
-          type="button"
-          id="tab-btn-upload-post"
-          className="btn btn-primary"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-          onClick={onOpenUpload}
-        >
-          <PlusCircle size={16} /> Đăng bài mới
-        </button>
+        <h2 className={styles.tabTitle} style={{ margin: 0 }}>Quản lý bài đăng tác phẩm</h2>
+        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          Đăng bài sáng tác mới, theo dõi lượt xem, quản lý trạng thái niêm yết và chỉnh sửa thông tin tranh.
+        </p>
       </div>
 
       {/* Toolbar & Filter Pills */}

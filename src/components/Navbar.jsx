@@ -111,47 +111,71 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
           {/* Center Navigation Menu */}
           <nav className={styles.navContainer} aria-label="Menu chính">
-            <ul className={styles.navLinks}>
-              {navLinks.map(link => {
-                const isActive = isArtist
-                  ? (location.pathname === '/profile' && (location.search === link.query || (!location.search && link.query === '?tab=artworks')))
-                  : location.pathname === link.path;
-                const IconComp = link.icon;
-                return (
-                  <li key={link.path} className={styles.navItem}>
-                    <Link
-                      to={link.path}
-                      className={`${styles.navLink} ${isActive ? styles.active : ''}`}
-                    >
-                      <div className={styles.navIconWrapper}>
-                        <IconComp size={16} strokeWidth={1.5} className={styles.navItemIcon} />
-                      </div>
-                      <div className={styles.navTextCol}>
-                        <div className={styles.navLabelRow}>
-                          <span className={styles.navLabel}>{link.label}</span>
-                          {link.isLive && (
-                            <span className={styles.liveBadge}>
-                              <span className={styles.livePulse} />
-                              LIVE
-                            </span>
-                          )}
+            {isArtist ? (
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 16px',
+                background: 'rgba(197, 160, 89, 0.08)',
+                border: '1px solid rgba(197, 160, 89, 0.22)',
+                borderRadius: '20px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                color: 'var(--gold-primary)',
+                letterSpacing: '0.04em'
+              }}>
+                <Palette size={15} />
+                <span>KÊNH QUẢN TRỊ HỌA SĨ</span>
+              </div>
+            ) : (
+              <ul className={styles.navLinks}>
+                {navLinks.map(link => {
+                  const isActive = location.pathname === link.path;
+                  const IconComp = link.icon;
+                  return (
+                    <li key={link.path} className={styles.navItem}>
+                      <Link
+                        to={link.path}
+                        className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+                      >
+                        <div className={styles.navIconWrapper}>
+                          <IconComp size={16} strokeWidth={1.5} className={styles.navItemIcon} />
                         </div>
-                        {link.subLabel && <span className={styles.navSubLabel}>{link.subLabel}</span>}
-                      </div>
-                      <span className={styles.activeGlowLine} />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+                        <div className={styles.navTextCol}>
+                          <div className={styles.navLabelRow}>
+                            <span className={styles.navLabel}>{link.label}</span>
+                            {link.isLive && (
+                              <span className={styles.liveBadge}>
+                                <span className={styles.livePulse} />
+                                LIVE
+                              </span>
+                            )}
+                          </div>
+                          {link.subLabel && <span className={styles.navSubLabel}>{link.subLabel}</span>}
+                        </div>
+                        <span className={styles.activeGlowLine} />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </nav>
 
           {/* Right Utility Buttons */}
           <div className={styles.actions}>
             {isArtist && (
-              <Link
-                to="/profile?action=upload"
+              <button
+                type="button"
                 id="nav-artist-post-btn"
+                onClick={() => {
+                  if (location.pathname === '/profile') {
+                    window.dispatchEvent(new CustomEvent('open-artist-upload'));
+                  } else {
+                    navigate('/profile?action=upload');
+                  }
+                }}
                 className="btn btn-primary btn-sm"
                 style={{
                   display: 'inline-flex',
@@ -161,12 +185,13 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                   padding: '7px 14px',
                   fontWeight: 600,
                   borderRadius: '8px',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer'
                 }}
               >
                 <PlusCircle size={15} />
                 <span>Đăng bài mới</span>
-              </Link>
+              </button>
             )}
 
             <button
