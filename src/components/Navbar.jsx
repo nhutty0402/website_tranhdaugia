@@ -109,26 +109,9 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
             <Logo size="md" />
           </Link>
 
-          {/* Center Navigation Menu */}
-          <nav className={styles.navContainer} aria-label="Menu chính">
-            {isArtist ? (
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 16px',
-                background: 'rgba(197, 160, 89, 0.08)',
-                border: '1px solid rgba(197, 160, 89, 0.22)',
-                borderRadius: '20px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                color: 'var(--gold-primary)',
-                letterSpacing: '0.04em'
-              }}>
-                <Palette size={15} />
-                <span>KÊNH QUẢN TRỊ HỌA SĨ</span>
-              </div>
-            ) : (
+          {/* Center Navigation Menu (Chỉ hiển thị cho Collector / Khách) */}
+          {!isArtist && (
+            <nav className={styles.navContainer} aria-label="Menu chính">
               <ul className={styles.navLinks}>
                 {navLinks.map(link => {
                   const isActive = location.pathname === link.path;
@@ -160,8 +143,8 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                   );
                 })}
               </ul>
-            )}
-          </nav>
+            </nav>
+          )}
 
           {/* Right Utility Buttons */}
           <div className={styles.actions}>
