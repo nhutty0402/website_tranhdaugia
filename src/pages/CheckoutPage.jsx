@@ -177,7 +177,7 @@ export default function CheckoutPage({ currentUser, addToast }) {
       artworkId: artwork?.artwork_id || 'aw-checkout',
       title: artwork?.title || 'Tác phẩm nghệ thuật',
       artist_name: artwork?.artist_name || 'Họa sĩ Artisan Hub',
-      image: artwork?.image || '/gallery_1.png',
+      image: artwork?.image || '/artwork_1.png',
       medium: artwork?.medium || 'Sơn dầu / Sơn mài',
       dimensions: artwork?.dimensions || '80 x 100 cm',
       creation_year: artwork?.creation_year || '2024',

@@ -747,7 +747,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
       artworkId: 'aw2',
       title: 'Hoàng Hôn Sông Hương',
       artist_name: 'Nguyễn Gia Trí',
-      image: '/gallery_2.png',
+      image: '/artwork_2.png',
       medium: 'Sơn mài truyền thống & Vàng quỳ 24K',
       dimensions: '90 x 120 cm',
       creation_year: '2023',
@@ -777,7 +777,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
       artworkId: 'aw1',
       title: 'Mùa Vàng Tây Bắc',
       artist_name: 'Trần Văn Cẩn',
-      image: '/gallery_1.png',
+      image: '/artwork_1.png',
       medium: 'Sơn dầu trên toan (Oil on canvas)',
       dimensions: '80 x 100 cm',
       creation_year: '2024',
@@ -807,7 +807,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
       artworkId: 'aw3',
       title: 'Thiếu Nữ Bên Hoa Huệ',
       artist_name: 'Tô Ngọc Vân',
-      image: '/gallery_3.png',
+      image: '/artwork_3.png',
       medium: 'Sơn mài phục dựng cao cấp',
       dimensions: '75 x 95 cm',
       creation_year: '2022',
@@ -1371,7 +1371,7 @@ const getAllPurchasedCertificates = (currentUser) => {
       orderId: 'AH-ORD-2024-8924',
       title: 'Hoàng Hôn Sông Hương',
       artist_name: 'Nguyễn Gia Trí',
-      image: '/gallery_2.png',
+      image: '/artwork_2.png',
       medium: 'Sơn mài truyền thống & Vàng quỳ 24K',
       dimensions: '90 x 120 cm',
       creation_year: '2023',
@@ -1394,7 +1394,7 @@ const getAllPurchasedCertificates = (currentUser) => {
       orderId: 'AH-ORD-2024-7620',
       title: 'Thiếu Nữ Bên Hoa Huệ',
       artist_name: 'Tô Ngọc Vân',
-      image: '/gallery_3.png',
+      image: '/artwork_3.png',
       medium: 'Sơn mài phục dựng cao cấp',
       dimensions: '75 x 95 cm',
       creation_year: '2022',
@@ -1417,7 +1417,7 @@ const getAllPurchasedCertificates = (currentUser) => {
       orderId: 'AH-ORD-2024-9102',
       title: 'Mùa Vàng Tây Bắc',
       artist_name: 'Trần Văn Cẩn',
-      image: '/gallery_1.png',
+      image: '/artwork_1.png',
       medium: 'Sơn dầu trên toan (Oil on canvas)',
       dimensions: '80 x 100 cm',
       creation_year: '2024',
@@ -2708,7 +2708,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
       created_at: '02/11/2026 14:30',
       artwork_id: 'aw2',
       title: 'Hoàng Hôn Sông Hương',
-      image: '/gallery_2.png',
+      image: '/artwork_2.png',
       buyer_name: 'Nguyễn Văn An',
       buyer_level: 'Patron Cấp L2',
       buyer_phone: '0903.882.194',
@@ -2725,7 +2725,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
       created_at: '03/11/2026 09:15',
       artwork_id: 'aw1',
       title: 'Mùa Vàng Tây Bắc',
-      image: '/gallery_1.png',
+      image: '/artwork_1.png',
       buyer_name: 'Phan Hoàng Yến Trang',
       buyer_level: 'VIP Patron Cấp L3',
       buyer_phone: '0918.423.901',
@@ -2742,7 +2742,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
       created_at: '25/10/2026 16:40',
       artwork_id: 'aw3',
       title: 'Thiếu Nữ Bên Hoa Huệ',
-      image: '/gallery_3.png',
+      image: '/artwork_3.png',
       buyer_name: 'Đỗ Đức Huy',
       buyer_level: 'Collector Cấp L2',
       buyer_phone: '0982.771.029',
@@ -2759,7 +2759,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
       created_at: '12/10/2026 11:20',
       artwork_id: 'aw4',
       title: 'Bình Minh Trên Biển Đông',
-      image: '/gallery_hero.png',
+      image: '/artwork_4.png',
       buyer_name: 'Lê Thùy Chi',
       buyer_level: 'Patron Cấp L1',
       buyer_phone: '0933.119.824',
@@ -2945,7 +2945,8 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
                   <img
                     src={order.image}
                     alt={order.title}
-                    style={{ width: 72, height: 72, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)', flexShrink: 0 }}
+                    onError={(e) => { e.currentTarget.src = '/artwork_2.png'; }}
+                    style={{ width: 72, height: 72, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }}
                   />
                   <div>
                     <h4 style={{ margin: '0 0 4px', fontSize: '1.05rem', color: 'var(--text-primary)', fontFamily: 'var(--font-brand)' }}>
@@ -3045,7 +3046,7 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
       code: 'AH-EXP-892401',
       order_id: 'AH-ORD-2024-8924',
       title: 'Hoàng Hôn Sông Hương',
-      image: '/gallery_2.png',
+      image: '/artwork_2.png',
       dimensions: '80 x 120 cm (Khung gỗ sồi tự nhiên)',
       recipient_name: 'Nguyễn Văn An',
       recipient_phone: '0903.882.194',
@@ -3061,7 +3062,7 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
       code: 'AH-EXP-928410',
       order_id: 'AH-ORD-2024-9102',
       title: 'Mùa Vàng Tây Bắc',
-      image: '/gallery_1.png',
+      image: '/artwork_1.png',
       dimensions: '100 x 150 cm (Sơn mài phủ bóng bảo vệ)',
       recipient_name: 'Phan Hoàng Yến Trang',
       recipient_phone: '0918.423.901',
@@ -3079,7 +3080,7 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
       code: 'AH-EXP-762019',
       order_id: 'AH-ORD-2024-7620',
       title: 'Thiếu Nữ Bên Hoa Huệ',
-      image: '/gallery_3.png',
+      image: '/artwork_3.png',
       dimensions: '90 x 120 cm (Sơn dầu đắp nổi)',
       recipient_name: 'Đỗ Đức Huy',
       recipient_phone: '0982.771.029',
@@ -3232,7 +3233,8 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
                   <img
                     src={s.image}
                     alt={s.title}
-                    style={{ width: 80, height: 80, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)', flexShrink: 0 }}
+                    onError={(e) => { e.currentTarget.src = '/artwork_2.png'; }}
+                    style={{ width: 80, height: 80, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }}
                   />
                   <div>
                     <h4 style={{ margin: '0 0 4px', fontSize: '1.05rem', color: 'var(--text-primary)', fontFamily: 'var(--font-brand)' }}>
