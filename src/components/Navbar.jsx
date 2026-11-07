@@ -2,38 +2,57 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Search, Bell, User, Menu, X, ChevronDown, LogOut,
-  Compass, Gavel, Palette, Landmark, Sun, Moon, ShieldCheck
+  Compass, Gavel, Palette, Landmark, Sun, Moon, ShieldCheck,
+  Receipt, Truck, PlusCircle
 } from 'lucide-react';
 import VerificationBadge from './VerificationBadge';
 import Logo from './Logo';
 import styles from './Navbar.module.css';
 
-const NAV_LINKS = [
+const PUBLIC_NAV_LINKS = [
   {
     label: 'Khám phá',
-    // subLabel: 'GALLERY & TRIỂN LÃM',
     path: '/gallery',
     icon: Compass,
   },
   {
     label: 'Đấu giá',
-    // subLabel: 'TRỰC TIẾP & ĐẤU KÍN',
     path: '/auction',
     icon: Gavel,
     isLive: true,
   },
   {
     label: 'Họa sĩ',
-    // subLabel: 'DANH MỤC NGHỆ THUẬT',
     path: '/artists',
     icon: Palette,
   },
-  // { 
-  //   label: 'Về chúng tôi', 
-  //   // subLabel: 'BẢO CHỨNG & DI SẢN',
-  //   path: '/about',
-  //   icon: Landmark,
-  // },
+];
+
+const ARTIST_NAV_LINKS = [
+  {
+    label: 'Quản lý bài đăng',
+    path: '/profile?tab=artworks',
+    query: '?tab=artworks',
+    icon: Palette,
+  },
+  {
+    label: 'Quản đơn',
+    path: '/profile?tab=orders',
+    query: '?tab=orders',
+    icon: Receipt,
+  },
+  {
+    label: 'Vận chuyển',
+    path: '/profile?tab=shipping',
+    query: '?tab=shipping',
+    icon: Truck,
+  },
+  {
+    label: 'Profile họa sĩ',
+    path: '/profile?tab=profile',
+    query: '?tab=profile',
+    icon: User,
+  },
 ];
 
 const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark', onToggleTheme }) => {
@@ -44,6 +63,9 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const isLight = theme === 'light';
   const userMenuRef = useRef(null);
+
+  const isArtist = user?.role === 'artist';
+  const navLinks = isArtist ? ARTIST_NAV_LINKS : PUBLIC_NAV_LINKS;
 
 
 
@@ -83,15 +105,17 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
       <header className={styles.navbar}>
         <div className={styles.inner}>
           {/* Logo "ARTISAN HUB" */}
-          <Link to="/" className={styles.logoLink} aria-label="Artisan Hub Trang chủ">
+          <Link to={isArtist ? "/profile?tab=artworks" : "/"} className={styles.logoLink} aria-label="Artisan Hub Trang chủ">
             <Logo size="md" />
           </Link>
 
           {/* Center Navigation Menu */}
           <nav className={styles.navContainer} aria-label="Menu chính">
             <ul className={styles.navLinks}>
-              {NAV_LINKS.map(link => {
-                const isActive = location.pathname === link.path;
+              {navLinks.map(link => {
+                const isActive = isArtist
+                  ? (location.pathname === '/profile' && (location.search === link.query || (!location.search && link.query === '?tab=artworks')))
+                  : location.pathname === link.path;
                 const IconComp = link.icon;
                 return (
                   <li key={link.path} className={styles.navItem}>
@@ -112,7 +136,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                             </span>
                           )}
                         </div>
-                        <span className={styles.navSubLabel}>{link.subLabel}</span>
+                        {link.subLabel && <span className={styles.navSubLabel}>{link.subLabel}</span>}
                       </div>
                       <span className={styles.activeGlowLine} />
                     </Link>
@@ -124,6 +148,27 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
           {/* Right Utility Buttons */}
           <div className={styles.actions}>
+            {isArtist && (
+              <Link
+                to="/profile?action=upload"
+                id="nav-artist-post-btn"
+                className="btn btn-primary btn-sm"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.82rem',
+                  padding: '7px 14px',
+                  fontWeight: 600,
+                  borderRadius: '8px',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <PlusCircle size={15} />
+                <span>Đăng bài mới</span>
+              </Link>
+            )}
+
             <button
               id="nav-search-btn"
               className={styles.iconBtn}
@@ -201,25 +246,68 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
                     <div className={styles.dropdownDivider} />
 
-                    <Link
-                      to="/profile"
-                      className={styles.dropdownItem}
-                      id="dropdown-profile-link"
-                      onClick={() => setUserMenuOpen(false)}
-                    >
-                      <User size={15} color="var(--gold-primary)" />
-                      <span>Hồ sơ & Bộ sưu tập</span>
-                    </Link>
+                    {isArtist ? (
+                      <>
+                        <Link
+                          to="/profile?tab=artworks"
+                          className={styles.dropdownItem}
+                          id="dropdown-artist-artworks-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <Palette size={15} color="var(--gold-primary)" />
+                          <span>Quản lý bài đăng</span>
+                        </Link>
+                        <Link
+                          to="/profile?tab=orders"
+                          className={styles.dropdownItem}
+                          id="dropdown-artist-orders-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <Receipt size={15} color="var(--gold-primary)" />
+                          <span>Quản lý đơn hàng</span>
+                        </Link>
+                        <Link
+                          to="/profile?tab=shipping"
+                          className={styles.dropdownItem}
+                          id="dropdown-artist-shipping-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <Truck size={15} color="var(--gold-primary)" />
+                          <span>Quản lý vận chuyển</span>
+                        </Link>
+                        <Link
+                          to="/profile?tab=profile"
+                          className={styles.dropdownItem}
+                          id="dropdown-artist-profile-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <User size={15} color="var(--gold-primary)" />
+                          <span>Profile họa sĩ</span>
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/profile"
+                          className={styles.dropdownItem}
+                          id="dropdown-profile-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <User size={15} color="var(--gold-primary)" />
+                          <span>Hồ sơ & Bộ sưu tập</span>
+                        </Link>
 
-                    <Link
-                      to="/quan-tri"
-                      className={styles.dropdownItem}
-                      id="dropdown-quan-tri-link"
-                      onClick={() => setUserMenuOpen(false)}
-                    >
-                      <ShieldCheck size={15} color="var(--gold-primary)" />
-                      <span>Giao diện Quản trị viên</span>
-                    </Link>
+                        <Link
+                          to="/quan-tri"
+                          className={styles.dropdownItem}
+                          id="dropdown-quan-tri-link"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <ShieldCheck size={15} color="var(--gold-primary)" />
+                          <span>Giao diện Quản trị viên</span>
+                        </Link>
+                      </>
+                    )}
 
                     <div className={styles.dropdownDivider} />
 
@@ -303,13 +391,35 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
         {/* Mobile nav */}
         {mobileOpen && (
           <div className={styles.mobileMenu}>
-            {NAV_LINKS.map(link => {
+            {isArtist && (
+              <Link
+                to="/profile?action=upload"
+                className="btn btn-primary btn-sm"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  margin: '12px 16px 8px',
+                  padding: '10px 16px',
+                  fontWeight: 600
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                <PlusCircle size={16} /> Đăng bài mới
+              </Link>
+            )}
+
+            {navLinks.map(link => {
+              const isActive = isArtist
+                ? (location.pathname === '/profile' && (location.search === link.query || (!location.search && link.query === '?tab=artworks')))
+                : location.pathname === link.path;
               const IconComp = link.icon;
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`${styles.mobileLink} ${location.pathname === link.path ? styles.mobileActive : ''}`}
+                  className={`${styles.mobileLink} ${isActive ? styles.mobileActive : ''}`}
                   onClick={() => setMobileOpen(false)}
                 >
                   <div className={styles.mobileLinkLeft}>
@@ -324,7 +434,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                           </span>
                         )}
                       </div>
-                      <div className={styles.mobileLinkSub}>{link.subLabel}</div>
+                      {link.subLabel && <div className={styles.mobileLinkSub}>{link.subLabel}</div>}
                     </div>
                   </div>
                 </Link>
@@ -348,12 +458,12 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                   </div>
                 </div>
                 <Link
-                  to="/profile"
+                  to={isArtist ? "/profile?tab=profile" : "/profile"}
                   className={styles.mobileLink}
                   onClick={() => setMobileOpen(false)}
                   style={{ display: 'flex', alignItems: 'center', gap: 8 }}
                 >
-                  <User size={16} /> Xem hồ sơ & Bộ sưu tập
+                  <User size={16} /> {isArtist ? 'Profile & Không gian họa sĩ' : 'Xem hồ sơ & Bộ sưu tập'}
                 </Link>
                 <button
                   id="mobile-logout-btn"
