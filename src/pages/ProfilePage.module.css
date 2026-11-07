@@ -1594,8 +1594,72 @@
 }
 
 /* ==========================================================================
-   ARTIST PROFILE & VERIFICATION TAB (Minimalist, High Legibility, 2-Column Split)
+   ARTIST PROFILE & VERIFICATION TAB (Balanced 2x2 Grid + Full-Width Security Strip)
    ========================================================================== */
+.profileSectionStack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profileGridTwo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 992px) {
+  .profileGridTwo {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+}
+
+.profileCardFull {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profileCardFull:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.securityGridThree {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .securityGridThree {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+.securityBox {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.securityBox:hover {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 .kycLayout {
   display: grid;
   grid-template-columns: 1fr;
@@ -1624,6 +1688,7 @@
   flex-direction: column;
   gap: 20px;
   position: relative;
+  height: 100%;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 

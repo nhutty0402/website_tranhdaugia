@@ -3513,21 +3513,30 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
 
   return (
     <div className={styles.tabContent}>
-      {/* Header tinh gọn */}
-      <div style={{ marginBottom: 28 }}>
-        <h2 className={styles.tabTitle} style={{ margin: 0 }}>Hồ sơ Họa sĩ & Thẩm định Xác thực</h2>
-        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Quản lý định danh eKYC Cấp L3, bản sắc sáng tác mỹ thuật và tài khoản ngân hàng nhận tiền giải ngân.
-        </p>
+      {/* Header tinh gọn & đẳng cấp */}
+      <div style={{ marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+        <div>
+          <h2 className={styles.tabTitle} style={{ margin: 0 }}>Hồ sơ Họa sĩ & Xác thực Chuyên môn</h2>
+          <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+            Quản lý định danh Master Artist Cấp L3, bản sắc sáng tác mỹ thuật, tài khoản thụ hưởng và bảo mật.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <span className="badge badge-verified" style={{ padding: '6px 12px' }}>
+            <ShieldCheck size={13} /> Master Artist Verified
+          </span>
+          <span className="badge badge-gold" style={{ padding: '6px 12px' }}>
+            Cấp L3 eKYC
+          </span>
+        </div>
       </div>
 
-      {/* Lưới 2 Cột cân đối, thoáng mắt */}
-      <div className={styles.kycLayout}>
-        {/* ==============================================
-            CỘT 1 (BÊN TRÁI): BẢN SẮC & CHUYÊN MÔN MỸ THUẬT
-            ============================================== */}
-        <div className={styles.kycColumn}>
-          {/* 1. Tuyên ngôn nghệ thuật (Artist Statement) */}
+      <div className={styles.profileSectionStack}>
+        {/* =========================================================
+            HÀNG 1: BẢN SẮC NGHỆ THUẬT & CHỨNG NHẬN CHUYÊN MÔN (2 CỘT CÂN ĐỐI 50-50)
+            ========================================================= */}
+        <div className={styles.profileGridTwo}>
+          {/* Card 1: Tuyên ngôn sáng tác */}
           <div className={styles.kycCard}>
             <div className={styles.kycCardHeader}>
               <div className={styles.kycHeaderLeft}>
@@ -3550,19 +3559,26 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
               </button>
             </div>
 
-            <div className={styles.statementAreaWrap}>
-              <div className={styles.statementQuoteMark}>“</div>
-              <textarea
-                className={styles.statementTextarea}
-                rows={4}
-                value={statement}
-                onChange={(e) => setStatement(e.target.value)}
-                placeholder="Nhập tuyên ngôn nghệ thuật, triết lý sáng tác và nguồn cảm hứng của bạn..."
-              />
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 12 }}>
+              <div className={styles.statementAreaWrap} style={{ flex: 1, minHeight: 140 }}>
+                <div className={styles.statementQuoteMark}>“</div>
+                <textarea
+                  className={styles.statementTextarea}
+                  rows={4}
+                  value={statement}
+                  onChange={(e) => setStatement(e.target.value)}
+                  placeholder="Nhập tuyên ngôn nghệ thuật, triết lý sáng tác và nguồn cảm hứng của bạn..."
+                  style={{ minHeight: 90 }}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                <span>✦ Hiển thị công khai trong trang tác phẩm & phòng đấu giá</span>
+                <span>{statement.length} ký tự</span>
+              </div>
             </div>
           </div>
 
-          {/* 2. Hồ sơ chuyên môn & Bằng cấp */}
+          {/* Card 2: Chứng nhận Chuyên môn */}
           <div className={styles.kycCard}>
             <div className={styles.kycCardHeader}>
               <div className={styles.kycHeaderLeft}>
@@ -3571,42 +3587,47 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                 </div>
                 <div className={styles.kycTitleWrap}>
                   <h3 className={styles.kycCardTitle}>Chứng nhận Chuyên môn</h3>
-                  <span className={styles.kycCardSubtitle}>Hội đồng Mỹ thuật & Hiệp hội Giám định xác thực</span>
+                  <span className={styles.kycCardSubtitle}>Hội đồng Mỹ thuật & Giám định xác thực</span>
                 </div>
               </div>
+              <span className="badge badge-verified" style={{ fontSize: '0.72rem' }}>
+                <Check size={12} /> Đã kiểm định
+              </span>
             </div>
 
-            <div className={styles.credentialsList}>
-              <div className={styles.credentialRow}>
-                <span className={styles.credentialLabel}>Hiệp hội nghề nghiệp</span>
-                <span className={styles.credentialValue}>Hội Mỹ thuật Việt Nam (Mã: VNA-2018-092)</span>
-              </div>
-              <div className={styles.credentialRow}>
-                <span className={styles.credentialLabel}>Đào tạo chính quy</span>
-                <span className={styles.credentialValue}>Thạc sĩ Mỹ thuật – ĐH Mỹ thuật Việt Nam</span>
-              </div>
-              <div className={styles.credentialRow}>
-                <span className={styles.credentialLabel}>Chất liệu thế mạnh</span>
-                <div className={styles.materialTags}>
-                  <span className={styles.materialTag}>Sơn mài 9 lớp</span>
-                  <span className={styles.materialTag}>Sơn dầu đắp nổi</span>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div className={styles.credentialsList}>
+                <div className={styles.credentialRow}>
+                  <span className={styles.credentialLabel}>Hiệp hội nghề nghiệp</span>
+                  <span className={styles.credentialValue}>Hội Mỹ thuật Việt Nam (Mã: VNA-2018-092)</span>
                 </div>
-              </div>
-              <div className={styles.credentialRow}>
-                <span className={styles.credentialLabel}>Giải thưởng tiêu biểu</span>
-                <span className={styles.credentialValue} style={{ color: 'var(--gold-light)' }}>
-                  Giải Nhì Triển lãm Toàn quốc 2020
-                </span>
+                <div className={styles.credentialRow}>
+                  <span className={styles.credentialLabel}>Đào tạo chính quy</span>
+                  <span className={styles.credentialValue}>Thạc sĩ Mỹ thuật – ĐH Mỹ thuật Việt Nam</span>
+                </div>
+                <div className={styles.credentialRow}>
+                  <span className={styles.credentialLabel}>Chất liệu thế mạnh</span>
+                  <div className={styles.materialTags}>
+                    <span className={styles.materialTag}>Sơn mài 9 lớp</span>
+                    <span className={styles.materialTag}>Sơn dầu đắp nổi</span>
+                  </div>
+                </div>
+                <div className={styles.credentialRow}>
+                  <span className={styles.credentialLabel}>Giải thưởng tiêu biểu</span>
+                  <span className={styles.credentialValue} style={{ color: 'var(--gold-light)' }}>
+                    Giải Nhì Triển lãm Toàn quốc 2020
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ==============================================
-            CỘT 2 (BÊN PHẢI): ĐỊNH DANH EKYC, TÀI KHOẢN & BẢO MẬT
-            ============================================== */}
-        <div className={styles.kycColumn}>
-          {/* 1. Thẻ Định danh eKYC Cấp L3 (Master Verified) */}
+        {/* =========================================================
+            HÀNG 2: ĐỊNH DANH PHÁP LÝ EKYC & TÀI KHOẢN THỤ HƯỞNG (2 CỘT CÂN ĐỐI 50-50)
+            ========================================================= */}
+        <div className={styles.profileGridTwo}>
+          {/* Card 3: Thẻ Định danh eKYC Cấp L3 (Master Verified) */}
           <div className={`${styles.kycCard} ${styles.kycCardGold}`}>
             <div className={styles.kycCardHeader}>
               <div className={styles.kycHeaderLeft}>
@@ -3625,52 +3646,54 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
               </span>
             </div>
 
-            {/* 4 ô thông số cô đọng */}
-            <div className={styles.idGrid}>
-              <div className={styles.idCell}>
-                <span className={styles.idCellLabel}>Họ và tên</span>
-                <strong className={styles.idCellValue}>{user.full_name}</strong>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
+              {/* 4 ô thông số cô đọng */}
+              <div className={styles.idGrid}>
+                <div className={styles.idCell}>
+                  <span className={styles.idCellLabel}>Họ và tên</span>
+                  <strong className={styles.idCellValue}>{user.full_name}</strong>
+                </div>
+                <div className={styles.idCell}>
+                  <span className={styles.idCellLabel}>Mã định danh ICOM</span>
+                  <strong className={styles.idCellValue} style={{ color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>
+                    VN-ART-8942-L3
+                  </strong>
+                </div>
+                <div className={styles.idCell}>
+                  <span className={styles.idCellLabel}>CCCD gắn chip</span>
+                  <strong className={styles.idCellValue} style={{ fontFamily: 'var(--font-mono)' }}>
+                    079***004521
+                  </strong>
+                </div>
+                <div className={styles.idCell}>
+                  <span className={styles.idCellLabel}>Liên hệ xác thực</span>
+                  <strong className={styles.idCellValue} style={{ color: '#2ECC71' }}>
+                    Chính chủ 100%
+                  </strong>
+                </div>
               </div>
-              <div className={styles.idCell}>
-                <span className={styles.idCellLabel}>Mã định danh ICOM</span>
-                <strong className={styles.idCellValue} style={{ color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>
-                  VN-ART-8942-L3
-                </strong>
-              </div>
-              <div className={styles.idCell}>
-                <span className={styles.idCellLabel}>CCCD gắn chip</span>
-                <strong className={styles.idCellValue} style={{ fontFamily: 'var(--font-mono)' }}>
-                  079***004521
-                </strong>
-              </div>
-              <div className={styles.idCell}>
-                <span className={styles.idCellLabel}>Liên hệ xác thực</span>
-                <strong className={styles.idCellValue} style={{ color: '#2ECC71' }}>
-                  Chính chủ 100%
-                </strong>
-              </div>
-            </div>
 
-            {/* 3 chip đặc quyền L3 tinh gọn thay vì đoạn văn dài */}
-            <div>
-              <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8, fontWeight: 700 }}>
-                Đặc quyền Họa sĩ Cấp L3
-              </span>
-              <div className={styles.privilegeRow}>
-                <span className={styles.privilegePill}>
-                  <span>⚡</span> Đấu giá kín (Sealed-Bid)
+              {/* 3 chip đặc quyền L3 */}
+              <div>
+                <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8, fontWeight: 700 }}>
+                  Đặc quyền Họa sĩ Cấp L3
                 </span>
-                <span className={styles.privilegePill}>
-                  <span>📜</span> Chứng nhận số SHA-256
-                </span>
-                <span className={styles.privilegePill}>
-                  <span>🛡️</span> Ký quỹ Escrow 72h
-                </span>
+                <div className={styles.privilegeRow}>
+                  <span className={styles.privilegePill}>
+                    <span>⚡</span> Đấu giá kín (Sealed-Bid)
+                  </span>
+                  <span className={styles.privilegePill}>
+                    <span>📜</span> Chứng nhận số SHA-256
+                  </span>
+                  <span className={styles.privilegePill}>
+                    <span>🛡️</span> Ký quỹ Escrow 72h
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 2. Tài khoản ngân hàng nhận tiền */}
+          {/* Card 4: Tài khoản ngân hàng nhận tiền */}
           <div className={styles.kycCard}>
             <div className={styles.kycCardHeader}>
               <div className={styles.kycHeaderLeft}>
@@ -3692,85 +3715,121 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
               </button>
             </div>
 
-            {/* Thẻ ngân hàng tối giản */}
-            <div className={styles.bankCardBox}>
-              <div className={styles.bankCardHeader}>
-                <span className={styles.bankBrandName}>VIETCOMBANK</span>
-                <span style={{ fontSize: '0.68rem', color: 'var(--gold-light)', border: '1px solid rgba(197, 160, 89, 0.3)', padding: '2px 8px', borderRadius: 4, background: 'rgba(197, 160, 89, 0.08)' }}>
-                  Tài khoản chính
-                </span>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 14 }}>
+              {/* Thẻ ngân hàng tối giản */}
+              <div className={styles.bankCardBox}>
+                <div className={styles.bankCardHeader}>
+                  <span className={styles.bankBrandName}>VIETCOMBANK</span>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--gold-light)', border: '1px solid rgba(197, 160, 89, 0.3)', padding: '2px 8px', borderRadius: 4, background: 'rgba(197, 160, 89, 0.08)' }}>
+                    Tài khoản chính
+                  </span>
+                </div>
+                <div className={styles.bankAccNumber}>
+                  <span>0071 0008 8688 6</span>
+                  <button
+                    type="button"
+                    className={styles.copyIconBtn}
+                    onClick={() => handleCopy('0071000886886')}
+                    title="Sao chép số tài khoản"
+                  >
+                    {copiedBank ? <Check size={16} style={{ color: 'var(--success)' }} /> : <Copy size={16} />}
+                  </button>
+                </div>
+                <div className={styles.bankCardFooter}>
+                  <span>Chủ TK: <strong style={{ color: 'var(--text-primary)' }}>{user.full_name?.toUpperCase()}</strong></span>
+                  <span>Chi nhánh: Sở Giao Dịch Hà Nội</span>
+                </div>
               </div>
-              <div className={styles.bankAccNumber}>
-                <span>0071 0008 8688 6</span>
-                <button
-                  type="button"
-                  className={styles.copyIconBtn}
-                  onClick={() => handleCopy('0071000886886')}
-                  title="Sao chép số tài khoản"
-                >
-                  {copiedBank ? <Check size={16} style={{ color: 'var(--success)' }} /> : <Copy size={16} />}
-                </button>
+
+              <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                ✓ Tự động giải ngân qua Napas 247 sau khi người mua hoàn tất nghiệm thu 72h.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* =========================================================
+            HÀNG 3: BẢO MẬT & QUẢN LÝ PHIÊN (CARD NGANG TRẢI DÀI 100%, 3 Ô CÂN ĐỐI)
+            ========================================================= */}
+        <div className={styles.profileCardFull}>
+          <div className={styles.kycCardHeader} style={{ paddingBottom: 14 }}>
+            <div className={styles.kycHeaderLeft}>
+              <div className={styles.kycIconBox} style={{ background: 'rgba(197, 160, 89, 0.1)', color: 'var(--gold-primary)' }}>
+                <Shield size={20} />
               </div>
-              <div className={styles.bankCardFooter}>
-                <span>Chủ TK: <strong style={{ color: 'var(--text-primary)' }}>{user.full_name?.toUpperCase()}</strong></span>
-                <span>Chi nhánh: Sở Giao Dịch Hà Nội</span>
+              <div className={styles.kycTitleWrap}>
+                <h3 className={styles.kycCardTitle}>Bảo mật & Quản lý Phiên làm việc</h3>
+                <span className={styles.kycCardSubtitle}>Quản lý phương thức bảo mật 2 lớp, mật khẩu và phiên đăng nhập</span>
               </div>
             </div>
-
-            <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-              ✓ Tự động giải ngân qua Napas 247 sau khi người mua hoàn tất nghiệm thu 72h.
-            </p>
           </div>
 
-          {/* 3. Cài đặt bảo mật & Đăng xuất */}
-          <div className={styles.kycCard} style={{ padding: '18px 24px', gap: 14 }}>
-            <div className={styles.securityItem}>
+          <div className={styles.securityGridThree}>
+            {/* Ô 1: 2FA */}
+            <div className={styles.securityBox}>
               <div>
-                <span style={{ display: 'block', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.84rem' }}>
+                <span style={{ display: 'block', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.88rem' }}>
                   Xác thực 2 lớp (2FA)
                 </span>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Bảo vệ rút tiền & tạo phiên đấu giá</span>
-              </div>
-              <span className="badge" style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ECC71', fontSize: '0.72rem' }}>
-                Đang bật
-              </span>
-            </div>
-
-            <div className={styles.securityItem}>
-              <div>
-                <span style={{ display: 'block', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.84rem' }}>
-                  Đổi mật khẩu
+                <span style={{ display: 'block', fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                  Bảo vệ rút tiền & xác thực phiên đấu giá
                 </span>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Cập nhật lần cuối 30 ngày trước</span>
               </div>
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                onClick={() => addToast?.('Liên kết đổi mật khẩu đã gửi về email!', 'info')}
-                style={{ fontSize: '0.75rem' }}
-              >
-                Đổi mật khẩu
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Trạng thái</span>
+                <span className="badge" style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ECC71', fontSize: '0.72rem' }}>
+                  ✓ Đang bật
+                </span>
+              </div>
             </div>
 
-            <div className={styles.securityItem} style={{ borderTop: '1px solid rgba(239, 68, 68, 0.2)', paddingTop: 14, marginTop: 4 }}>
+            {/* Ô 2: Đổi mật khẩu */}
+            <div className={styles.securityBox}>
               <div>
-                <span style={{ display: 'block', color: '#f87171', fontWeight: 600, fontSize: '0.84rem' }}>
+                <span style={{ display: 'block', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.88rem' }}>
+                  Mật khẩu đăng nhập
+                </span>
+                <span style={{ display: 'block', fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                  Cập nhật lần cuối 30 ngày trước
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Bảo mật cao</span>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => addToast?.('Liên kết đổi mật khẩu đã gửi về email!', 'info')}
+                  style={{ fontSize: '0.75rem', padding: '4px 12px' }}
+                >
+                  Đổi mật khẩu
+                </button>
+              </div>
+            </div>
+
+            {/* Ô 3: Đăng xuất */}
+            <div className={styles.securityBox} style={{ borderColor: 'rgba(239, 68, 68, 0.15)' }}>
+              <div>
+                <span style={{ display: 'block', color: '#f87171', fontWeight: 600, fontSize: '0.88rem' }}>
                   Đăng xuất tài khoản
                 </span>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Thoát phiên làm việc trên thiết bị này</span>
+                <span style={{ display: 'block', fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                  Thoát phiên làm việc trên thiết bị này
+                </span>
               </div>
-              <button
-                type="button"
-                className="btn btn-danger btn-sm"
-                style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem' }}
-                onClick={() => {
-                  onLogout?.();
-                  navigate('/');
-                }}
-              >
-                <LogOut size={13} /> Đăng xuất
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 8, borderTop: '1px solid rgba(239,68,68,0.1)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Phiên hiện tại</span>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', padding: '4px 12px' }}
+                  onClick={() => {
+                    onLogout?.();
+                    navigate('/');
+                  }}
+                >
+                  <LogOut size={13} /> Đăng xuất
+                </button>
+              </div>
             </div>
           </div>
         </div>
