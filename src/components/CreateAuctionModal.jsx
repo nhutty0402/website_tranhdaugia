@@ -183,7 +183,7 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                       <Lock size={18} color="var(--gold-primary)" />
                     </div>
                     <div>
-                      <h4 className={styles.typeName}>Phiên Đấu Giá Kín (Sealed-bid)</h4>
+                      <h4 className={styles.typeName}>Phiên Đấu Giá Kín</h4>
                       <span className={styles.typeTag}>Được khuyến nghị cho tác phẩm độc bản</span>
                     </div>
                   </div>
@@ -192,7 +192,7 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                   </p>
                 </div>
 
-                {/* Option 2: Phiên công khai (Live) */}
+                {/* Option 2: Phiên công khai */}
                 <div
                   id="type-live"
                   className={`${styles.typeCard} ${auctionType === 'live' ? styles.typeSelected : ''}`}
@@ -206,8 +206,8 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                       <Globe size={18} color="var(--text-secondary)" />
                     </div>
                     <div>
-                      <h4 className={styles.typeName}>Phiên Công Khai Trực Tiếp (Live)</h4>
-                      <span className={styles.typeTagMuted}>Đua giá realtime 1-chạm</span>
+                      <h4 className={styles.typeName}>Phiên Đấu Giá Trực Tiếp</h4>
+                      <span className={styles.typeTagMuted}>Đua giá trực tiếp 1-chạm</span>
                     </div>
                   </div>
                   <p className={styles.typeDesc}>
@@ -225,11 +225,11 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                   <span>Định giá tự do từ cộng đồng (Không có giá khởi điểm)</span>
                 </div>
                 <p className={styles.sealedNoStartPriceDesc}>
-                  Họa sĩ không cần thiết lập giá khởi điểm. Người mua sẽ tự do đưa ra mức giá theo đánh giá cá nhân để hệ thống thống kê chính xác <strong>giá tranh tối thiểu (Min) bao nhiêu</strong> và <strong>giá tranh tối đa (Max) bao nhiêu</strong>.
+                  Họa sĩ không cần thiết lập giá khởi điểm. Người mua sẽ tự do đưa ra mức giá theo đánh giá cá nhân để hệ thống thống kê chính xác <strong>giá tranh tối thiểu bao nhiêu</strong> và <strong>giá tranh tối đa bao nhiêu</strong>.
                 </p>
                 <div className={styles.sealedNoStartPricePills}>
                   <span className="badge badge-gold">✓ Tự do ra giá</span>
-                  <span className="badge badge-verified">✓ Thống kê Min ~ Max</span>
+                  <span className="badge badge-verified">✓ Thống kê Sàn ~ Trần</span>
                   <span className="badge badge-gold">✓ Bảo mật thầu 100%</span>
                 </div>
               </div>
@@ -335,10 +335,10 @@ const CreateAuctionModal = ({ onClose, onSuccess, artistArtworks, currentUser })
                 <div className={styles.previewBadgeRow}>
                   {auctionType === 'sealed' ? (
                     <span className="badge badge-gold" style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
-                      <Lock size={12} /> ĐẤU GIÁ KÍN (SEALED-BID)
+                      <Lock size={12} /> ĐẤU GIÁ KÍN
                     </span>
                   ) : (
-                    <span className="badge badge-live">LIVE AUCTION</span>
+                    <span className="badge badge-live">ĐẤU GIÁ TRỰC TIẾP</span>
                   )}
                   <span className="badge badge-verified">Độc bản</span>
                 </div>

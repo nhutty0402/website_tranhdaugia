@@ -6,7 +6,7 @@ import {
   PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut, Palette,
   ShieldAlert, CheckCircle2, RotateCcw, Settings as SettingsIcon, UserCog,
   Truck, Copy, Check, Search, Filter, Receipt, FileText, ChevronRight, Eye, ShieldCheck, MapPin, Phone, CreditCard, Sparkles, Printer, X, DollarSign, Wallet, Building2, Send, ChevronDown,
-  Edit3, Trash2
+  Edit3, Trash2, Camera, Upload
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, formatPrice, formatPriceFull
@@ -22,9 +22,25 @@ import styles from './ProfilePage.module.css';
 const ARTIST_TABS = [
   'Quản lý bài đăng',
   'Quản lý đơn hàng',
-  'Vận chuyển',
+  'Quản lý vận chuyển',
   'Hồ sơ họa sĩ'
 ];
+
+const ARTIST_TAB_CONFIG = [
+  { id: 'artworks', label: 'Quản lý bài đăng', icon: Palette },
+  { id: 'orders', label: 'Quản lý đơn hàng', icon: Receipt },
+  { id: 'shipping', label: 'Quản lý vận chuyển', icon: Truck },
+  { id: 'profile', label: 'Hồ sơ họa sĩ', icon: User },
+];
+
+const getArtistTabFromQuery = (search) => {
+  const params = new URLSearchParams(search);
+  const tab = params.get('tab');
+  if (tab === 'orders' || tab === 'don-hang') return 'Quản lý đơn hàng';
+  if (tab === 'shipping' || tab === 'van-chuyen') return 'Quản lý vận chuyển';
+  if (tab === 'profile' || tab === 'kyc') return 'Hồ sơ họa sĩ';
+  return 'Quản lý bài đăng';
+};
 
 const COLLECTOR_TABS = [
   'Bộ sưu tập & Chứng chỉ số',
@@ -32,7 +48,7 @@ const COLLECTOR_TABS = [
   'Hồ sơ & Bảo mật'
 ];
 
-const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
+const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick, onUpdateUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,41 +56,54 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
   const currentTabs = isArtist ? ARTIST_TABS : COLLECTOR_TABS;
 
   const [activeTab, setActiveTab] = useState(() => {
-    const params = new URLSearchParams(location.search);
-    const tabParam = params.get('tab');
     if (isArtist) {
-      if (tabParam === 'artworks' || tabParam === 'posts' || tabParam === 'bai-dang' || location.state?.tab === 'Quản lý bài đăng' || location.state?.tab === 'Tác phẩm & Phiên đấu giá') return 'Quản lý bài đăng';
-      if (tabParam === 'orders' || tabParam === 'don-hang' || location.state?.tab === 'Quản lý đơn hàng' || location.state?.tab === 'Ví & Doanh thu') return 'Quản lý đơn hàng';
-      if (tabParam === 'shipping' || tabParam === 'van-chuyen' || location.state?.tab === 'Vận chuyển') return 'Vận chuyển';
-      if (tabParam === 'profile' || tabParam === 'kyc' || location.state?.tab === 'Hồ sơ họa sĩ' || location.state?.tab === 'Hồ sơ & Xác thực') return 'Hồ sơ họa sĩ';
-      if (location.state?.tab && ARTIST_TABS.includes(location.state.tab)) return location.state.tab;
-      return 'Quản lý bài đăng';
+      return getArtistTabFromQuery(location.search);
     } else {
-      if (location.state?.tab === 'Bộ sưu tập' || location.state?.tab === 'Chứng chỉ số') return 'Bộ sưu tập & Chứng chỉ số';
-      if (location.state?.tab === 'Đơn hàng & Ký quỹ' || location.state?.tab === 'orders' || location.state?.tab === 'Phiên của tôi') return 'Đơn hàng & Ký quỹ';
-      if (location.state?.tab === 'Cài đặt' || location.state?.tab === 'profile') return 'Hồ sơ & Bảo mật';
-      if (location.state?.tab && COLLECTOR_TABS.includes(location.state.tab)) return location.state.tab;
+      const params = new URLSearchParams(location.search);
+      const tabParam = params.get('tab');
       if (tabParam === 'orders' || tabParam === 'don-hang') return 'Đơn hàng & Ký quỹ';
       if (tabParam === 'profile' || tabParam === 'settings') return 'Hồ sơ & Bảo mật';
       return 'Bộ sưu tập & Chứng chỉ số';
     }
   });
 
+  // Đồng bộ activeTab hoàn toàn theo URL search query param
   React.useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const tabParam = params.get('tab');
     if (isArtist) {
-      if (tabParam === 'artworks' || tabParam === 'posts' || tabParam === 'bai-dang') setActiveTab('Quản lý bài đăng');
-      else if (tabParam === 'orders' || tabParam === 'don-hang') setActiveTab('Quản lý đơn hàng');
-      else if (tabParam === 'shipping' || tabParam === 'van-chuyen') setActiveTab('Vận chuyển');
-      else if (tabParam === 'profile' || tabParam === 'kyc') setActiveTab('Hồ sơ họa sĩ');
-      else if (!ARTIST_TABS.includes(activeTab)) setActiveTab('Quản lý bài đăng');
+      setActiveTab(getArtistTabFromQuery(location.search));
     } else {
+      const params = new URLSearchParams(location.search);
+      const tabParam = params.get('tab');
       if (tabParam === 'orders' || tabParam === 'don-hang') setActiveTab('Đơn hàng & Ký quỹ');
       else if (tabParam === 'profile' || tabParam === 'settings') setActiveTab('Hồ sơ & Bảo mật');
       else if (!COLLECTOR_TABS.includes(activeTab)) setActiveTab('Bộ sưu tập & Chứng chỉ số');
     }
   }, [location.search, isArtist]);
+
+  // Nếu có location.state.tab, chuyển hướng URL query param để cả navbar lẫn nội dung đều khớp 100%
+  React.useEffect(() => {
+    if (location.state?.tab) {
+      if (isArtist) {
+        const stateMap = {
+          'Quản lý bài đăng': 'artworks',
+          'Quản lý tác phẩm': 'artworks',
+          'Tác phẩm & Phiên đấu giá': 'artworks',
+          'Quản lý đơn hàng': 'orders',
+          'Đơn hàng & Ký quỹ': 'orders',
+          'wallet': 'orders',
+          'Quản lý vận chuyển': 'shipping',
+          'Vận chuyển': 'shipping',
+          'shipping': 'shipping',
+          'Hồ sơ họa sĩ': 'profile',
+          'Hồ sơ họa sĩ': 'profile',
+          'Hồ sơ & Xác thực': 'profile',
+          'profile': 'profile',
+        };
+        const targetSlug = stateMap[location.state.tab] || 'artworks';
+        navigate(`/profile?tab=${targetSlug}`, { replace: true, state: {} });
+      }
+    }
+  }, [location.state, isArtist, navigate]);
 
   React.useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -88,23 +117,6 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
     window.addEventListener('open-artist-upload', handleOpenUpload);
     return () => window.removeEventListener('open-artist-upload', handleOpenUpload);
   }, []);
-
-  React.useEffect(() => {
-    if (location.state?.tab) {
-      if (isArtist) {
-        if (location.state.tab === 'Quản lý tác phẩm' || location.state.tab === 'Quản lý bài đăng' || location.state.tab === 'Tác phẩm & Phiên đấu giá') setActiveTab('Quản lý bài đăng');
-        else if (location.state.tab === 'Đơn hàng & Ký quỹ' || location.state.tab === 'Quản lý đơn hàng' || location.state.tab === 'wallet') setActiveTab('Quản lý đơn hàng');
-        else if (location.state.tab === 'Vận chuyển' || location.state.tab === 'shipping') setActiveTab('Vận chuyển');
-        else if (location.state.tab === 'Cài đặt' || location.state.tab === 'Hồ sơ họa sĩ' || location.state.tab === 'Hồ sơ & Xác thực') setActiveTab('Hồ sơ họa sĩ');
-        else if (ARTIST_TABS.includes(location.state.tab)) setActiveTab(location.state.tab);
-      } else {
-        if (location.state.tab === 'Bộ sưu tập' || location.state.tab === 'Chứng chỉ số') setActiveTab('Bộ sưu tập & Chứng chỉ số');
-        else if (location.state.tab === 'Đơn hàng & Ký quỹ' || location.state.tab === 'orders' || location.state.tab === 'Phiên của tôi') setActiveTab('Đơn hàng & Ký quỹ');
-        else if (location.state.tab === 'Cài đặt' || location.state.tab === 'profile') setActiveTab('Hồ sơ & Bảo mật');
-        else if (COLLECTOR_TABS.includes(location.state.tab)) setActiveTab(location.state.tab);
-      }
-    }
-  }, [location.state, isArtist]);
 
   const [createAuctionOpen, setCreateAuctionOpen] = useState(false);
   const [uploadArtworkOpen, setUploadArtworkOpen] = useState(false);
@@ -147,9 +159,10 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
     );
   }
 
-  // Artist metrics
+  // Artist metrics - dynamic based on artist's own artworks & orders
+  const myPostsCount = ARTWORKS.filter(a => a.artist_id === currentUser.user_id || a.artist_name === currentUser.full_name).length;
   const artistStats = [
-    { value: '6', label: 'Tác phẩm đã đăng' },
+    { value: String(myPostsCount || 2), label: 'Tác phẩm đã đăng' },
     { value: '4', label: 'Đơn hàng đã bán' },
     { value: '₫185.0M', label: 'Doanh thu bán tranh' },
   ];
@@ -169,9 +182,23 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
           <div className={styles.profileHero}>
             <div className={styles.avatarWrap}>
               <img src={currentUser.avatar} alt={currentUser.full_name} className={styles.avatar} />
-              <div className={styles.avatarBadge}>
-                <CheckCircle size={14} />
-              </div>
+              {isArtist ? (
+                <button
+                  type="button"
+                  className={styles.heroAvatarEditBtn}
+                  onClick={() => {
+                    setActiveTab('Hồ sơ họa sĩ');
+                    navigate('/profile?tab=profile');
+                  }}
+                  title="Thay đổi ảnh đại diện trong Hồ sơ họa sĩ"
+                >
+                  <Camera size={13} />
+                </button>
+              ) : (
+                <div className={styles.avatarBadge}>
+                  <CheckCircle size={14} />
+                </div>
+              )}
             </div>
 
             <div className={styles.profileInfo}>
@@ -179,15 +206,15 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
                 <h1 className={styles.profileName}>{currentUser.full_name}</h1>
                 {isArtist ? (
                   <span className="badge badge-verified">
-                    <ShieldCheck size={12} /> Họa sĩ xác thực (Master Artist)
+                    <ShieldCheck size={12} /> Họa sĩ xác thực
                   </span>
                 ) : (
                   <span className="badge badge-verified">
-                    <Award size={12} /> {currentUser.collector_type || 'Nhà sưu tầm tư nhân (Collector)'}
+                    <Award size={12} /> {currentUser.collector_type || 'Nhà sưu tầm tư nhân'}
                   </span>
                 )}
                 <span className="badge badge-gold">
-                  Cấp L{currentUser.kyc_level || (isArtist ? 3 : 2)} eKYC
+                  Cấp L{currentUser.kyc_level || (isArtist ? 3 : 2)}
                 </span>
               </div>
               <p className={styles.profileUsername}>@{currentUser.username}</p>
@@ -206,20 +233,39 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
             {/* Quick Actions: Strictly separated by role */}
             <div className={styles.profileHeroActions}>
               {isArtist ? (
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '6px 14px',
-                  background: 'rgba(34, 197, 94, 0.08)',
-                  border: '1px solid rgba(34, 197, 94, 0.22)',
-                  borderRadius: 20,
-                  fontSize: '0.8rem',
-                  fontWeight: 500,
-                  color: '#4ade80'
-                }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)' }} />
-                  <span>Kênh họa sĩ đang hoạt động</span>
+                <div className={styles.artistHeroActionWrap}>
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '6px 14px',
+                    background: 'rgba(34, 197, 94, 0.08)',
+                    border: '1px solid rgba(34, 197, 94, 0.22)',
+                    borderRadius: 20,
+                    fontSize: '0.8rem',
+                    fontWeight: 500,
+                    color: '#4ade80'
+                  }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)' }} />
+                    <span>Kênh họa sĩ đang hoạt động</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => setUploadArtworkOpen(true)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      fontWeight: 600,
+                      fontSize: '0.82rem',
+                      padding: '7px 14px',
+                      borderRadius: 8
+                    }}
+                  >
+                    <PlusCircle size={15} />
+                    <span>Đăng bài tác phẩm mới</span>
+                  </button>
                 </div>
               ) : (
                 <>
@@ -245,38 +291,49 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
       </div>
 
       <div className="container" style={{ paddingTop: 32 }}>
-        {/* Streamlined Tabs: 4 tabs for Artist, 3 tabs for Collector */}
-        <div className={styles.tabs} style={{ overflowX: 'auto', flexWrap: 'nowrap', paddingBottom: 6 }}>
-          {currentTabs.map(tab => (
-            <button
-              key={tab}
-              id={`profile-tab-${tab.replace(/\s+/g, '-').toLowerCase()}`}
-              className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
-              onClick={() => {
-                setActiveTab(tab);
-                if (isArtist) {
-                  const tabMap = {
-                    'Quản lý bài đăng': 'artworks',
-                    'Quản lý đơn hàng': 'orders',
-                    'Vận chuyển': 'shipping',
-                    'Hồ sơ họa sĩ': 'profile',
-                  };
-                  navigate(`/profile?tab=${tabMap[tab] || 'artworks'}`, { replace: true });
-                } else {
+        {/* Tabs: Pill Segmented Tabs cho Họa sĩ (đồng bộ 100% với Navbar), Classic Tabs cho Collector */}
+        {isArtist ? (
+          <div className={styles.artistTabsBar}>
+            {ARTIST_TAB_CONFIG.map(({ id, label, icon: IconComp }) => {
+              const isActive = activeTab === label;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  id={`artist-tab-${id}`}
+                  className={`${styles.artistTabPill} ${isActive ? styles.artistTabPillActive : ''}`}
+                  onClick={() => {
+                    navigate(`/profile?tab=${id}`);
+                  }}
+                >
+                  <IconComp size={16} strokeWidth={1.6} />
+                  <span>{label}</span>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={styles.tabs} style={{ overflowX: 'auto', flexWrap: 'nowrap', paddingBottom: 6 }}>
+            {COLLECTOR_TABS.map(tab => (
+              <button
+                key={tab}
+                id={`profile-tab-${tab.replace(/\s+/g, '-').toLowerCase()}`}
+                className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
+                onClick={() => {
                   const tabMap = {
                     'Bộ sưu tập & Chứng chỉ số': 'collection',
                     'Đơn hàng & Ký quỹ': 'orders',
                     'Hồ sơ & Bảo mật': 'settings',
                   };
-                  navigate(`/profile?tab=${tabMap[tab] || 'collection'}`, { replace: true });
-                }
-              }}
-              style={{ whiteSpace: 'nowrap' }}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+                  navigate(`/profile?tab=${tabMap[tab] || 'collection'}`);
+                }}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* ARTIST TAB 1: Quản lý bài đăng */}
         {isArtist && activeTab === 'Quản lý bài đăng' && (
@@ -292,13 +349,13 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
         {isArtist && activeTab === 'Quản lý đơn hàng' && (
           <ArtistOrderManagementTab
             currentUser={currentUser}
-            onGoToShipping={() => setActiveTab('Vận chuyển')}
+            onGoToShipping={() => navigate('/profile?tab=shipping')}
             addToast={addToast}
           />
         )}
 
-        {/* ARTIST TAB 3: Vận chuyển */}
-        {isArtist && activeTab === 'Vận chuyển' && (
+        {/* ARTIST TAB 3: Quản lý vận chuyển */}
+        {isArtist && (activeTab === 'Quản lý vận chuyển' || activeTab === 'Vận chuyển') && (
           <ArtistShippingTab
             currentUser={currentUser}
             addToast={addToast}
@@ -306,12 +363,13 @@ const ProfilePage = ({ currentUser, addToast, onLogout, onLoginClick }) => {
         )}
 
         {/* ARTIST TAB 4: Hồ sơ họa sĩ */}
-        {isArtist && activeTab === 'Hồ sơ họa sĩ' && (
+        {isArtist && (activeTab === 'Hồ sơ họa sĩ' || activeTab === 'Hồ sơ họa sĩ') && (
           <ArtistProfileAndVerificationTab
             user={currentUser}
             addToast={addToast}
             onLogout={onLogout}
             navigate={navigate}
+            onUpdateUser={onUpdateUser}
           />
         )}
 
@@ -873,7 +931,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
     setOrders(updated);
     try {
       localStorage.setItem('artisan_orders', JSON.stringify(updated));
-    } catch {}
+    } catch { }
     setConfirmOrder(null);
     addToast?.(`✦ Nghiệm thu thành công! Tiền ký quỹ ${formatPriceFull(targetOrder.grandTotal)} đã giải ngân về ví Họa sĩ ${targetOrder.artist_name}.`, 'success', 6000);
   };
@@ -889,7 +947,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
     setOrders(updated);
     try {
       localStorage.setItem('artisan_orders', JSON.stringify(updated));
-    } catch {}
+    } catch { }
     setReportOrder(null);
     addToast?.(`⚠️ Đã tạm dừng ký quỹ đơn #${reportOrder.orderId} & gửi hồ sơ sang Ban giám định L3.`, 'warning', 6000);
   };
@@ -904,7 +962,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
     setOrders(updated);
     try {
       localStorage.setItem('artisan_orders', JSON.stringify(updated));
-    } catch {}
+    } catch { }
     addToast?.('Đã khôi phục quy trình nghiệm thu 72h bình thường.', 'info');
   };
 
@@ -1218,8 +1276,8 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
                         {isReleased
                           ? 'Đã nghiệm thu hài lòng'
                           : isDisputed
-                          ? 'Đang tạm dừng thẩm định'
-                          : 'Đang mở kiểm tra tranh'}
+                            ? 'Đang tạm dừng thẩm định'
+                            : 'Đang mở kiểm tra tranh'}
                       </p>
                     </div>
                   </div>
@@ -1243,7 +1301,7 @@ const OrdersAndEscrowTab = ({ addToast, onViewCertificates, highlightOrderId }) 
                         style={{ whiteSpace: 'nowrap' }}
                       >
                         Xem Thẻ chứng nhận số →
-                      </button> 
+                      </button>
                     )}
                   </div>
                 )}
@@ -1702,7 +1760,7 @@ const MyAuctionsTab = ({ currentUser, onRaiseBid, addToast }) => {
   // Find sessions user placed bids on or mock participant sessions
   const userBids = BID_HISTORY.filter(b => b.bidder_id === currentUser.user_id);
   const mySessionIds = new Set(userBids.map(b => b.session_id));
-  
+
   // Include at least the sealed auction as4_sealed & live as1 for demo
   if (mySessionIds.size === 0) {
     mySessionIds.add('as4_sealed');
@@ -1746,14 +1804,15 @@ const MyAuctionsTab = ({ currentUser, onRaiseBid, addToast }) => {
             }
           } else {
             if (isSealed) {
-statusBadge = (
-  <span
-    className="badge badge-gold"
-    style={{ fontSize: "10px", padding: "8px 8px", gap: "4px" }}
-  >
-    <Lock size={8} /> ĐÃ GỬI HỒ SƠ KÍN
-  </span>
-);            } else if (myBid.status === 'winning') {
+              statusBadge = (
+                <span
+                  className="badge badge-gold"
+                  style={{ fontSize: "10px", padding: "8px 8px", gap: "4px" }}
+                >
+                  <Lock size={8} /> ĐÃ GỬI HỒ SƠ KÍN
+                </span>
+              );
+            } else if (myBid.status === 'winning') {
               statusBadge = <span className="badge badge-live">DẪN ĐẦU</span>;
             } else {
               statusBadge = <span className="badge badge-secondary">ĐÃ BỊ VƯỢT</span>;
@@ -1967,7 +2026,7 @@ const CollectorCollectionAndCertificatesTab = ({ currentUser, addToast, navigate
           selectedCertTarget={{ certificateId: focusedCertId }}
           currentUser={currentUser}
           onNavigateToArtwork={(artId) => navigate(`/artwork/${artId}?owned=true`, { state: { isOwned: true } })}
-          onNavigateToOrders={() => {}}
+          onNavigateToOrders={() => { }}
         />
       )}
     </div>
@@ -2329,34 +2388,46 @@ const CollectorProfileAndSecurityTab = ({ user, addToast, onLogout, navigate }) 
    - Lọc theo: Tất cả, Đang bán, Đã bán, Chờ duyệt
    ========================================================================== */
 const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, addToast }) => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialSearch = searchParams.get('search') || searchParams.get('q') || '';
+
   const [filter, setFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [editingArtwork, setEditingArtwork] = useState(null);
   const [deleteConfirmArtwork, setDeleteConfirmArtwork] = useState(null);
 
+  React.useEffect(() => {
+    const q = new URLSearchParams(location.search).get('search') || new URLSearchParams(location.search).get('q');
+    if (q !== null && q !== undefined) {
+      setSearchQuery(q);
+    }
+  }, [location.search]);
+
   const [posts, setPosts] = useState(() => {
-    const list = ARTWORKS.filter(a => a.artist_id === currentUser.user_id || currentUser.role === 'artist');
+    // CHỈ HIỂN THỊ TÁC PHẨM CỦA CHÍNH HỌA SĨ HIỆN TẠI (KHÔNG HIỂN THỊ CỦA HỌA SĨ KHÁC)
+    const list = ARTWORKS.filter(a => a.artist_id === currentUser.user_id || a.artist_name === currentUser.full_name);
     return list.map((art, idx) => ({
       ...art,
-      post_status: idx === 1 || idx === 3 ? 'sold' : (idx === 4 ? 'pending' : 'selling'),
+      post_status: art.post_status || (idx === 1 ? 'sold' : (idx === 2 ? 'pending' : 'selling')),
       price_val: art.current_price || art.price || 25000000,
-      views: 120 + idx * 45,
-      likes: 24 + idx * 11,
-      posted_date: '02/11/2026'
+      views: art.views || (120 + idx * 45),
+      likes: art.likes || (24 + idx * 11),
+      posted_date: art.posted_date || '02/11/2026'
     }));
   });
 
   React.useEffect(() => {
-    const list = ARTWORKS.filter(a => a.artist_id === currentUser.user_id || currentUser.role === 'artist');
+    const list = ARTWORKS.filter(a => a.artist_id === currentUser.user_id || a.artist_name === currentUser.full_name);
     setPosts(list.map((art, idx) => ({
       ...art,
-      post_status: art.post_status || (idx === 1 || idx === 3 ? 'sold' : (idx === 4 ? 'pending' : 'selling')),
+      post_status: art.post_status || (idx === 1 ? 'sold' : (idx === 2 ? 'pending' : 'selling')),
       price_val: art.price_val || art.current_price || art.price || 25000000,
       views: art.views || (120 + idx * 45),
       likes: art.likes || (24 + idx * 11),
       posted_date: art.posted_date || '02/11/2026'
     })));
-  }, [artworksVersion]);
+  }, [artworksVersion, currentUser]);
 
   const handleDelete = (artId) => {
     setPosts(prev => prev.filter(p => p.artwork_id !== artId));
@@ -2399,41 +2470,59 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
         </p>
       </div>
 
-      {/* Toolbar & Filter Pills */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 16,
-        flexWrap: 'wrap',
-        marginBottom: 20
-      }}>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      {/* Toolbar & Refined Segmented Filter */}
+      <div className={styles.postManagementToolbar}>
+        {/* Luxury Segmented Filter Tabs */}
+        <div className={styles.galleryFilterSegment}>
           {[
-            { id: 'all', label: `Tất cả (${posts.length})` },
-            { id: 'selling', label: `Đang bán (${sellingCount})` },
-            { id: 'sold', label: `Đã bán (${soldCount})` },
-            { id: 'pending', label: `Chờ duyệt (${pendingCount})` },
-          ].map(f => (
-            <button
-              key={f.id}
-              onClick={() => setFilter(f.id)}
-              className={`${styles.filterPill} ${filter === f.id ? styles.filterPillActive : ''}`}
-              style={{ fontSize: '0.8rem', padding: '6px 14px' }}
-            >
-              {f.label}
-            </button>
-          ))}
+            { id: 'all', label: 'Tất cả', count: posts.length, icon: Palette },
+            { id: 'selling', label: 'Đang bán', count: sellingCount, dotColor: '#10B981' },
+            { id: 'sold', label: 'Đã bán', count: soldCount, dotColor: 'var(--gold-primary)' },
+            { id: 'pending', label: 'Chờ duyệt', count: pendingCount, dotColor: '#F59E0B' },
+          ].map(f => {
+            const isActive = filter === f.id;
+            const IconComp = f.icon;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setFilter(f.id)}
+                className={`${styles.galleryFilterBtn} ${isActive ? styles.galleryFilterBtnActive : ''}`}
+              >
+                {IconComp && <IconComp size={13} style={{ opacity: isActive ? 1 : 0.7 }} />}
+                {f.dotColor && (
+                  <span
+                    className={styles.filterDot}
+                    style={{ background: f.dotColor, boxShadow: isActive ? `0 0 8px ${f.dotColor}` : 'none' }}
+                  />
+                )}
+                <span>{f.label}</span>
+                <span className={`${styles.filterCountBadge} ${isActive ? styles.filterCountBadgeActive : ''}`}>
+                  {f.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        <div className={styles.searchBox} style={{ maxWidth: 280 }}>
-          <Search size={15} style={{ color: 'var(--text-muted)' }} />
-          <input
-            type="text"
-            placeholder="Tìm theo tên tranh, chất liệu..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        {/* Right Info & Actions (Loại bỏ ô tìm kiếm trùng lặp với menu, tối ưu UX) */}
+        <div className={styles.postManagementToolbarRight}>
+          {searchQuery && (
+            <div className={styles.searchActivePill}>
+              <span>Từ khóa: <strong>"{searchQuery}"</strong></span>
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className={styles.clearSearchBtn}
+                title="Xóa bộ lọc tìm kiếm"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          )}
+          <span className={styles.postCountLabel}>
+            Hiển thị <strong>{filteredPosts.length}</strong> / {posts.length} tác phẩm
+          </span>
         </div>
       </div>
 
@@ -2484,6 +2573,7 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
                   <img
                     src={art.image}
                     alt={art.title}
+                    onError={(e) => { e.currentTarget.src = '/artwork_1.png'; }}
                     style={{ width: 84, height: 84, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)', flexShrink: 0 }}
                   />
                   <div>
@@ -3041,6 +3131,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
    - Thông tin tài xế, mã vận đơn, biển số xe
    ========================================================================== */
 const ArtistShippingTab = ({ currentUser, addToast }) => {
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [shipments, setShipments] = useState([
     {
       code: 'AH-EXP-892401',
@@ -3090,7 +3181,7 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
       delivered_at: '26/10/2026 10:15',
       driver_name: 'Nguyễn Văn Cường',
       driver_phone: '0934.551.229',
-      packaging_standard: 'Đã hoàn tất nghiệm thu & Đồng kiểm nguyên trạng 100%'
+      packaging_standard: 'Thùng gỗ tiêu chuẩn bảo tàng + Giác góc đệm silicone chống sốc'
     }
   ]);
 
@@ -3113,55 +3204,101 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
   return (
     <div className={styles.tabContent}>
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <h2 className={styles.tabTitle} style={{ margin: 0 }}>Quản lý vận chuyển tác phẩm mỹ thuật</h2>
-        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+      <div style={{ marginBottom: 20 }}>
+        <h2 className={styles.tabTitle} style={{ margin: 0, fontSize: '1.45rem', color: '#FFFFFF' }}>
+          Quản lý vận chuyển tác phẩm mỹ thuật
+        </h2>
+        <p style={{ margin: '8px 0 0', fontSize: '0.88rem', color: '#CBD5E1', lineHeight: 1.6 }}>
           Giám sát quy trình giao nhận tranh với tiêu chuẩn thùng gỗ định hình chống sốc, xe chuyên dụng kiểm soát nhiệt ẩm và bảo hiểm 100%.
         </p>
       </div>
 
+      {/* 3 Quick Overview Stats Pills */}
+      <div className={styles.shippingOverviewCards}>
+        <div className={styles.shippingStatPill}>
+          <div className={styles.shippingStatIconBox} style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#FBBF24', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+            <Package size={20} />
+          </div>
+          <div>
+            <div className={styles.shippingStatNum}>1</div>
+            <div className={styles.shippingStatLabel}>Chờ đóng gói thùng gỗ</div>
+          </div>
+        </div>
+
+        <div className={styles.shippingStatPill}>
+          <div className={styles.shippingStatIconBox} style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+            <Truck size={20} />
+          </div>
+          <div>
+            <div className={styles.shippingStatNum}>1</div>
+            <div className={styles.shippingStatLabel}>Đang trên xe chuyên dụng</div>
+          </div>
+        </div>
+
+        <div className={styles.shippingStatPill}>
+          <div className={styles.shippingStatIconBox} style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ADE80', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
+            <CheckCircle2 size={20} />
+          </div>
+          <div>
+            <div className={styles.shippingStatNum}>1</div>
+            <div className={styles.shippingStatLabel}>Đã giao & Nghiệm thu xong</div>
+          </div>
+        </div>
+      </div>
+
       {/* 4-Step Standard Guide */}
-      <div style={{
-        background: 'rgba(197, 160, 89, 0.05)',
-        border: '1px solid rgba(197, 160, 89, 0.25)',
-        borderRadius: 14,
-        padding: '16px 20px',
-        marginBottom: 24
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <ShieldCheck size={18} color="var(--gold-primary)" />
-          <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--gold-light)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <div className={styles.shippingGuideBox}>
+        <div className={styles.shippingGuideHeader}>
+          <ShieldCheck size={20} color="var(--gold-primary)" />
+          <h4 className={styles.shippingGuideTitle}>
             Quy trình giao nhận tác phẩm độc bản đạt chuẩn bảo tàng
           </h4>
         </div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 14,
-          fontSize: '0.78rem',
-          color: 'var(--text-secondary)'
-        }}>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-            <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', flexShrink: 0 }}>1</span>
-            <span><strong>Đóng gói thùng gỗ:</strong> Họa sĩ đóng thùng định hình + bọc 5 lớp màng xốp khí chống va đập.</span>
+        <div className={styles.shippingGuideGrid}>
+          <div className={styles.shippingStepCard}>
+            <div className={styles.shippingStepHeader}>
+              <span className={styles.shippingStepBadge}>01</span>
+              <h5 className={styles.shippingStepName}>Đóng gói thùng gỗ</h5>
+            </div>
+            <p className={styles.shippingStepDesc}>
+              Họa sĩ đóng thùng định hình bọc 5 lớp màng xốp khí EPS chống sốc và chống ẩm đa tầng.
+            </p>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-            <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', flexShrink: 0 }}>2</span>
-            <span><strong>Bàn giao xe chuyên dụng:</strong> Xe tải có hệ thống chống sốc bóng hơi và camera giám sát kiện hàng.</span>
+
+          <div className={styles.shippingStepCard}>
+            <div className={styles.shippingStepHeader}>
+              <span className={styles.shippingStepBadge}>02</span>
+              <h5 className={styles.shippingStepName}>Bàn giao xe chuyên dụng</h5>
+            </div>
+            <p className={styles.shippingStepDesc}>
+              Xe tải trang bị hệ thống giảm chấn bóng hơi êm ái và camera giám sát trực tiếp kiện hàng.
+            </p>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-            <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', flexShrink: 0 }}>3</span>
-            <span><strong>Kiểm soát nhiệt ẩm:</strong> Buồng xe giữ nhiệt độ 20-24°C, độ ẩm 50-60% bảo vệ lớp sơn và toan tranh.</span>
+
+          <div className={styles.shippingStepCard}>
+            <div className={styles.shippingStepHeader}>
+              <span className={styles.shippingStepBadge}>03</span>
+              <h5 className={styles.shippingStepName}>Vi khí hậu 20–24°C</h5>
+            </div>
+            <p className={styles.shippingStepDesc}>
+              Buồng xe duy trì nhiệt độ 20–24°C, độ ẩm 50–60% bảo vệ lớp sơn dầu và toan vẽ nguyên bản.
+            </p>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-            <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', flexShrink: 0 }}>4</span>
-            <span><strong>Đồng kiểm & Ký nhận:</strong> Người mua mở thùng đồng kiểm hiện trạng, ký biên bản bàn giao an toàn.</span>
+
+          <div className={styles.shippingStepCard}>
+            <div className={styles.shippingStepHeader}>
+              <span className={styles.shippingStepBadge}>04</span>
+              <h5 className={styles.shippingStepName}>Đồng kiểm & Ký nhận</h5>
+            </div>
+            <p className={styles.shippingStepDesc}>
+              Người mua mở thùng kiểm tra trực tiếp hiện trạng và ký biên bản giao nhận điện tử an toàn.
+            </p>
           </div>
         </div>
       </div>
 
       {/* Shipments List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         {shipments.map(s => {
           const isPending = s.status === 'pending_packaging';
           const isReadyPickup = s.status === 'ready_for_pickup';
@@ -3169,172 +3306,186 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
           const isDelivered = s.status === 'delivered';
 
           return (
-            <div
-              key={s.code}
-              style={{
-                background: 'var(--bg-elevated)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 14,
-                padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 14
-              }}
-            >
+            <div key={s.code} className={styles.shipmentCard}>
               {/* Parcel Header */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 10,
-                borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                paddingBottom: 12
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ fontWeight: 800, color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)', fontSize: '0.95rem' }}>
+              <div className={styles.shipmentHeader}>
+                <div className={styles.shipmentMetaLeft}>
+                  <span className={styles.shipmentCode}>
                     {s.code}
                   </span>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    Mã đơn: {s.order_id}
+                  <span className={styles.shipmentOrderId}>
+                    Mã đơn: <strong>{s.order_id}</strong>
                   </span>
                 </div>
 
                 <div>
                   {isDelivered ? (
-                    <span className="badge" style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ECC71', border: '1px solid rgba(46, 204, 113, 0.3)' }}>
-                      <CheckCircle2 size={12} /> Đã giao thành công
+                    <span className="badge" style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ADE80', border: '1px solid rgba(34, 197, 94, 0.35)', fontSize: '0.8rem', padding: '6px 14px' }}>
+                      <CheckCircle2 size={13} /> Đã giao thành công
                     </span>
                   ) : isInTransit ? (
-                    <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                      <Truck size={12} /> Đang trên xe giao hàng
+                    <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.35)', fontSize: '0.8rem', padding: '6px 14px' }}>
+                      <Truck size={13} /> Đang trên xe giao hàng
                     </span>
                   ) : isReadyPickup ? (
-                    <span className="badge" style={{ background: 'rgba(197, 160, 89, 0.2)', color: 'var(--gold-primary)', border: '1px solid var(--border-gold)' }}>
-                      <Check size={12} /> Sẵn sàng bàn giao cho xe
+                    <span className="badge" style={{ background: 'rgba(20, 184, 166, 0.15)', color: '#2DD4BF', border: '1px solid rgba(20, 184, 166, 0.35)', fontSize: '0.8rem', padding: '6px 14px' }}>
+                      <Check size={13} /> Sẵn sàng bàn giao cho xe
                     </span>
                   ) : (
-                    <span className="badge" style={{ background: 'rgba(243, 156, 18, 0.15)', color: '#F39C12', border: '1px solid rgba(243, 156, 18, 0.3)' }}>
-                      <Package size={12} /> Chờ đóng gói thùng gỗ
+                    <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#FBBF24', border: '1px solid rgba(245, 158, 11, 0.35)', fontSize: '0.8rem', padding: '6px 14px' }}>
+                      <Package size={13} /> Chờ đóng gói thùng gỗ
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Parcel Body */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: 20,
-                alignItems: 'center'
-              }}>
-                {/* Artwork info */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <img
-                    src={s.image}
-                    alt={s.title}
-                    onError={(e) => { e.currentTarget.src = '/artwork_2.png'; }}
-                    style={{ width: 80, height: 80, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--border-subtle)', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }}
-                  />
-                  <div>
-                    <h4 style={{ margin: '0 0 4px', fontSize: '1.05rem', color: 'var(--text-primary)', fontFamily: 'var(--font-brand)' }}>
+              {/* Artwork Banner Strip */}
+              <div className={styles.shipmentArtworkBar}>
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  onError={(e) => { e.currentTarget.src = '/artwork_2.png'; }}
+                  className={styles.shipmentThumb}
+                />
+                <div className={styles.shipmentArtworkDetails}>
+                  <div className={styles.shipmentArtTitleRow}>
+                    <h4 className={styles.shipmentArtTitle}>
                       {s.title}
                     </h4>
-                    <p style={{ margin: '0 0 4px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                      Quy cách: {s.dimensions}
-                    </p>
-                    <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--gold-light)' }}>
-                      📦 {s.packaging_standard}
-                    </p>
+                    <span className={styles.shipmentUniqueBadge}>Độc bản 1/1</span>
                   </div>
+                  <p className={styles.shipmentArtSpecs}>
+                    <span className={styles.shipmentArtSpecsLabel}>Quy cách tác phẩm:</span>
+                    <strong className={styles.shipmentArtSpecsValue}>{s.dimensions}</strong>
+                  </p>
+                </div>
+              </div>
+
+              {/* Symmetrical 2-Column Grid: Quy chuẩn đóng gói (Trái) & Thông tin giao nhận (Phải) */}
+              <div className={styles.shipmentDetailsGrid}>
+                {/* Khung trái: Quy chuẩn đóng gói bảo tàng */}
+                <div className={styles.shipmentSubCard}>
+                  <div className={styles.shipmentSubCardHeader}>
+                    <Package size={14} className={styles.shipmentSubCardIconGold} />
+                    <span className={styles.shipmentSubCardTitle}>QUY CHUẨN ĐÓNG GÓI BẢO TÀNG</span>
+                  </div>
+
+                  <div className={styles.shipmentSubCardBody}>
+                    <div className={styles.shipmentPackagingContent}>
+                      <span className={styles.shipmentPackagingEmoji}>📦</span>
+                      <span className={styles.shipmentPackagingMainText}>{s.packaging_standard}</span>
+                    </div>
+                    <div className={styles.shipmentPackagingSubText}>
+                      <ShieldCheck size={14} style={{ color: 'var(--gold-primary)', flexShrink: 0 }} />
+                      <span>Thùng gỗ định hình hun trùng nhiệt ẩm, bọc 5 lớp màng xốp EPS chống va đập</span>
+                    </div>
+                  </div>
+
+                  {isPending ? (
+                    <div className={styles.shipmentSubCardStatusPillWarning}>
+                      <Clock size={12} /> Chờ họa sĩ hoàn tất đóng thùng & dán tem niêm phong
+                    </div>
+                  ) : (
+                    <div className={styles.shipmentSubCardStatusPillSuccess}>
+                      <CheckCircle2 size={12} /> Kiện tranh đã bảo chứng tiêu chuẩn vận chuyển Fine Art
+                    </div>
+                  )}
                 </div>
 
-                {/* Delivery details */}
-                <div style={{
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                  borderRadius: 10,
-                  padding: '12px 14px',
-                  fontSize: '0.8rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 6
-                }}>
-                  <div>
-                    <span style={{ color: 'var(--text-muted)' }}>Người nhận: </span>
-                    <strong style={{ color: 'var(--text-primary)' }}>{s.recipient_name}</strong> ({s.recipient_phone})
+                {/* Khung phải: Thông tin người nhận & Địa chỉ giao */}
+                <div className={styles.shipmentSubCard}>
+                  <div className={styles.shipmentSubCardHeader}>
+                    <MapPin size={14} className={styles.shipmentSubCardIconBlue} />
+                    <span className={styles.shipmentSubCardTitle}>THÔNG TIN NGƯỜI NHẬN & ĐỊA CHỈ GIAO</span>
                   </div>
-                  <div>
-                    <span style={{ color: 'var(--text-muted)' }}>Địa chỉ: </span>
-                    <span>{s.destination}</span>
-                  </div>
-                  {s.vehicle_plate && (
-                    <div>
-                      <span style={{ color: 'var(--text-muted)' }}>Xe vận chuyển: </span>
-                      <strong style={{ color: 'var(--gold-primary)' }}>{s.vehicle_plate}</strong> ({s.carrier})
+
+                  <div className={styles.shipmentSubCardBody}>
+                    <div className={styles.shipmentInfoRow}>
+                      <User size={15} className={styles.shipmentInfoIcon} style={{ color: 'var(--gold-primary)' }} />
+                      <div>
+                        <span className={styles.shipmentInfoLabel}>Người nhận: </span>
+                        <strong className={styles.shipmentInfoValue}>{s.recipient_name}</strong>
+                        <span className={styles.shipmentPhoneText}>({s.recipient_phone})</span>
+                      </div>
                     </div>
-                  )}
+
+                    <div className={styles.shipmentInfoRow}>
+                      <MapPin size={15} className={styles.shipmentInfoIcon} style={{ color: '#38BDF8' }} />
+                      <div>
+                        <span className={styles.shipmentInfoLabel}>Địa chỉ giao: </span>
+                        <span className={styles.shipmentInfoText}>{s.destination}</span>
+                      </div>
+                    </div>
+
+                    {s.vehicle_plate && (
+                      <div className={styles.shipmentInfoRow}>
+                        <Truck size={15} className={styles.shipmentInfoIcon} style={{ color: '#38BDF8' }} />
+                        <div>
+                          <span className={styles.shipmentInfoLabel}>Xe vận chuyển: </span>
+                          <strong style={{ color: '#F8FAFC' }}>{s.vehicle_plate}</strong>
+                          <span style={{ color: '#94A3B8', marginLeft: 6 }}>({s.carrier})</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   {s.temperature && (
-                    <div style={{ color: '#2ECC71', fontSize: '0.75rem' }}>
-                      🌡️ {s.temperature}
+                    <div className={styles.shipmentClimatePill}>
+                      <span>🌡️</span>
+                      <span>Vi khí hậu buồng xe: {s.temperature}</span>
                     </div>
                   )}
+
                   {s.delivered_at && (
-                    <div style={{ color: '#2ECC71', fontSize: '0.75rem' }}>
-                      ✓ Đã ký nhận lúc: {s.delivered_at}
+                    <div className={styles.shipmentDeliveredPill}>
+                      <CheckCircle2 size={14} />
+                      <span>Đã ký nhận biên bản lúc: {s.delivered_at}</span>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Parcel Footer Actions */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 10,
-                borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-                paddingTop: 12
-              }}>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              <div className={styles.shipmentFooter}>
+                <div className={styles.shipmentDriverMeta}>
                   {s.driver_name !== 'Đang chờ bàn giao' && (
-                    <span>Tài xế phụ trách: <strong>{s.driver_name}</strong> ({s.driver_phone})</span>
+                    <span>Tài xế phụ trách: <strong style={{ color: '#F8FAFC' }}>{s.driver_name}</strong> ({s.driver_phone})</span>
                   )}
-                  {s.eta && <span style={{ marginLeft: 12, color: 'var(--gold-light)' }}>⏱ {s.eta}</span>}
+                  {s.eta && (
+                    <span className={styles.shipmentEtaBadge}>
+                      <Clock size={13} color="var(--gold-primary)" /> {s.eta}
+                    </span>
+                  )}
                 </div>
 
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                   {isPending && (
                     <button
                       type="button"
-                      className="btn btn-primary btn-sm"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.8rem' }}
+                      className={styles.shipmentBtnConfirm}
                       onClick={() => handleConfirmPackaging(s.code)}
                     >
-                      <Package size={14} /> Xác nhận đã đóng thùng gỗ chống ẩm
+                      <Package size={15} /> Xác nhận đã đóng thùng gỗ chống ẩm
                     </button>
                   )}
 
                   {isInTransit && (
                     <a
                       href={`tel:${s.driver_phone}`}
-                      className="btn btn-primary btn-sm"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', textDecoration: 'none' }}
+                      className={styles.shipmentBtnCall}
                       onClick={() => addToast?.(`Đang kết nối cuộc gọi đến tài xế ${s.driver_name} (${s.driver_phone})...`, 'info')}
                     >
-                      <Phone size={14} /> Gọi tài xế ({s.driver_phone})
+                      <Phone size={15} /> Sao chép số của tài xế ({s.driver_phone})
                     </a>
                   )}
 
                   {isDelivered && (
                     <button
                       type="button"
-                      className="btn btn-ghost btn-sm"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.8rem' }}
-                      onClick={() => addToast?.('Biên bản giao nhận điện tử đã lưu trữ an toàn trên hệ thống!', 'info')}
+                      className={styles.shipmentBtnReceipt}
+                      onClick={() => setSelectedReceipt(s)}
                     >
-                      <FileText size={14} /> Biên bản bàn giao đã ký
+                      <FileText size={15} /> Biên bản bàn giao đã ký
                     </button>
                   )}
                 </div>
@@ -3342,6 +3493,227 @@ const ArtistShippingTab = ({ currentUser, addToast }) => {
             </div>
           );
         })}
+      </div>
+
+      {/* Modal Biên bản bàn giao đã ký */}
+      {selectedReceipt && (
+        <DeliveryReceiptModal
+          shipment={selectedReceipt}
+          onClose={() => setSelectedReceipt(null)}
+          addToast={addToast}
+        />
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+   MODAL BIÊN BẢN BÀN GIAO ĐÃ KÝ (Signed Art Handover & Inspection Receipt Modal)
+   - Thiết kế tinh gọn, sang trọng, đúng chuẩn bàn giao mỹ thuật Fine Art
+   - Tối ưu UI/UX ngắn gọn, không rườm rà
+   ========================================================================== */
+const DeliveryReceiptModal = ({ shipment, onClose, addToast }) => {
+  if (!shipment) return null;
+
+  const receiptNo = `BBBG-2026-${shipment.order_id?.replace(/\D/g, '') || '7620'}`;
+  const deliveredTime = shipment.delivered_at || '26/10/2026 10:15';
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  return (
+    <div className={styles.invoiceModalOverlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={styles.invoiceModalBox} style={{ maxWidth: 660, padding: 28 }}>
+        {/* Top Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(34, 197, 94, 0.12)', border: '1px solid rgba(34, 197, 94, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4ADE80' }}>
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-brand)' }}>
+                Biên bản bàn giao tác phẩm
+              </h3>
+              <span style={{ fontSize: '0.74rem', color: '#94A3B8' }}>
+                Chứng từ đồng kiểm giao nhận điện tử đạt chuẩn bảo tàng
+              </span>
+            </div>
+          </div>
+          <button type="button" className="btn btn-icon btn-ghost" onClick={onClose} style={{ borderRadius: '50%' }}>
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Paper Container */}
+        <div style={{
+          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.09)',
+          borderRadius: 14,
+          padding: '20px 22px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16
+        }}>
+          {/* Metadata Row */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingBottom: 14,
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            fontSize: '0.82rem',
+            flexWrap: 'wrap',
+            gap: 10
+          }}>
+            <div>
+              <span style={{ color: '#94A3B8' }}>Số biên bản: </span>
+              <strong style={{ color: 'var(--gold-primary)', fontFamily: 'var(--font-mono)' }}>{receiptNo}</strong>
+            </div>
+            <div>
+              <span style={{ color: '#94A3B8' }}>Vận đơn: </span>
+              <strong style={{ color: '#F1F5F9', fontFamily: 'var(--font-mono)' }}>{shipment.code}</strong>
+            </div>
+            <div>
+              <span style={{ color: '#94A3B8' }}>Thời gian ký: </span>
+              <span style={{ color: '#4ADE80', fontWeight: 600 }}>{deliveredTime}</span>
+            </div>
+          </div>
+
+          {/* Artwork Summary Bar */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            padding: '12px 14px',
+            background: 'rgba(0, 0, 0, 0.25)',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: 10
+          }}>
+            <img
+              src={shipment.image}
+              alt={shipment.title}
+              onError={(e) => { e.currentTarget.src = '/artwork_3.png'; }}
+              style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover', border: '1px solid rgba(212, 175, 55, 0.3)' }}
+            />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h4 style={{ margin: 0, fontSize: '1rem', color: '#FFFFFF', fontFamily: 'var(--font-brand)' }}>
+                  {shipment.title}
+                </h4>
+                <span className="badge badge-verified" style={{ fontSize: '0.68rem', padding: '2px 6px' }}>Độc bản 1/1</span>
+              </div>
+              <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: '#CBD5E1' }}>
+                Quy cách: {shipment.dimensions}
+              </p>
+            </div>
+          </div>
+
+          {/* 2 Parties Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            {/* Sender / Carrier */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: 10,
+              padding: '12px 14px'
+            }}>
+              <span style={{ fontSize: '0.72rem', color: 'var(--gold-primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                BÊN GIAO (ĐỘI XE CHUYÊN DỤNG)
+              </span>
+              <p style={{ margin: '6px 0 2px', fontWeight: 600, fontSize: '0.85rem', color: '#F1F5F9' }}>
+                {shipment.carrier}
+              </p>
+              <p style={{ margin: 0, fontSize: '0.78rem', color: '#94A3B8' }}>
+                Tài xế: {shipment.driver_name} ({shipment.driver_phone})
+              </p>
+            </div>
+
+            {/* Recipient */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: 10,
+              padding: '12px 14px'
+            }}>
+              <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                BÊN NHẬN (NGƯỜI SƯU TẦM)
+              </span>
+              <p style={{ margin: '6px 0 2px', fontWeight: 600, fontSize: '0.85rem', color: '#F1F5F9' }}>
+                {shipment.recipient_name} ({shipment.recipient_phone})
+              </p>
+              <p style={{ margin: 0, fontSize: '0.78rem', color: '#94A3B8', lineHeight: 1.4 }}>
+                {shipment.destination}
+              </p>
+            </div>
+          </div>
+
+          {/* Inspection Checklist */}
+          <div style={{
+            background: 'rgba(34, 197, 94, 0.04)',
+            border: '1px solid rgba(34, 197, 94, 0.18)',
+            borderRadius: 10,
+            padding: '12px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8
+          }}>
+            <span style={{ fontSize: '0.74rem', color: '#4ADE80', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              KẾT QUẢ ĐỒNG KIỂM TẠI HIỆN TRƯỜNG
+            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.8rem', color: '#E2E8F0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CheckCircle2 size={14} color="#4ADE80" style={{ flexShrink: 0 }} />
+                <span>Thùng gỗ định hình & màng EPS nguyên niêm phong, không móp méo va đập.</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CheckCircle2 size={14} color="#4ADE80" style={{ flexShrink: 0 }} />
+                <span>Tình trạng toan vẽ và mặt sơn hoàn hảo 100%, đúng hiện trạng công bố.</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CheckCircle2 size={14} color="#4ADE80" style={{ flexShrink: 0 }} />
+                <span>Bàn giao trọn bộ Giấy chứng nhận tác quyền và Thẻ định danh số SHA-256.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Digital Signature & Escrow Note */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: 12,
+            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+            fontSize: '0.76rem',
+            flexWrap: 'wrap',
+            gap: 10
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span className="badge" style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ADE80', border: '1px solid rgba(34, 197, 94, 0.35)', fontSize: '0.72rem' }}>
+                ✓ ĐÃ KÝ ĐIỆN TỬ OTP XÁC THỰC
+              </span>
+              <span style={{ color: '#94A3B8' }}>Bảo chứng Escrow 72h hoàn tất</span>
+            </div>
+            <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+              Mã băm: 7f9c...4a2b
+            </span>
+          </div>
+        </div>
+
+        {/* Modal Actions */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+          <button type="button" className="btn btn-ghost" onClick={onClose} style={{ fontSize: '0.82rem' }}>
+            Đóng
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handlePrint}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.82rem' }}
+          >
+            <Printer size={14} /> In biên bản bàn giao
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -3490,19 +3862,64 @@ const ArtistVatInvoiceModal = ({ order, artistName, onClose, addToast }) => {
 /* ==========================================================================
    TAB 4: HỒ SƠ HỌA SĨ (Artist Profile & Verification)
    - Tối giản hóa thông tin, phân chia 2 cột cân đối, chống ngợp chữ
-   - Cột trái: Tuyên ngôn sáng tác & Chứng nhận chuyên môn
+   - Cột trái: Tiểu sử & Chứng nhận chuyên môn
    - Cột phải: Định danh eKYC Cấp L3, Thẻ ngân hàng & Bảo mật
    ========================================================================== */
-const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate }) => {
+const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate, onUpdateUser }) => {
+  const fileInputRef = React.useRef(null);
+  const [currentAvatar, setCurrentAvatar] = useState(user?.avatar || '/artist_1.jpg');
+
+  React.useEffect(() => {
+    if (user?.avatar) {
+      setCurrentAvatar(user.avatar);
+    }
+  }, [user?.avatar]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      addToast?.('Vui lòng chọn tệp hình ảnh hợp lệ (JPG, PNG, WEBP)!', 'error');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      addToast?.('Dung lượng ảnh không được vượt quá 5MB!', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result;
+      if (dataUrl) {
+        setCurrentAvatar(dataUrl);
+        onUpdateUser?.({ avatar: dataUrl });
+        addToast?.('✦ Cập nhật ảnh đại diện Họa sĩ thành công!', 'success');
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
   const [statement, setStatement] = useState(
     'Nghệ thuật là hành trình đối thoại giữa chất cảm tự nhiên và tâm thức đương đại. Mỗi vệt màu đắp nổi là một nhịp thở của tự nhiên và linh hồn của di sản mỹ thuật Việt Nam.'
   );
   const [statementSaved, setStatementSaved] = useState(false);
   const [copiedBank, setCopiedBank] = useState(false);
 
+  // Tài khoản thụ hưởng của Họa sĩ
+  const [beneficiaryAccount, setBeneficiaryAccount] = useState({
+    bank_name: 'Vietcombank',
+    account_number: '0071000886886',
+    account_holder: user?.full_name?.toUpperCase() || 'TRẦN THỊ ÁNH DƯƠNG',
+    branch: 'Sở Giao Dịch Hà Nội'
+  });
+  const [isEditBankOpen, setIsEditBankOpen] = useState(false);
+
   const handleSaveStatement = () => {
     setStatementSaved(true);
-    addToast?.('✦ Đã lưu tuyên ngôn sáng tác của Họa sĩ thành công!', 'success');
+    addToast?.('✦ Đã lưu Tiểu sử của Họa sĩ thành công!', 'success');
     setTimeout(() => setStatementSaved(false), 3000);
   };
 
@@ -3520,25 +3937,81 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
         <div>
           <h2 className={styles.tabTitle} style={{ margin: 0 }}>Hồ sơ Họa sĩ & Xác thực Chuyên môn</h2>
           <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Quản lý định danh Master Artist Cấp L3, bản sắc sáng tác mỹ thuật, tài khoản thụ hưởng và bảo mật.
+            Quản lý định danh Họa sĩ Cấp L3, bản sắc sáng tác mỹ thuật, tài khoản thụ hưởng và bảo mật.
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <span className="badge badge-verified" style={{ padding: '6px 12px' }}>
-            <ShieldCheck size={13} /> Master Artist Verified
+            <ShieldCheck size={13} /> Họa sĩ đã xác thực
           </span>
           <span className="badge badge-gold" style={{ padding: '6px 12px' }}>
-            Cấp L3 eKYC
+            Cấp L3
           </span>
         </div>
       </div>
 
       <div className={styles.profileSectionStack}>
         {/* =========================================================
+            HÀNG 0: ẢNH ĐẠI DIỆN & NHẬN DIỆN THƯƠNG HIỆU HỌA SĨ
+            ========================================================= */}
+        <div className={styles.avatarEditCard}>
+          <div className={styles.avatarEditLeft}>
+            <div className={styles.avatarUploadWrap}>
+              <img
+                src={currentAvatar}
+                alt={user.full_name}
+                className={styles.avatarLargeImg}
+                onError={(e) => { e.currentTarget.src = '/artist_1.jpg'; }}
+              />
+              <button
+                type="button"
+                className={styles.avatarCameraBtn}
+                onClick={() => fileInputRef.current?.click()}
+                title="Thay đổi ảnh đại diện"
+              >
+                <Camera size={16} />
+              </button>
+            </div>
+
+            <div className={styles.avatarInfoDetails}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                <h3 className={styles.avatarArtistName}>{user.full_name}</h3>
+                <span className="badge badge-verified" style={{ fontSize: '0.72rem' }}>
+                  <ShieldCheck size={12} /> Họa sĩ Cấp L3
+                </span>
+              </div>
+              <p className={styles.avatarSubText}>
+                Ảnh chân dung đại diện hiển thị công khai trên không gian nghệ thuật, các phiên đấu giá và chứng thư tác quyền số.
+              </p>
+              <div className={styles.avatarFormatNote}>
+                Định dạng JPG, PNG, WEBP tối đa 5MB · Khuyến nghị tỉ lệ vuông 1:1
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.avatarEditRight}>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => fileInputRef.current?.click()}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 18px', fontSize: '0.84rem' }}
+            >
+              <Upload size={15} /> Tải ảnh mới từ máy
+            </button>
+          </div>
+        </div>
+        {/* =========================================================
             HÀNG 1: BẢN SẮC NGHỆ THUẬT & CHỨNG NHẬN CHUYÊN MÔN (2 CỘT CÂN ĐỐI 50-50)
             ========================================================= */}
         <div className={styles.profileGridTwo}>
-          {/* Card 1: Tuyên ngôn sáng tác */}
+          {/* Card 1: Tiểu sử */}
           <div className={styles.kycCard}>
             <div className={styles.kycCardHeader}>
               <div className={styles.kycHeaderLeft}>
@@ -3546,7 +4019,7 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                   <Palette size={20} />
                 </div>
                 <div className={styles.kycTitleWrap}>
-                  <h3 className={styles.kycCardTitle}>Tuyên ngôn Sáng tác</h3>
+                  <h3 className={styles.kycCardTitle}>Tiểu sử</h3>
                   <span className={styles.kycCardSubtitle}>Phong cách & triết lý hội họa gửi đến giới mộ điệu</span>
                 </div>
               </div>
@@ -3557,7 +4030,7 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                 style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', padding: '6px 14px' }}
               >
                 {statementSaved ? <CheckCircle size={14} /> : <Sparkles size={14} />}
-                {statementSaved ? 'Đã lưu' : 'Lưu tuyên ngôn'}
+                {statementSaved ? 'Đã lưu' : 'Lưu tiểu sử'}
               </button>
             </div>
 
@@ -3569,7 +4042,7 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                   rows={4}
                   value={statement}
                   onChange={(e) => setStatement(e.target.value)}
-                  placeholder="Nhập tuyên ngôn nghệ thuật, triết lý sáng tác và nguồn cảm hứng của bạn..."
+                  placeholder="Nhập tiểu sử nghệ thuật, triết lý sáng tác và nguồn cảm hứng của bạn..."
                   style={{ minHeight: 90 }}
                 />
               </div>
@@ -3644,7 +4117,7 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                 </div>
               </div>
               <span className="badge badge-gold" style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}>
-                MASTER VERIFIED
+                ĐÃ XÁC THỰC
               </span>
             </div>
 
@@ -3682,13 +4155,13 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                 </span>
                 <div className={styles.privilegeRow}>
                   <span className={styles.privilegePill}>
-                    <span>⚡</span> Đấu giá kín (Sealed-Bid)
+                    <span>⚡</span> Đấu giá kín
                   </span>
                   <span className={styles.privilegePill}>
                     <span>📜</span> Chứng nhận số SHA-256
                   </span>
                   <span className={styles.privilegePill}>
-                    <span>🛡️</span> Ký quỹ Escrow 72h
+                    <span>🛡️</span> Ký quỹ đảm bảo 72 giờ
                   </span>
                 </div>
               </div>
@@ -3704,16 +4177,16 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
                 </div>
                 <div className={styles.kycTitleWrap}>
                   <h3 className={styles.kycCardTitle}>Tài khoản Thụ hưởng</h3>
-                  <span className={styles.kycCardSubtitle}>Đã đối soát trùng khớp tên CCCD (AML Safe)</span>
+                  <span className={styles.kycCardSubtitle}>Đã đối soát trùng khớp tên CCCD (Chuẩn an toàn thanh toán)</span>
                 </div>
               </div>
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
-                onClick={() => addToast?.('Chức năng cập nhật tài khoản yêu cầu xác thực OTP bảo mật!', 'info')}
-                style={{ fontSize: '0.75rem' }}
+                onClick={() => setIsEditBankOpen(true)}
+                style={{ fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}
               >
-                Thay đổi
+                <Edit3 size={13} /> Thay đổi
               </button>
             </div>
 
@@ -3721,31 +4194,41 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
               {/* Thẻ ngân hàng tối giản */}
               <div className={styles.bankCardBox}>
                 <div className={styles.bankCardHeader}>
-                  <span className={styles.bankBrandName}>VIETCOMBANK</span>
+                  <span className={styles.bankBrandName}>{beneficiaryAccount.bank_name.toUpperCase()}</span>
                   <span style={{ fontSize: '0.68rem', color: 'var(--gold-light)', border: '1px solid rgba(197, 160, 89, 0.3)', padding: '2px 8px', borderRadius: 4, background: 'rgba(197, 160, 89, 0.08)' }}>
                     Tài khoản chính
                   </span>
                 </div>
                 <div className={styles.bankAccNumber}>
-                  <span>0071 0008 8688 6</span>
+                  <span>{beneficiaryAccount.account_number.replace(/(\d{4})(?=\d)/g, '$1 ')}</span>
                   <button
                     type="button"
                     className={styles.copyIconBtn}
-                    onClick={() => handleCopy('0071000886886')}
+                    onClick={() => handleCopy(beneficiaryAccount.account_number)}
                     title="Sao chép số tài khoản"
                   >
                     {copiedBank ? <Check size={16} style={{ color: 'var(--success)' }} /> : <Copy size={16} />}
                   </button>
                 </div>
                 <div className={styles.bankCardFooter}>
-                  <span>Chủ TK: <strong style={{ color: 'var(--text-primary)' }}>{user.full_name?.toUpperCase()}</strong></span>
-                  <span>Chi nhánh: Sở Giao Dịch Hà Nội</span>
+                  <span>Chủ TK: <strong style={{ color: 'var(--text-primary)' }}>{beneficiaryAccount.account_holder}</strong></span>
+                  <span>Chi nhánh: {beneficiaryAccount.branch}</span>
                 </div>
               </div>
 
-              <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                ✓ Tự động giải ngân qua Napas 247 sau khi người mua hoàn tất nghiệm thu 72h.
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                  ✓ Tự động giải ngân qua Napas 247 sau khi người mua hoàn tất nghiệm thu 72 giờ.
+                </p>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setIsEditBankOpen(true)}
+                  style={{ fontSize: '0.75rem', padding: '4px 10px', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                >
+                  <Edit3 size={12} /> Cập nhật tài khoản
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -3771,7 +4254,7 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
             <div className={styles.securityBox}>
               <div>
                 <span style={{ display: 'block', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.88rem' }}>
-                  Xác thực 2 lớp (2FA)
+                  Xác thực bảo mật 2 lớp (2FA)
                 </span>
                 <span style={{ display: 'block', fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: 4 }}>
                   Bảo vệ rút tiền & xác thực phiên đấu giá
@@ -3835,6 +4318,210 @@ const ArtistProfileAndVerificationTab = ({ user, addToast, onLogout, navigate })
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Modal Cập nhật Tài khoản Thụ hưởng */}
+      {isEditBankOpen && (
+        <ArtistBeneficiaryModal
+          currentAccount={beneficiaryAccount}
+          user={user}
+          onSave={(updated) => {
+            setBeneficiaryAccount(updated);
+            setIsEditBankOpen(false);
+            addToast?.(`✦ Đã cập nhật tài khoản thụ hưởng ${updated.bank_name} thành công!`, 'success');
+          }}
+          onClose={() => setIsEditBankOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+   MODAL TÀI KHOẢN THỤ HƯỞNG (Artist Beneficiary Bank Account Modal)
+   - Cập nhật tài khoản nhận tiền bán tranh sau nghiệm thu Escrow 72h
+   - Ngắn gọn, giản lược, tối ưu UI/UX
+   ========================================================================== */
+const ArtistBeneficiaryModal = ({ currentAccount, onSave, onClose, user }) => {
+  const [formData, setFormData] = useState({
+    bank_name: currentAccount?.bank_name || 'Vietcombank',
+    account_number: currentAccount?.account_number || '0071000886886',
+    account_holder: currentAccount?.account_holder || user?.full_name?.toUpperCase() || 'TRẦN THỊ ÁNH DƯƠNG',
+    branch: currentAccount?.branch || 'Sở Giao Dịch Hà Nội'
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.account_number.trim()) {
+      return;
+    }
+    onSave(formData);
+  };
+
+  const banks = [
+    'Vietcombank (Ngân hàng TMCP Ngoại Thương)',
+    'Techcombank (Ngân hàng TMCP Kỹ Thương)',
+    'MB Bank (Ngân hàng TMCP Quân Đội)',
+    'BIDV (Ngân hàng Đầu tư và Phát triển VN)',
+    'VietinBank (Ngân hàng Công Thương VN)',
+    'ACB (Ngân hàng Á Châu)',
+    'VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)'
+  ];
+
+  return (
+    <div className={styles.invoiceModalOverlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={styles.invoiceModalBox} style={{ maxWidth: 520, padding: 28 }}>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(212, 175, 55, 0.12)', border: '1px solid rgba(212, 175, 55, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gold-primary)' }}>
+              <Building2 size={20} />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-brand)' }}>
+                Tài khoản Thụ hưởng
+              </h3>
+              <span style={{ fontSize: '0.74rem', color: '#94A3B8' }}>
+                Nhận tiền bán tranh tự động giải ngân qua Napas 247 sau 72h
+              </span>
+            </div>
+          </div>
+          <button type="button" className="btn btn-icon btn-ghost" onClick={onClose} style={{ borderRadius: '50%' }}>
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Ngân hàng */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label style={{ fontSize: '0.78rem', color: '#CBD5E1', fontWeight: 600 }}>
+              Ngân hàng thụ hưởng
+            </label>
+            <select
+              value={formData.bank_name}
+              onChange={(e) => setFormData(prev => ({ ...prev, bank_name: e.target.value }))}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                borderRadius: 8,
+                padding: '9px 12px',
+                color: '#FFFFFF',
+                fontSize: '0.85rem',
+                outline: 'none'
+              }}
+            >
+              {banks.map(b => (
+                <option key={b} value={b.split(' ')[0]} style={{ background: '#1A1A1E', color: '#FFF' }}>
+                  {b}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Số tài khoản */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label style={{ fontSize: '0.78rem', color: '#CBD5E1', fontWeight: 600 }}>
+              Số tài khoản ngân hàng
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="Nhập số tài khoản..."
+              value={formData.account_number}
+              onChange={(e) => setFormData(prev => ({ ...prev, account_number: e.target.value.replace(/\s/g, '') }))}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                borderRadius: 8,
+                padding: '9px 12px',
+                color: '#FFFFFF',
+                fontSize: '0.88rem',
+                fontFamily: 'var(--font-mono)',
+                outline: 'none'
+              }}
+            />
+          </div>
+
+          {/* Tên chủ tài khoản */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label style={{ fontSize: '0.78rem', color: '#CBD5E1', fontWeight: 600 }}>
+                Tên chủ tài khoản (In hoa không dấu)
+              </label>
+              <span style={{ fontSize: '0.7rem', color: '#10B981' }}>✓ Đối soát CCCD L3</span>
+            </div>
+            <input
+              type="text"
+              required
+              value={formData.account_holder}
+              onChange={(e) => setFormData(prev => ({ ...prev, account_holder: e.target.value.toUpperCase() }))}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                borderRadius: 8,
+                padding: '9px 12px',
+                color: '#FFFFFF',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                outline: 'none'
+              }}
+            />
+          </div>
+
+          {/* Chi nhánh */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label style={{ fontSize: '0.78rem', color: '#CBD5E1', fontWeight: 600 }}>
+              Chi nhánh ngân hàng
+            </label>
+            <input
+              type="text"
+              placeholder="Ví dụ: Sở Giao Dịch Hà Nội, Chi nhánh Bến Thành..."
+              value={formData.branch}
+              onChange={(e) => setFormData(prev => ({ ...prev, branch: e.target.value }))}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                borderRadius: 8,
+                padding: '9px 12px',
+                color: '#FFFFFF',
+                fontSize: '0.85rem',
+                outline: 'none'
+              }}
+            />
+          </div>
+
+          {/* Quick Notice */}
+          <div style={{
+            background: 'rgba(212, 175, 55, 0.07)',
+            border: '1px dashed rgba(212, 175, 55, 0.25)',
+            borderRadius: 8,
+            padding: '10px 12px',
+            fontSize: '0.76rem',
+            color: '#F5E6B3',
+            lineHeight: 1.45,
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 8
+          }}>
+            <ShieldCheck size={14} style={{ color: 'var(--gold-primary)', flexShrink: 0, marginTop: 2 }} />
+            <span>Tên chủ tài khoản bắt buộc trùng khớp với họ tên trên CCCD đã xác thực Cấp L3 để đảm bảo giải ngân tự động.</span>
+          </div>
+
+          {/* Action buttons */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 6 }}>
+            <button type="button" className="btn btn-ghost" onClick={onClose} style={{ fontSize: '0.82rem' }}>
+              Hủy
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', padding: '8px 18px' }}
+            >
+              <Check size={14} /> Lưu tài khoản thụ hưởng
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import './index.css';
 import Navbar from './components/Navbar';
 import ToastContainer from './components/ToastContainer';
@@ -25,6 +25,7 @@ import CommunityChatDrawer from './components/CommunityChatDrawer';
 
 const AppContent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/quan-tri');
 
   const [currentUser, setCurrentUser] = useState(null);
@@ -60,19 +61,47 @@ const AppContent = () => {
   const handleLogin = (user) => {
     setCurrentUser(user);
     addToast(`Chào mừng trở lại, ${user.full_name.split(' ').slice(-1)[0]}! ✨`, 'success');
+    if (user.role === 'artist') {
+      navigate('/profile?tab=artworks');
+    }
   };
 
   const handleRegister = (user) => {
     setCurrentUser(user);
-    const levelLabels = ['', 'L1 SĐT', 'L2 eKYC', 'L3 Họa sĩ'];
+    const levelLabels = ['', 'L1 SĐT', 'L2 Định danh', 'L3 Họa sĩ'];
     const lvl = user.kyc_level || 0;
     const levelText = lvl > 0 ? ` • Cấp ${levelLabels[lvl]} đã xác minh!` : '';
     addToast(`🎉 Chào mừng, ${user.full_name.split(' ').slice(-1)[0]}!${levelText}`, 'success', 5000);
+    if (user.role === 'artist') {
+      navigate('/profile?tab=artworks');
+    }
+  };
+
+  const handleSwitchToCollector = (collectorUser) => {
+    const userToSet = collectorUser || {
+      user_id: 'u1',
+      username: 'minh_collector',
+      email: 'minh@example.com',
+      role: 'collector',
+      full_name: 'Nguyễn Minh Khôi',
+      collector_type: 'Nhà sưu tầm tư nhân',
+      verification_badge: true,
+      kyc_level: 2,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+      badge_label: 'Cấp L2',
+    };
+    setCurrentUser(userToSet);
+    addToast(`✦ Đã chuyển sang vai Nhà sưu tầm (${userToSet.full_name.split(' ').slice(-1)[0]} · L2)!`, 'success');
+    navigate('/gallery');
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
     addToast('Đã đăng xuất. Hẹn gặp lại!', 'info');
+  };
+
+  const handleUpdateUser = (updatedFields) => {
+    setCurrentUser(prev => prev ? { ...prev, ...updatedFields } : null);
   };
 
   const sharedProps = {
@@ -82,7 +111,9 @@ const AppContent = () => {
     addToast,
     onLoginClick: () => setLoginOpen(true),
     onRegisterClick: () => setRegisterOpen(true),
+    onSwitchToCollector: handleSwitchToCollector,
     onLogout: handleLogout,
+    onUpdateUser: handleUpdateUser,
   };
 
   return (
@@ -151,8 +182,8 @@ const AppContent = () => {
       {/* Thông báo Toast toàn cục */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
-      {/* WIDGET TƯ VẤN KHÁCH HÀNG (ẨN HOÀN TOÀN TRÊN PHÂN HỆ QUẢN TRỊ VIÊN) */}
-      {!isAdminRoute && (
+      {/* WIDGET TƯ VẤN KHÁCH HÀNG (ẨN HOÀN TOÀN TRÊN PHÂN HỆ QUẢN TRỊ VIÊN & HỌA SĨ) */}
+      {!isAdminRoute && currentUser?.role !== 'artist' && (
         <CommunityChatDrawer
           currentUser={currentUser}
           onLoginClick={() => setLoginOpen(true)}

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Search, Bell, User, Menu, X, ChevronDown, LogOut,
+  Search, User, Menu, X, ChevronDown, LogOut,
   Compass, Gavel, Palette, Landmark, Sun, Moon, ShieldCheck,
   Receipt, Truck, PlusCircle
 } from 'lucide-react';
@@ -32,28 +32,37 @@ const ARTIST_NAV_LINKS = [
   {
     label: 'Quản lý bài đăng',
     path: '/profile?tab=artworks',
-    query: '?tab=artworks',
+    tabSlug: 'artworks',
     icon: Palette,
   },
   {
-    label: 'Quản đơn',
+    label: 'Quản lý đơn hàng',
     path: '/profile?tab=orders',
-    query: '?tab=orders',
+    tabSlug: 'orders',
     icon: Receipt,
   },
   {
-    label: 'Vận chuyển',
+    label: 'Quản lý vận chuyển',
     path: '/profile?tab=shipping',
-    query: '?tab=shipping',
+    tabSlug: 'shipping',
     icon: Truck,
   },
   {
-    label: 'Profile họa sĩ',
+    label: 'Hồ sơ họa sĩ',
     path: '/profile?tab=profile',
-    query: '?tab=profile',
+    tabSlug: 'profile',
     icon: User,
   },
 ];
+
+const getArtistTabSlug = (search) => {
+  const params = new URLSearchParams(search);
+  const t = params.get('tab');
+  if (t === 'orders' || t === 'don-hang') return 'orders';
+  if (t === 'shipping' || t === 'van-chuyen') return 'shipping';
+  if (t === 'profile' || t === 'kyc') return 'profile';
+  return 'artworks';
+};
 
 const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark', onToggleTheme }) => {
   const location = useLocation();
@@ -66,6 +75,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
   const isArtist = user?.role === 'artist';
   const navLinks = isArtist ? ARTIST_NAV_LINKS : PUBLIC_NAV_LINKS;
+  const currentArtistTabSlug = getArtistTabSlug(location.search);
 
 
 
@@ -109,15 +119,15 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
             <Logo size="md" />
           </Link>
 
-          {/* Center Navigation Menu (Chỉ hiển thị cho Collector / Khách) */}
+          {/* Center Navigation Menu (Chỉ hiển thị cho Khách / Nhà sưu tầm, Họa sĩ sử dụng thanh điều hướng ngay dưới trang Profile) */}
           {!isArtist && (
             <nav className={styles.navContainer} aria-label="Menu chính">
               <ul className={styles.navLinks}>
-                {navLinks.map(link => {
+                {PUBLIC_NAV_LINKS.map(link => {
                   const isActive = location.pathname === link.path;
                   const IconComp = link.icon;
                   return (
-                    <li key={link.path} className={styles.navItem}>
+                    <li key={link.label} className={styles.navItem}>
                       <Link
                         to={link.path}
                         className={`${styles.navLink} ${isActive ? styles.active : ''}`}
@@ -148,153 +158,109 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
 
           {/* Right Utility Buttons */}
           <div className={styles.actions}>
-            {isArtist && (
-              <button
-                type="button"
-                id="nav-artist-post-btn"
-                onClick={() => {
-                  if (location.pathname === '/profile') {
-                    window.dispatchEvent(new CustomEvent('open-artist-upload'));
-                  } else {
-                    navigate('/profile?action=upload');
-                  }
-                }}
-                className="btn btn-primary btn-sm"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '0.82rem',
-                  padding: '7px 14px',
-                  fontWeight: 600,
-                  borderRadius: '8px',
-                  whiteSpace: 'nowrap',
-                  cursor: 'pointer'
-                }}
-              >
-                <PlusCircle size={15} />
-                <span>Đăng bài mới</span>
-              </button>
-            )}
-
-            <button
-              id="nav-search-btn"
-              className={styles.iconBtn}
-              onClick={() => { setSearchOpen(!searchOpen); setMobileOpen(false); setUserMenuOpen(false); }}
-              aria-label="Tìm kiếm tác phẩm"
-            >
-              <Search size={18} strokeWidth={1.4} />
-            </button>
-
-            <button
-              id="nav-bell-btn"
-              className={styles.iconBtn}
-              aria-label="Thông báo"
-            >
-              <div className={styles.bellWrapper}>
-                <Bell size={18} strokeWidth={1.4} />
-                <span className={styles.notifDot} />
-              </div>
-            </button>
-
-            {/* Nút chuyển đổi chế độ giao diện Sáng / Tối */}
-            {/* <button
-              id="theme-toggle-btn"
-              type="button"
-              className={`${styles.iconBtn} ${styles.themeBtn} ${isLight ? styles.themeBtnActive : ''}`}
-              onClick={onToggleTheme}
-              aria-label={isLight ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
-              title={isLight ? 'Chuyển sang chế độ tối (Dark Mode)' : 'Chuyển sang chế độ sáng (Light Mode)'}
-            >
-              {isLight ? (
-                <Sun size={18} strokeWidth={1.6} className={styles.sunIcon} />
-              ) : (
-                <Moon size={18} strokeWidth={1.6} className={styles.moonIcon} />
-              )}
-            </button> */}
-
-            {user ? (
-              <div className={styles.userMenuWrapper} ref={userMenuRef}>
+            {isArtist ? (
+              /* GIAO DIỆN TINH GỌN BẢO TÀNG CHO HỌA SĨ: TÌM KIẾM, LỜI CHÀO & ĐĂNG XUẤT NHANH */
+              <>
                 <button
-                  type="button"
-                  id="nav-profile-btn"
-                  className={`${styles.userChip} ${userMenuOpen ? styles.userChipActive : ''}`}
-                  onClick={() => { setUserMenuOpen(!userMenuOpen); setMobileOpen(false); }}
-                  aria-expanded={userMenuOpen}
-                  aria-label="Menu tài khoản"
+                  id="nav-search-btn"
+                  className={styles.iconBtn}
+                  onClick={() => { setSearchOpen(!searchOpen); setUserMenuOpen(false); }}
+                  aria-label="Tìm kiếm trong bài đăng"
+                  title="Tìm kiếm tác phẩm của bạn"
                 >
-                  <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
-                  <span className={styles.userChipMeta}>
-                    <span className={styles.userName}>{user.full_name.split(' ').slice(-1)[0]}</span>
-                    <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
-                    <ChevronDown
-                      size={14}
-                      strokeWidth={1.5}
-                      className={`${styles.chevron} ${userMenuOpen ? styles.chevronRotated : ''}`}
-                    />
-                  </span>
+                  <Search size={18} strokeWidth={1.4} />
                 </button>
 
-                {/* Dropdown Menu */}
-                {userMenuOpen && (
-                  <div className={styles.userDropdown} id="nav-user-dropdown">
-                    <div className={styles.dropdownHeader}>
-                      <img src={user.avatar} alt={user.full_name} className={styles.dropdownAvatar} />
-                      <div className={styles.dropdownUserInfo}>
-                        <div className={styles.dropdownName}>{user.full_name}</div>
-                        <div className={styles.dropdownMeta}>
-                          <span className={styles.dropdownRole}>
-                            {user.role === 'artist' ? 'Họa sĩ xác thực' : 'Nhà sưu tầm'}
-                          </span>
-                          <span className={styles.dropdownKyc}>Cấp L{user.kyc_level || 0}</span>
-                        </div>
-                        <div className={styles.dropdownEmail}>{user.email}</div>
-                      </div>
+                <div className={styles.artistControls}>
+                  <Link
+                    to="/profile?tab=profile"
+                    className={styles.artistGreeting}
+                    id="nav-artist-greeting"
+                    title="Xem Hồ sơ họa sĩ & Không gian trưng bày"
+                  >
+                    <img
+                      src={user?.avatar || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80"}
+                      alt={user?.full_name || "Họa sĩ"}
+                      className={styles.artistGreetingAvatar}
+                    />
+                    <div className={styles.artistGreetingTextGroup}>
+                      <span className={styles.artistGreetingPrefix}>Xin chào,&nbsp;</span>
+                      <span className={styles.artistGreetingName}>
+                        <span className={styles.nameFull}>Họa sĩ {user?.full_name || 'Trần Thị Ánh Dương'}</span>
+                        <span className={styles.nameShort}>Họa sĩ {user?.full_name ? user.full_name.split(' ').slice(-2).join(' ') : 'Ánh Dương'}</span>
+                      </span>
                     </div>
+                    <VerificationBadge level={user?.kyc_level || 3} size="sm" showLabel={false} />
+                  </Link>
 
-                    <div className={styles.dropdownDivider} />
+                  <button
+                    type="button"
+                    id="nav-quick-logout-btn"
+                    className={styles.quickLogoutBtn}
+                    onClick={() => {
+                      onLogout?.();
+                      navigate('/');
+                    }}
+                    title="Đăng xuất nhanh khỏi hệ thống"
+                    aria-label="Đăng xuất nhanh"
+                  >
+                    <LogOut size={15} strokeWidth={2} />
+                    <span className={styles.quickLogoutLabel}>Đăng xuất</span>
+                  </button>
+                </div>
+              </>
+            ) : (
+              /* GIAO DIỆN CHO KHÁCH & NHÀ SƯU TẦM */
+              <>
+                <button
+                  id="nav-search-btn"
+                  className={styles.iconBtn}
+                  onClick={() => { setSearchOpen(!searchOpen); setMobileOpen(false); setUserMenuOpen(false); }}
+                  aria-label="Tìm kiếm tác phẩm"
+                  title="Tìm kiếm tác phẩm nghệ thuật"
+                >
+                  <Search size={18} strokeWidth={1.4} />
+                </button>
 
-                    {isArtist ? (
-                      <>
-                        <Link
-                          to="/profile?tab=artworks"
-                          className={styles.dropdownItem}
-                          id="dropdown-artist-artworks-link"
-                          onClick={() => setUserMenuOpen(false)}
-                        >
-                          <Palette size={15} color="var(--gold-primary)" />
-                          <span>Quản lý bài đăng</span>
-                        </Link>
-                        <Link
-                          to="/profile?tab=orders"
-                          className={styles.dropdownItem}
-                          id="dropdown-artist-orders-link"
-                          onClick={() => setUserMenuOpen(false)}
-                        >
-                          <Receipt size={15} color="var(--gold-primary)" />
-                          <span>Quản lý đơn hàng</span>
-                        </Link>
-                        <Link
-                          to="/profile?tab=shipping"
-                          className={styles.dropdownItem}
-                          id="dropdown-artist-shipping-link"
-                          onClick={() => setUserMenuOpen(false)}
-                        >
-                          <Truck size={15} color="var(--gold-primary)" />
-                          <span>Quản lý vận chuyển</span>
-                        </Link>
-                        <Link
-                          to="/profile?tab=profile"
-                          className={styles.dropdownItem}
-                          id="dropdown-artist-profile-link"
-                          onClick={() => setUserMenuOpen(false)}
-                        >
-                          <User size={15} color="var(--gold-primary)" />
-                          <span>Profile họa sĩ</span>
-                        </Link>
-                      </>
-                    ) : (
-                      <>
+                {user ? (
+                  <div className={styles.userMenuWrapper} ref={userMenuRef}>
+                    <button
+                      type="button"
+                      id="nav-profile-btn"
+                      className={`${styles.userChip} ${userMenuOpen ? styles.userChipActive : ''}`}
+                      onClick={() => { setUserMenuOpen(!userMenuOpen); setMobileOpen(false); }}
+                      aria-expanded={userMenuOpen}
+                      aria-label="Menu tài khoản"
+                    >
+                      <img src={user.avatar} alt={user.full_name} className={styles.avatar} />
+                      <span className={styles.userChipMeta}>
+                        <span className={styles.userName}>{user.full_name}</span>
+                        <VerificationBadge level={user.kyc_level || 0} size="sm" showLabel={false} />
+                        <ChevronDown
+                          size={14}
+                          strokeWidth={1.5}
+                          className={`${styles.chevron} ${userMenuOpen ? styles.chevronRotated : ''}`}
+                        />
+                      </span>
+                    </button>
+
+                    {/* Dropdown Menu cho Collector */}
+                    {userMenuOpen && (
+                      <div className={styles.userDropdown} id="nav-user-dropdown">
+                        <div className={styles.dropdownHeader}>
+                          <img src={user.avatar} alt={user.full_name} className={styles.dropdownAvatar} />
+                          <div className={styles.dropdownUserInfo}>
+                            <div className={styles.dropdownName}>{user.full_name}</div>
+                            <div className={styles.dropdownMeta}>
+                              <span className={styles.dropdownRole}>Nhà sưu tầm</span>
+                              <span className={styles.dropdownKyc}>Cấp L{user.kyc_level || 0}</span>
+                            </div>
+                            <div className={styles.dropdownEmail}>{user.email}</div>
+                          </div>
+                        </div>
+
+                        <div className={styles.dropdownDivider} />
+
                         <Link
                           to="/profile"
                           className={styles.dropdownItem}
@@ -314,52 +280,53 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                           <ShieldCheck size={15} color="var(--gold-primary)" />
                           <span>Giao diện Quản trị viên</span>
                         </Link>
-                      </>
+
+                        <div className={styles.dropdownDivider} />
+
+                        <button
+                          type="button"
+                          id="nav-logout-btn"
+                          className={`${styles.dropdownItem} ${styles.dropdownLogout}`}
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            onLogout?.();
+                            navigate('/');
+                          }}
+                        >
+                          <LogOut size={15} />
+                          <span>Đăng xuất</span>
+                        </button>
+                      </div>
                     )}
-
-                    <div className={styles.dropdownDivider} />
-
+                  </div>
+                ) : (
+                  <div className={styles.authGroup}>
                     <button
-                      type="button"
-                      id="nav-logout-btn"
-                      className={`${styles.dropdownItem} ${styles.dropdownLogout}`}
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        onLogout?.();
-                      }}
+                      id="nav-register-btn"
+                      className={styles.btnRegister}
+                      onClick={onRegisterClick}
                     >
-                      <LogOut size={15} />
-                      <span>Đăng xuất</span>
+                      Đăng ký
+                    </button>
+                    <button
+                      id="nav-login-btn"
+                      className={styles.btnLogin}
+                      onClick={onLoginClick}
+                    >
+                      Đăng nhập
                     </button>
                   </div>
                 )}
-              </div>
-            ) : (
-              <div className={styles.authGroup}>
-                <button
-                  id="nav-register-btn"
-                  className={styles.btnRegister}
-                  onClick={onRegisterClick}
-                >
-                  Đăng ký
-                </button>
-                <button
-                  id="nav-login-btn"
-                  className={styles.btnLogin}
-                  onClick={onLoginClick}
-                >
-                  Đăng nhập
-                </button>
-              </div>
-            )}
 
-            <button
-              className={styles.menuBtn}
-              onClick={() => { setMobileOpen(!mobileOpen); setUserMenuOpen(false); }}
-              aria-label="Mở menu di động"
-            >
-              {mobileOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
-            </button>
+                <button
+                  className={styles.menuBtn}
+                  onClick={() => { setMobileOpen(!mobileOpen); setUserMenuOpen(false); }}
+                  aria-label="Mở menu di động"
+                >
+                  {mobileOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -374,10 +341,14 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
                   id="nav-search-input"
                   autoFocus
                   className={styles.searchInput}
-                  placeholder="Tìm kiếm ..."
+                  placeholder={isArtist ? "Tìm trong bài đăng của bạn..." : "Tìm kiếm tranh, họa sĩ, phong cách..."}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && e.target.value.trim()) {
-                      navigate(`/gallery?q=${encodeURIComponent(e.target.value.trim())}`);
+                      if (isArtist) {
+                        navigate(`/profile?tab=artworks&search=${encodeURIComponent(e.target.value.trim())}`);
+                      } else {
+                        navigate(`/gallery?q=${encodeURIComponent(e.target.value.trim())}`);
+                      }
                       setSearchOpen(false);
                     }
                   }}
@@ -396,32 +367,11 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, theme = 'dark',
           </>
         )}
 
-        {/* Mobile nav */}
-        {mobileOpen && (
+        {/* Mobile nav (Dành riêng cho Khách / Nhà sưu tầm) */}
+        {!isArtist && mobileOpen && (
           <div className={styles.mobileMenu}>
-            {isArtist && (
-              <Link
-                to="/profile?action=upload"
-                className="btn btn-primary btn-sm"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  margin: '12px 16px 8px',
-                  padding: '10px 16px',
-                  fontWeight: 600
-                }}
-                onClick={() => setMobileOpen(false)}
-              >
-                <PlusCircle size={16} /> Đăng bài mới
-              </Link>
-            )}
-
-            {navLinks.map(link => {
-              const isActive = isArtist
-                ? (location.pathname === '/profile' && (location.search === link.query || (!location.search && link.query === '?tab=artworks')))
-                : location.pathname === link.path;
+            {PUBLIC_NAV_LINKS.map(link => {
+              const isActive = location.pathname === link.path;
               const IconComp = link.icon;
               return (
                 <Link

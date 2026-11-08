@@ -26,7 +26,7 @@ const ROLES = [
     label: 'Họa sĩ',
     sublabel: 'Đăng bán, mở phiên đấu giá và nhận thanh toán',
     color: '#A78BFA',
-    perks: ['Đăng tranh độc bản', 'Tạo phiên đấu giá Live / Kín', 'Nhận tiền qua Escrow'],
+    perks: ['Đăng tranh độc bản', 'Tạo phiên đấu giá Trực tiếp / Kín', 'Nhận tiền qua Escrow'],
   },
 ];
 
@@ -35,7 +35,7 @@ const STEPS_COLLECTOR = [
   { id: 'account', label: 'Tài khoản', short: 'L0' },
   { id: 'email',   label: 'Xác nhận email', short: 'L0' },
   { id: 'phone',   label: 'Số điện thoại',  short: 'L1' },
-  { id: 'kyc',     label: 'Định danh eKYC', short: 'L2' },
+  { id: 'kyc',     label: 'Xác thực định danh', short: 'L2' },
   { id: 'done',    label: 'Hoàn tất',  short: '✓'  },
 ];
 
@@ -44,7 +44,7 @@ const STEPS_ARTIST = [
   { id: 'account', label: 'Tài khoản', short: 'L0' },
   { id: 'email',   label: 'Xác nhận email', short: 'L0' },
   { id: 'phone',   label: 'Số điện thoại',  short: 'L1' },
-  { id: 'kyc',     label: 'Định danh eKYC', short: 'L2' },
+  { id: 'kyc',     label: 'Xác thực định danh', short: 'L2' },
   { id: 'profile', label: 'Hồ sơ họa sĩ',  short: 'L3' },
   { id: 'pending', label: 'Chờ duyệt',      short: '⏳' },
 ];
@@ -680,7 +680,7 @@ const StepKYC = ({ data, setData, onNext, onBack, onSkip }) => {
   return (
     <div className={styles.stepContent}>
       <div className={styles.stepHeader}>
-        <h2 className={styles.stepTitle}>Định danh eKYC</h2>
+        <h2 className={styles.stepTitle}>Xác thực định danh</h2>
         <p className={styles.stepDesc}>Cấp L2 – Đặt giá không giới hạn, đấu giá kín và thanh toán Escrow.</p>
         <div className={styles.levelBadge} style={{ '--lvl-color': '#2ECC71' }}>
           <Shield size={12} /> Cấp L2 – Đặt giá không giới hạn
@@ -689,7 +689,7 @@ const StepKYC = ({ data, setData, onNext, onBack, onSkip }) => {
 
       <PrivacyBox items={[
         { field: 'Ảnh CCCD/CMND', reason: 'Xác minh danh tính thật theo quy định giao dịch tài chính. Chỉ lưu mã băm, không lưu số gốc.' },
-        { field: 'Selfie liveness', reason: 'Đảm bảo người đăng ký là người thật, chống giả mạo bằng ảnh in.' },
+        { field: 'Kiểm tra sinh trắc học', reason: 'Đảm bảo người đăng ký là người thật, chống giả mạo bằng ảnh in.' },
         { field: 'Tên tài khoản NH', reason: 'Tên phải khớp với tên định danh để bảo vệ thanh toán Escrow.' },
       ]} />
 
@@ -717,7 +717,7 @@ const StepKYC = ({ data, setData, onNext, onBack, onSkip }) => {
           />
         </div>
         <div className={`${styles.uploadItem} ${styles.uploadItemWide}`}>
-          <p className={styles.uploadTitle}><span className={styles.uploadNum}>3</span> Selfie kèm CCCD (Liveness check)</p>
+          <p className={styles.uploadTitle}><span className={styles.uploadNum}>3</span> Chụp chân dung kèm CCCD (Kiểm tra sinh trắc học)</p>
           <UploadZone
             id="upload-selfie"
             label="Kéo thả hoặc nhấn để chọn"
@@ -732,8 +732,8 @@ const StepKYC = ({ data, setData, onNext, onBack, onSkip }) => {
       {/* Liveness result */}
       {liveness && (
         <div className={`${styles.livenessBox} ${styles[`liveness_${liveness}`]}`}>
-          {liveness === 'checking' && <><span className={styles.spinner} style={{ borderTopColor: '#60B4F6' }} /> Hệ thống đang kiểm tra liveness...</>}
-          {liveness === 'passed' && <><CheckCircle2 size={16} /> Liveness check thành công! Đang chuyển bước...</>}
+          {liveness === 'checking' && <><span className={styles.spinner} style={{ borderTopColor: '#60B4F6' }} /> Hệ thống đang kiểm tra sinh trắc học...</>}
+          {liveness === 'passed' && <><CheckCircle2 size={16} /> Kiểm tra sinh trắc học thành công! Đang chuyển bước...</>}
           {liveness === 'failed' && <><AlertCircle size={16} /> Không nhận ra khuôn mặt. Vui lòng thử lại với ảnh rõ hơn.</>}
         </div>
       )}
@@ -746,7 +746,7 @@ const StepKYC = ({ data, setData, onNext, onBack, onSkip }) => {
           checked={consent}
           onChange={e => setConsent(e.target.checked)}
         />
-        <span>Tôi đồng ý cung cấp thông tin định danh theo <a href="#" className={styles.link}>Điều khoản eKYC</a> và hiểu rằng dữ liệu được bảo vệ theo Nghị định 13/2023/NĐ-CP.</span>
+        <span>Tôi đồng ý cung cấp thông tin định danh theo <a href="#" className={styles.link}>Điều khoản định danh điện tử</a> và hiểu rằng dữ liệu được bảo vệ theo Nghị định 13/2023/NĐ-CP.</span>
       </label>
 
       <div className={styles.stepActions}>
@@ -818,15 +818,15 @@ const StepArtistProfile = ({ data, setData, onNext, onBack }) => {
             onChange={e => setData(d => ({ ...d, bankName: e.target.value }))}
           />
           <p className={styles.fieldHint}>
-            <Lock size={11} /> Tên tài khoản phải khớp với tên định danh eKYC để bảo vệ thanh toán.
+            <Lock size={11} /> Tên tài khoản phải khớp với tên định danh căn cước công dân để bảo vệ thanh toán.
           </p>
         </div>
 
         <div className={styles.uploadItem}>
-          <p className={styles.uploadTitle}><span className={styles.uploadNum}>1</span> Portfolio (PDF hoặc ảnh)</p>
+          <p className={styles.uploadTitle}><span className={styles.uploadNum}>1</span> Hồ sơ sáng tác (PDF hoặc ảnh)</p>
           <UploadZone
             id="upload-portfolio"
-            label="Upload portfolio nghệ thuật"
+            label="Tải lên hồ sơ nghệ thuật"
             hint="PDF, JPG, PNG · Tối đa 20MB"
             accept="image/*,.pdf"
             value={portfolio}
@@ -838,7 +838,7 @@ const StepArtistProfile = ({ data, setData, onNext, onBack }) => {
           <p className={styles.uploadTitle}><span className={styles.uploadNum}>2</span> Ảnh/Video quá trình sáng tác</p>
           <UploadZone
             id="upload-process"
-            label="Upload ảnh xưởng vẽ hoặc video sáng tác"
+            label="Tải ảnh xưởng vẽ hoặc video sáng tác"
             hint="JPG, PNG, MP4 · Tối đa 50MB"
             accept="image/*,video/*"
             value={process}
@@ -874,7 +874,7 @@ const StepDone = ({ role, kycLevel, onClose }) => {
         </h2>
         <p className={styles.stepDesc}>
           {isArtist
-            ? 'Ban Curator sẽ xem xét hồ sơ trong vòng 3–5 ngày làm việc. Bạn sẽ nhận thông báo kết quả qua email và ứng dụng.'
+            ? 'Ban Thẩm định sẽ xem xét hồ sơ trong vòng 3–5 ngày làm việc. Bạn sẽ nhận thông báo kết quả qua email và ứng dụng.'
             : 'Tài khoản của bạn đã sẵn sàng. Hãy bắt đầu khám phá nghệ thuật!'}
         </p>
 
@@ -882,7 +882,7 @@ const StepDone = ({ role, kycLevel, onClose }) => {
           {[
             { lvl: 'L0', label: 'Email xác nhận', color: '#D4AF37', done: kycLevel >= 0 },
             { lvl: 'L1', label: 'SĐT xác minh', color: '#60B4F6', done: kycLevel >= 1 },
-            { lvl: 'L2', label: 'eKYC định danh', color: '#2ECC71', done: kycLevel >= 2 },
+            { lvl: 'L2', label: 'Xác thực định danh', color: '#2ECC71', done: kycLevel >= 2 },
             { lvl: 'L3', label: 'Họa sĩ xác thực', color: '#A78BFA', done: kycLevel >= 3 },
           ].map(({ lvl, label, color, done }) => (
             <div key={lvl} className={`${styles.levelRow} ${done ? styles.levelRowDone : ''}`} style={done ? { '--lvl-color': color } : {}}>

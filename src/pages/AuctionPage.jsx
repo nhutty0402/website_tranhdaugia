@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Clock, Zap, ArrowRight, Trophy, Users, Lock, PlusCircle, Shield, EyeOff, Palette } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, QUICK_BID_STEPS,
@@ -9,7 +9,11 @@ import CreateAuctionModal from '../components/CreateAuctionModal';
 import UploadArtworkModal from '../components/UploadArtworkModal';
 import styles from './AuctionPage.module.css';
 
-const AuctionPage = ({ addToast, currentUser }) => {
+const AuctionPage = ({ addToast, currentUser, onRegisterClick, onLoginClick, onSwitchToCollector }) => {
+  if (currentUser?.role === 'artist') {
+    return <Navigate to="/profile?tab=artworks" replace />;
+  }
+
   const [sessions, setSessions] = useState(AUCTION_SESSIONS);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -31,7 +35,7 @@ const AuctionPage = ({ addToast, currentUser }) => {
           <div>
             <span className="section-label">Sàn đấu giá</span>
             <h1 className={styles.pageTitle}>Sàn Đấu Giá Trực Tuyến</h1>
-            <p className={styles.pageDesc}>Tham gia đấu giá công khai hoặc nộp hồ sơ đấu giá kín (Sealed-bid) có bảo chứng</p>
+            <p className={styles.pageDesc}>Tham gia đấu giá công khai hoặc nộp hồ sơ đấu giá kín có bảo chứng</p>
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {currentUser?.role === 'artist' && (
@@ -95,7 +99,7 @@ const AuctionPage = ({ addToast, currentUser }) => {
         {/* Live Public Sessions */}
         <div className={styles.sectionHeader}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span className="badge badge-live">LIVE</span>
+            <span className="badge badge-live">TRỰC TIẾP</span>
             <h2>Đấu giá Công khai Trực tiếp</h2>
           </div>
         </div>
@@ -198,7 +202,7 @@ const LiveAuctionCard = ({ session, artwork, addToast, currentUser }) => {
           </Link>
         </div>
         <div className={styles.imageBadges}>
-          <span className="badge badge-live">LIVE</span>
+          <span className="badge badge-live">TRỰC TIẾP</span>
         </div>
       </div>
 

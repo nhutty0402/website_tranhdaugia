@@ -36,7 +36,7 @@
 
 /* 2. THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR SLATE-900) */
 .sidebar {
-  width: 260px; /* Khung rộng rãi, đảm bảo hiển thị trọn vẹn danh tính QTV */
+  width: 290px; /* Khung rộng rãi 290px, đảm bảo hiển thị trọn vẹn danh tính QTV không bị cắt chữ */
   background: #0d131f;
   border-right: 1px solid #1E293B;
   display: flex;
@@ -235,8 +235,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 8px 10px;
+  gap: 10px;
+  padding: 9px 12px;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
   border: 1.5px solid rgba(197, 160, 89, 0.45);
@@ -283,17 +283,14 @@
   min-width: 0;
   margin-left: 0;
   flex: 1;
-  overflow: hidden;
 }
 
 .userName {
-  font-size: 0.78rem;
+  font-size: 0.81rem;
   font-weight: 700;
   color: #FFFFFF;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.25;
+  line-height: 1.3;
   letter-spacing: -0.01em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
@@ -1602,7 +1599,7 @@
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 280px !important;
+    width: 290px !important;
     height: 100vh !important;
     min-height: 100vh !important;
     z-index: 150 !important;

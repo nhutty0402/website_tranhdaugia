@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   X, Trophy, Users, Shield, ArrowRight,
-  CheckCircle, MessageSquare, ExternalLink, Calendar,
+  CheckCircle, MessageSquare, Mail, ExternalLink, Calendar,
   Clock, DollarSign, Lock, AlertCircle, Eye, Award,
   Sparkles, ArrowDownRight, ArrowUpRight, XCircle
 } from 'lucide-react';
@@ -22,8 +22,8 @@ const ArtistSessionDashboardModal = ({
   const sortedBids = [...(bids || [])].sort((a, b) => b.bid_amount - a.bid_amount);
   const highestBid = sortedBids[0];
   const lowestBid = sortedBids.length > 0 ? sortedBids[sortedBids.length - 1] : null;
-  const avgBid = sortedBids.length > 0 
-    ? Math.round(sortedBids.reduce((sum, b) => sum + b.bid_amount, 0) / sortedBids.length) 
+  const avgBid = sortedBids.length > 0
+    ? Math.round(sortedBids.reduce((sum, b) => sum + b.bid_amount, 0) / sortedBids.length)
     : 0;
   const totalParticipants = new Set(sortedBids.map(b => b.bidder_id || b.bidder_name)).size;
 
@@ -48,8 +48,10 @@ const ArtistSessionDashboardModal = ({
 
   const handleContactWinner = (bid) => {
     setSelectedBid(bid);
+    const bidderEmail = bid.bidder_email || `${bid.bidder_id || 'collector'}@artisan-hub.vn`;
     if (onContactWinner && session?.session_id) onContactWinner(session.session_id, bid);
-    if (addToast) addToast(`✦ Đã gửi thông báo liên hệ tới ${bid.bidder_name}!`, 'success');
+    if (addToast) addToast(`✦ Đã mở kết nối Email tới Nhà sưu tầm ${bid.bidder_name} (${bidderEmail})!`, 'success');
+    window.location.href = `mailto:${bidderEmail}?subject=${encodeURIComponent(`[Artisan Hub] Trao đổi giá thầu tác phẩm "${artwork?.title || 'Tác phẩm'}"`)}&body=${encodeURIComponent(`Kính gửi ${bid.bidder_name},\n\nTôi là họa sĩ sáng tác tác phẩm "${artwork?.title || 'Tác phẩm'}". Tôi đã nhận được đề xuất giá thầu ${formatPriceFull(bid.bid_amount)} của bạn trên hệ thống đấu giá kín Artisan Hub.\n\nTrân trọng!`)}`;
   };
 
   const handleOpenEscrow = (bid) => {
@@ -124,8 +126,8 @@ const ArtistSessionDashboardModal = ({
               <Sparkles size={14} color="var(--gold-primary)" /> Biên độ định giá
             </span>
             <span className={styles.metricValue} style={{ fontSize: '1.05rem', color: 'var(--text-primary)' }}>
-              {lowestBid && highestBid 
-                ? `${formatPrice(lowestBid.bid_amount)} ~ ${formatPrice(highestBid.bid_amount)}` 
+              {lowestBid && highestBid
+                ? `${formatPrice(lowestBid.bid_amount)} ~ ${formatPrice(highestBid.bid_amount)}`
                 : 'Chưa đủ dữ liệu'}
             </span>
             <span className={styles.metricSub}>
@@ -215,7 +217,7 @@ const ArtistSessionDashboardModal = ({
                   Phiên đã kết thúc! Người thắng cao nhất: {highestBid?.bidder_name || 'Chưa xác định'}
                 </h4>
                 <p className={styles.endedNoticeDesc}>
-                  Mức giá cao nhất: <strong>{formatPriceFull(highestBid?.bid_amount || 0)}</strong>. 
+                  Mức giá cao nhất: <strong>{formatPriceFull(highestBid?.bid_amount || 0)}</strong>.
                   Bạn có thể liên hệ người thắng để bán hoặc từ chối nếu mức giá chưa đạt kỳ vọng.
                 </p>
               </div>
@@ -339,19 +341,10 @@ const ArtistSessionDashboardModal = ({
                               id={`contact-bid-${bid.bid_id}`}
                               className={`btn btn-secondary btn-sm ${styles.tblActionBtn}`}
                               onClick={() => handleContactWinner(bid)}
-                              title={`Gửi tin nhắn liên hệ tới ${bid.bidder_name}`}
+                              title={`Gửi liên hệ tới Email của ${bid.bidder_name}`}
                             >
-                              <MessageSquare size={12} />
-                              <span>Liên hệ</span>
-                            </button>
-                            <button
-                              id={`escrow-bid-${bid.bid_id}`}
-                              className={`btn btn-primary btn-sm ${styles.tblActionBtn}`}
-                              onClick={() => handleOpenEscrow(bid)}
-                              title="Tạo hợp đồng ký quỹ bảo chứng Escrow 72h"
-                            >
-                              <Shield size={12} />
-                              <span>Tạo HĐ</span>
+                              <Mail size={13} />
+                              <span>Liên hệ Email</span>
                             </button>
                           </div>
                         </td>
@@ -416,23 +409,16 @@ const ArtistSessionDashboardModal = ({
                       </div>
                     )}
 
-                    {/* Action buttons (Touch-friendly 50/50 on 390px) */}
+                    {/* Action buttons (Touch-friendly on 390px) */}
                     <div className={styles.mobileCardActions}>
                       <button
                         id={`m-contact-bid-${bid.bid_id}`}
                         className={`btn btn-secondary btn-sm ${styles.mobileActionBtn}`}
                         onClick={() => handleContactWinner(bid)}
+                        style={{ width: '100%' }}
                       >
-                        <MessageSquare size={13} />
-                        <span>Liên hệ</span>
-                      </button>
-                      <button
-                        id={`m-escrow-bid-${bid.bid_id}`}
-                        className={`btn btn-primary btn-sm ${styles.mobileActionBtn}`}
-                        onClick={() => handleOpenEscrow(bid)}
-                      >
-                        <Shield size={13} />
-                        <span>Tạo Escrow</span>
+                        <Mail size={14} />
+                        <span>Liên hệ Email</span>
                       </button>
                     </div>
                   </div>

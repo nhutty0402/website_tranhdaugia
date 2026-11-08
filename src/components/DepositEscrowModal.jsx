@@ -205,7 +205,7 @@ const DepositEscrowModal = ({
         <div className={styles.header}>
           <div className={styles.headerText}>
             <span className={styles.stepBadge}>
-              <Shield size={12} /> Bước {currentStep}/4 · Friction with Purpose
+              <Shield size={12} /> Bước {currentStep}/4 · Bảo mật đa tầng
             </span>
             <h2 className={styles.title}>
               {currentStep === 1 && 'Nghĩa vụ tài chính & Ký quỹ Escrow'}
@@ -290,13 +290,13 @@ const DepositEscrowModal = ({
                 <div className={styles.financialRow}>
                   <span style={{ color: '#B8B0A0' }}>Phí bảo hiểm & Thẩm định tác phẩm:</span>
                   <span style={{ color: '#2ECC71', fontWeight: 600 }}>
-                    Miễn phí (Thành viên L2 eKYC)
+                    Miễn phí (Thành viên Cấp L2)
                   </span>
                 </div>
 
                 <div className={`${styles.financialRow} ${styles.financialTotalRow}`}>
                   <span className={styles.totalLabel}>
-                    Tổng số tiền tạm khóa trong Ví ký quỹ (Escrow):
+                    Tổng số tiền tạm khóa trong Ví ký quỹ đảm bảo:
                   </span>
                   <span className={styles.totalAmount}>
                     {formatPriceFull(totalLocked)}
@@ -414,7 +414,7 @@ const DepositEscrowModal = ({
                   onClick={() => setMfaType('biometric')}
                 >
                   <Fingerprint size={16} />
-                  Sinh trắc học (Touch/Face ID)
+                  Sinh trắc học (Vân tay / Khuôn mặt)
                 </button>
                 <button
                   type="button"
@@ -458,7 +458,7 @@ const DepositEscrowModal = ({
                       onClick={handleTriggerBiometric}
                       disabled={isScanningBio}
                     >
-                      {isScanningBio ? 'Đang xác thực...' : 'Quét vân tay / Face ID'}
+                      {isScanningBio ? 'Đang xác thực...' : 'Quét vân tay / Khuôn mặt'}
                     </button>
                   )}
                 </div>
@@ -513,7 +513,7 @@ const DepositEscrowModal = ({
               {/* Bidding Access Pass Card */}
               <div className={styles.accessPassCard}>
                 <div className={styles.passHeader}>
-                  <span className={styles.passBrand}>ARTISAN HUB · ACCESS PASS</span>
+                  <span className={styles.passBrand}>ARTISAN HUB · THẺ PHÒNG ĐẤU</span>
                   <span className="badge badge-gold" style={{ fontSize: '0.65rem' }}>
                     <ShieldCheck size={12} /> ĐÃ KHÓA KÝ QUỸ
                   </span>
@@ -532,7 +532,7 @@ const DepositEscrowModal = ({
                       Số tiền ký quỹ: <strong>{formatPriceFull(passData.lockedAmount)}</strong>
                     </p>
                     <p className={styles.passHash}>
-                      Mã Escrow: {passData.escrowId}
+                      Mã ký quỹ: {passData.escrowId}
                     </p>
                   </div>
                 </div>
@@ -542,7 +542,7 @@ const DepositEscrowModal = ({
                     ✦ Cấp quyền phòng đấu giá VIP
                   </span>
                   <span className="badge badge-secondary" style={{ fontSize: '0.7rem' }}>
-                    Bảo chứng ví 72h
+                    Bảo chứng ví 72 giờ
                   </span>
                 </div>
               </div>

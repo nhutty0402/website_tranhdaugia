@@ -4,7 +4,7 @@ import { BadgeCheck, Shield, Brush, Phone } from 'lucide-react';
 const LEVEL_CONFIG = {
   0: { label: 'L0 – Email', color: '#9CA3AF', icon: null,        bg: 'rgba(156,163,175,0.1)',  border: 'rgba(156,163,175,0.25)' },
   1: { label: 'L1 – SĐT',  color: '#60B4F6', icon: Phone,       bg: 'rgba(96,180,246,0.1)',   border: 'rgba(96,180,246,0.3)'  },
-  2: { label: 'L2 – eKYC', color: '#2ECC71', icon: Shield,      bg: 'rgba(46,204,113,0.1)',   border: 'rgba(46,204,113,0.3)'  },
+  2: { label: 'L2 – Định danh', color: '#2ECC71', icon: Shield,      bg: 'rgba(46,204,113,0.1)',   border: 'rgba(46,204,113,0.3)'  },
   3: { label: 'L3 – Họa sĩ', color: '#A78BFA', icon: Brush,    bg: 'rgba(167,139,250,0.1)',  border: 'rgba(167,139,250,0.3)' },
 };
 

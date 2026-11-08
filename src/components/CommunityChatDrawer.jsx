@@ -81,15 +81,15 @@ const CommunityChatDrawer = ({ currentUser, onLoginClick }) => {
 
     const expertMap = {
       curator:    { name: 'GS. TS. Trần Viết Cường',        role: 'curator',   badge: 'Chủ tịch Thẩm định',  avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80' },
-      artists:    { name: 'Trần Thị Ánh Dương',              role: 'artist',    badge: 'Master Artist L3',     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80' },
-      collectors: { name: 'Phan Hoàng Yến Trang (Victoria)', role: 'collector', badge: 'VIP Patron L3',        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80' },
+      artists:    { name: 'Trần Thị Ánh Dương',              role: 'artist',    badge: 'Họa sĩ Cấp L3',       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80' },
+      collectors: { name: 'Phan Hoàng Yến Trang (Victoria)', role: 'collector', badge: 'Nhà sưu tầm VIP',    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80' },
     };
     const expert = expertMap[activeChannel];
 
     const replyContentMap = {
       curator:    `Cảm ơn câu hỏi của ${senderName}! Hội đồng Thẩm định kiểm tra tác phẩm theo quy chuẩn ICOM bằng phân tích quang phổ và cấp chứng thư số SHA-256 bảo đảm tính độc bản.`,
       artists:    `Chào ${senderName}! Với kỹ thuật vẽ nhiều lớp chất màu khoáng, tác phẩm cần 7–10 ngày se bề mặt tự nhiên trước khi phủ lớp varnish bảo vệ vĩnh viễn.`,
-      collectors: `Chào bạn! Toàn bộ tiền đặt cọc và tiền mua được ký quỹ Escrow 72 giờ trong tài khoản bảo chứng — chỉ giải ngân khi tranh về tay an toàn.`,
+      collectors: `Chào bạn! Toàn bộ tiền đặt cọc và tiền mua được ký quỹ đảm bảo 72 giờ trong tài khoản bảo chứng — chỉ giải ngân khi tranh về tay an toàn.`,
     };
 
     setTypingName(expert.name);
@@ -135,7 +135,7 @@ const CommunityChatDrawer = ({ currentUser, onLoginClick }) => {
         <div className={styles.triggerCopy}>
           <div className={styles.triggerHeadlineRow}>
             <span className={styles.triggerTitle}>TƯ VẤN & THẨM ĐỊNH</span>
-            <span className={styles.liveTag}>LIVE</span>
+            <span className={styles.liveTag}>TRỰC TIẾP</span>
           </div>
           <span className={styles.triggerSubtitle}>Hội đồng Thẩm định · Họa sĩ</span>
         </div>

@@ -26,12 +26,14 @@
 .inner {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 36px;
+  padding: 0 clamp(16px, 2vw, 32px);
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 28px;
+  gap: clamp(10px, 1.5vw, 20px);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 /* Logo link wrapper */
@@ -51,12 +53,13 @@
   align-items: center;
   justify-content: center;
   flex: 1;
+  min-width: 0;
 }
 
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: clamp(8px, 1.2vw, 16px);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -70,12 +73,13 @@
 .navLink {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 8px;
+  padding: 6px 10px;
   text-decoration: none;
   border-radius: 8px;
   transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  white-space: nowrap;
 }
 
 /* Icon container with fine gold treatment */
@@ -83,9 +87,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   background: rgba(212, 175, 55, 0.05);
   border: 1px solid rgba(212, 175, 55, 0.16);
   transition: all 260ms ease;
@@ -101,7 +105,7 @@
 .navTextCol {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   line-height: 1.15;
 }
 
@@ -113,7 +117,7 @@
 
 .navLabel {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 0.885rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: #E2E2E8;
   letter-spacing: 0.015em;
@@ -231,15 +235,149 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: clamp(8px, 1vw, 14px);
   flex-shrink: 0;
+}
+
+/* ==========================================================================
+   ARTIST EXCLUSIVE CONTROLS (GREETING & QUICK LOGOUT)
+   Tinh tế, sang trọng chuẩn bảo tàng nghệ thuật hoàng gia
+   ========================================================================== */
+
+.artistControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.artistGreeting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 14px 5px 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 0 12px rgba(212, 175, 55, 0.05);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.artistGreeting:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(223, 186, 115, 0.75);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 16px rgba(212, 175, 55, 0.25);
+  transform: translateY(-1px);
+}
+
+.artistGreetingAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #DFC07A;
+  box-shadow: 0 0 8px rgba(223, 186, 115, 0.4);
+  flex-shrink: 0;
+}
+
+.artistGreetingTextGroup {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.artistGreetingPrefix {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+}
+
+.artistGreetingName {
+  color: #FFF4D0;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(223, 186, 115, 0.4);
+}
+
+.nameFull {
+  display: inline;
+}
+
+.nameShort {
+  display: none;
+}
+
+/* Nút Đăng xuất nhanh 1 chạm tinh gọn */
+.quickLogoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: 9999px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #FCA5A5;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.quickLogoutBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.7);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+.quickLogoutBtn:active {
+  transform: translateY(0);
+}
+
+.quickLogoutLabel {
+  font-weight: 600;
+}
+
+.artistUploadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  white-space: nowrap;
+  background: var(--gold-primary);
+  color: #0D0D0F;
+  border: 1px solid var(--gold-primary);
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: 0 2px 8px rgba(197, 160, 89, 0.25);
+  flex-shrink: 0;
+}
+
+.artistUploadBtn:hover {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(197, 160, 89, 0.4);
 }
 
 /* Thinner matte white icon buttons for Search and Bell */
 .iconBtn {
   position: relative;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -250,6 +388,7 @@
   cursor: pointer;
   transition: all 220ms ease;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .iconBtn:hover {
@@ -386,7 +525,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 12px 5px 5px;
+  padding: 4px 12px 4px 4px;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(212, 175, 55, 0.35);
@@ -395,12 +534,14 @@
   color: #FFFFFF;
   transition: all 220ms ease;
   font-family: inherit;
+  flex-shrink: 0;
 }
 
 .userChipMeta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .userChip:hover,
@@ -416,12 +557,15 @@
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #DFC07A;
+  flex-shrink: 0;
 }
 
 .userName {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #FFFFFF;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
 .chevron {
@@ -766,24 +910,23 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-@media (max-width: 1080px) {
-  .navLinks {
-    gap: 18px;
-  }
-}
-
-@media (max-width: 960px) {
+/* Breakpoint 1180px: Đảm bảo Desktop 1440px rộng rãi, còn Laptop nhỏ & Tablet chuyển sang Drawer Menu */
+@media (max-width: 1180px) {
   .inner {
     padding: 0 20px;
-    gap: 16px;
+    gap: 12px;
   }
 
   .navContainer {
-    display: none;
+    display: none !important;
+  }
+
+  .artistUploadBtn {
+    display: none !important;
   }
 
   .menuBtn {
-    display: flex;
+    display: flex !important;
   }
 
   .mobileMenu {
@@ -795,7 +938,7 @@
   }
 }
 
-/* Responsive 768px & 390px Navigation */
+/* Breakpoint 768px: Tối ưu chuyên biệt cho iPad (Portrait 768px) */
 @media (max-width: 768px) {
   .navbar {
     height: 64px;
@@ -805,30 +948,115 @@
   }
   .inner {
     padding: 0 16px;
-    gap: 12px;
+    gap: 10px;
   }
   .actions {
-    gap: 10px;
+    gap: 8px;
     flex-shrink: 0;
   }
-  /* On mobile / tablet bar, auth buttons are moved to inside the mobile drawer */
+  .artistControls {
+    gap: 8px !important;
+  }
+  .artistGreeting {
+    padding: 4px 10px 4px 5px !important;
+    gap: 8px !important;
+  }
+  .artistGreetingAvatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .artistGreetingTextGroup {
+    font-size: 0.8rem !important;
+  }
+  .quickLogoutBtn {
+    padding: 6px 12px !important;
+    font-size: 0.78rem !important;
+  }
+  .artistUploadBtn {
+    display: none !important;
+  }
   .authGroup {
     display: none !important;
   }
+  .iconBtn {
+    width: 36px !important;
+    height: 36px !important;
+  }
   .menuBtn {
-    display: flex;
-    width: 40px;
-    height: 40px;
+    display: flex !important;
+    width: 38px !important;
+    height: 38px !important;
     flex-shrink: 0;
   }
 }
 
+/* Breakpoint 480px / 390px: Tối ưu chuẩn xác cho Mobile (iPhone 390px) */
 @media (max-width: 600px) {
-  .userChip {
+  .navbar {
+    height: 60px;
+  }
+  .navbarSpacer {
+    height: 60px;
+  }
+  .inner {
+    padding: 0 10px;
+    gap: 6px;
+  }
+  .logoLink {
+    transform: scale(0.86);
+    transform-origin: left center;
+  }
+  .actions {
+    gap: 5px !important;
+    flex-shrink: 0;
+  }
+  .artistControls {
+    gap: 5px !important;
+  }
+  .artistGreeting {
+    padding: 3px 8px 3px 3px !important;
+    gap: 6px !important;
+  }
+  .artistGreetingAvatar {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  .artistGreetingPrefix {
+    display: none !important;
+  }
+  .nameFull {
+    display: none !important;
+  }
+  .nameShort {
+    display: inline !important;
+  }
+  .artistGreetingTextGroup {
+    font-size: 0.75rem !important;
+  }
+  .quickLogoutBtn {
+    padding: 5px 9px !important;
+    font-size: 0.74rem !important;
+    gap: 4px !important;
+  }
+  .artistUploadBtn {
+    display: none !important;
+  }
+  .iconBtn {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0;
+  }
+  .menuBtn {
     width: 36px !important;
     height: 36px !important;
-    min-width: 36px !important;
-    max-width: 36px !important;
+    flex-shrink: 0;
+    display: flex !important;
+  }
+  .userChip {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
     padding: 0 !important;
     border-radius: 50% !important;
     overflow: hidden !important;
@@ -861,25 +1089,17 @@
   }
   .userDropdown {
     position: fixed !important;
-    top: 66px !important;
-    right: 12px !important;
-    left: auto !important;
-    width: calc(100vw - 24px) !important;
-    max-width: 290px !important;
+    top: 62px !important;
+    right: 10px !important;
+    left: 10px !important;
+    width: auto !important;
+    max-width: 320px !important;
+    margin-left: auto !important;
     z-index: 1001 !important;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15) !important;
   }
-}
-
-@media (max-width: 480px) {
-  .navbar {
-    height: 64px;
-  }
-  .navbarSpacer {
-    height: 64px;
-  }
   .searchBackdrop {
-    top: 64px;
+    top: 60px;
   }
   .searchBar {
     padding: 10px 12px;
@@ -894,52 +1114,17 @@
   .searchKbd {
     display: none;
   }
-  .inner {
-    padding: 0 12px;
-    gap: 8px;
-  }
-  .actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    flex-shrink: 0 !important;
-  }
-  /* Hide non-essential bell icon on small mobile, keep key Search + Avatar + Hamburger */
-  .actions button[aria-label="Thông báo"] {
-    display: none !important;
-  }
-  .iconBtn {
-    width: 36px !important;
-    height: 36px !important;
-    flex-shrink: 0 !important;
-  }
-  .userMenuWrapper {
-    flex-shrink: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-  }
-  .menuBtn {
-    width: 38px !important;
-    height: 38px !important;
-    flex-shrink: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: rgba(197, 160, 89, 0.12) !important;
-    border: 1px solid rgba(197, 160, 89, 0.35) !important;
-    border-radius: 8px !important;
-  }
   .mobileMenu {
-    padding: 16px 14px 28px;
-    max-height: calc(100vh - 64px);
+    padding: 14px 12px 24px;
+    max-height: calc(100vh - 60px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     border-bottom: 1px solid rgba(212, 175, 55, 0.2);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
   }
   .mobileLink {
-    padding: 12px 14px;
-    min-height: 44px;
+    padding: 10px 12px;
+    min-height: 42px;
   }
   .mobileUserSection {
     padding: 14px;

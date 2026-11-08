@@ -59,7 +59,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
         <div className={styles.header}>
           <div className={styles.headerTitleWrap}>
             <span className="badge badge-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              <Lock size={12} /> ĐẤU GIÁ KÍN (SEALED-BID)
+              <Lock size={12} /> ĐẤU GIÁ KÍN
             </span>
             <h2 className={styles.headerTitle}>
               {step === 1 ? 'Nộp hồ sơ ra giá kín' : 'Cam kết bí mật & Xác nhận'}
@@ -147,7 +147,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
             <div className={styles.secrecyNotice}>
               <EyeOff size={16} color="var(--gold-primary)" />
               <p>
-                <strong>Khám phá giá tự do:</strong> Họa sĩ không đặt giá khởi điểm. Mức giá này được mã hóa bảo mật. Mọi người tự do đề xuất giá để cùng xác định <strong>khoảng giá tối thiểu (Min) và tối đa (Max)</strong> của tác phẩm.
+                <strong>Khám phá giá tự do:</strong> Họa sĩ không đặt giá khởi điểm. Mức giá này được mã hóa bảo mật. Mọi người tự do đề xuất giá để cùng xác định <strong>khoảng giá tối thiểu và tối đa</strong> của tác phẩm.
               </p>
             </div>
 
@@ -193,7 +193,7 @@ const SealedBidModal = ({ artwork, session, existingBid, onClose, onSubmitBid, c
                 <li><strong>Giá của bạn được giữ bí mật, không thể rút hoặc hạ giá</strong> trong suốt phiên.</li>
                 <li>Bạn có quyền tăng giá bất kỳ lúc nào trước khi phiên kết thúc.</li>
                 <li>Chủ sở hữu tác phẩm chỉ mở xem bảng giá thầu khi phiên kết thúc.</li>
-                <li>Nếu là người trả giá cao nhất khi hết giờ, giao dịch sẽ hoàn tất qua <strong>Ví ký quỹ Escrow 72h</strong>.</li>
+                <li>Nếu là người trả giá cao nhất khi hết giờ, giao dịch sẽ hoàn tất qua <strong>Ví ký quỹ đảm bảo 72 giờ</strong>.</li>
               </ul>
             </div>
 

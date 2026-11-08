@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Zap, Shield, Eye, ChevronDown,
   Star, Award, Users, TrendingUp,
@@ -50,7 +50,7 @@ const HeroCountdown = () => {
 
   return (
     <div className={styles.heroCountdown}>
-      <span className="badge badge-live" style={{ fontSize: '0.7rem' }}>LIVE AUCTION</span>
+      <span className="badge badge-live" style={{ fontSize: '0.7rem' }}>ĐẤU GIÁ TRỰC TIẾP</span>
       <div className={styles.countdownBlocks}>
         {[
           { v: time.hours, l: 'GIỜ' },
@@ -70,7 +70,15 @@ const HeroCountdown = () => {
   );
 };
 
-const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
+const HomePage = ({ onLoginClick, wishlisted, onWishlist, currentUser }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser?.role === 'artist') {
+      navigate('/profile?tab=artworks', { replace: true });
+    }
+  }, [currentUser, navigate]);
+
   const featuredArtworks = ARTWORKS.filter(a => a.is_featured);
   const allArtworks = ARTWORKS.slice(0, 4);
 
@@ -123,7 +131,7 @@ const HomePage = ({ onLoginClick, wishlisted, onWishlist }) => {
               <div className={`glass ${styles.heroArtCard}`}>
                 <img src="/artwork_1.png" alt="Bình Minh Trên Biển Đông" className={styles.heroArt} />
                 <div className={styles.heroArtInfo}>
-                  <span className="badge badge-live">LIVE</span>
+                  <span className="badge badge-live">TRỰC TIẾP</span>
                   <h4 className={styles.heroArtTitle}>Bình Minh Trên Biển Đông</h4>
                   <p className={styles.heroArtPrice}>{formatPrice(22500000)}</p>
                 </div>

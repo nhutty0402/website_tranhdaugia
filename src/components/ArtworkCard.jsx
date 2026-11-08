@@ -47,7 +47,7 @@ const ArtworkCard = ({ artwork, session, onWishlist, wishlisted }) => {
               <Lock size={11} /> ĐẤU GIÁ KÍN
             </span>
           )}
-          {isLive && <span className="badge badge-live">LIVE</span>}
+          {isLive && <span className="badge badge-live">TRỰC TIẾP</span>}
           {isUpcoming && (
             <span className="badge badge-upcoming">
               <Clock size={11} /> SẮP MỞ

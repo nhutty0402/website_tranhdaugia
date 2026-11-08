@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, Grid3X3, List, X, RotateCcw, Palette } from 'lucide-react';
 import ArtworkCard from '../components/ArtworkCard';
 import { ARTWORKS, AUCTION_SESSIONS, FILTER_STYLES, FILTER_PRICE_RANGES } from '../data/mockData';
 import styles from './GalleryPage.module.css';
 
-const GalleryPage = ({ wishlisted, onWishlist }) => {
+const GalleryPage = ({
+  wishlisted,
+  onWishlist,
+  currentUser,
+  onRegisterClick,
+  onLoginClick,
+  onSwitchToCollector,
+  addToast,
+}) => {
+  // Họa sĩ chỉ hoạt động trong không gian quản trị nghệ sĩ, không truy cập trang Triển lãm số của Nhà sưu tầm
+  if (currentUser?.role === 'artist') {
+    return <Navigate to="/profile?tab=artworks" replace />;
+  }
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('Tất cả');
   const [selectedPrice, setSelectedPrice] = useState(FILTER_PRICE_RANGES[0]);

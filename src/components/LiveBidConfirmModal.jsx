@@ -40,7 +40,7 @@ const LiveBidConfirmModal = ({
         <div className={styles.header}>
           <div className={styles.headerTitleWrap}>
             <span className="badge badge-live" style={{ fontSize: '0.68rem', alignSelf: 'flex-start' }}>
-              ✦ Đấu giá trực tiếp · Live Auction
+              ✦ Đấu giá trực tiếp
             </span>
             <h2 id="modal-live-bid-title" className={styles.headerTitle}>
               Xác nhận đặt giá thầu
@@ -97,7 +97,7 @@ const LiveBidConfirmModal = ({
               <Zap size={13} /> Bước giá tăng thêm: +{formatPriceFull(bidIncrement)}
             </span>
             <span className={styles.guaranteeBadge}>
-              <Shield size={13} /> Bảo chứng ví ký quỹ 72h
+              <Shield size={13} /> Bảo chứng ví ký quỹ 72 giờ
             </span>
           </div>
 
@@ -106,7 +106,7 @@ const LiveBidConfirmModal = ({
             <AlertCircle size={20} color="var(--warning)" style={{ flexShrink: 0, marginTop: 2 }} />
             <p className={styles.commitmentText}>
               <strong>Lưu ý quan trọng:</strong> Mức giá đặt mang tính ràng buộc pháp lý. Bạn cam kết thanh toán
-              trong vòng <strong>48h</strong> qua Hợp đồng Escrow nếu là người trả giá cao nhất khi phiên đấu giá kết thúc.
+              trong vòng <strong>48 giờ</strong> qua Hợp đồng Ký quỹ Đảm bảo nếu là người trả giá cao nhất khi phiên đấu giá kết thúc.
             </p>
           </div>
 

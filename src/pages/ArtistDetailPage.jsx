@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import {
   ShieldCheck, Award, MapPin, Copy, Check, Play, Pause,
   Share2, Heart, ArrowRight, Clock, Trophy, Eye, Sparkles,
@@ -78,8 +78,12 @@ const TAB_CONFIG = [
   { id: 'studio', label: 'Không gian xưởng vẽ' },
 ];
 
-const ArtistDetailPage = ({ addToast, currentUser }) => {
+const ArtistDetailPage = ({ addToast, currentUser, onRegisterClick, onLoginClick, onSwitchToCollector }) => {
   const { id } = useParams();
+
+  if (currentUser?.role === 'artist') {
+    return <Navigate to="/profile?tab=profile" replace />;
+  }
 
   // Find artist from mock database or fallback to primary artist
   const artistData = useMemo(() => {

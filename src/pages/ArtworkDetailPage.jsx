@@ -22,10 +22,11 @@ import styles from './ArtworkDetailPage.module.css';
 
 const TAB_ITEMS = ['Thông tin', 'Room View', 'Vệt cọ', 'Lịch sử đặt giá'];
 
-const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) => {
+const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser, onRegisterClick, onLoginClick, onSwitchToCollector }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const artwork = ARTWORKS.find(a => a.artwork_id === id) || ARTWORKS[0];
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const isOwnedParam = searchParams.get('owned') === 'true' || location.state?.isOwned;
@@ -224,8 +225,8 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
       {/* Breadcrumb */}
       <div className={styles.breadcrumb}>
         <div className="container">
-          <Link to="/gallery" className={styles.backLink}>
-            <ArrowLeft size={16} /> Quay lại triển lãm
+          <Link to={isArtist ? "/profile?tab=artworks" : "/gallery"} className={styles.backLink}>
+            <ArrowLeft size={16} /> {isArtist ? 'Quay lại quản lý bài đăng' : 'Quay lại triển lãm'}
           </Link>
         </div>
       </div>
@@ -392,10 +393,10 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   style={{ fontSize: '0.7rem', padding: '4px 10px', minHeight: 26 }}
                   onClick={() => {
                     setTestRole('COLLECTOR');
-                    addToast?.('✦ Chuyển sang góc nhìn: Khách hàng (COLLECTOR) – Đầy đủ quyền đặt giá', 'info', 3000);
+                    addToast?.('✦ Chuyển sang góc nhìn: Khách hàng (Nhà sưu tầm) – Đầy đủ quyền đặt giá', 'info', 3000);
                   }}
                 >
-                  Khách hàng (COLLECTOR)
+                  Khách hàng (Nhà sưu tầm)
                 </button>
                 <button
                   type="button"
@@ -403,10 +404,10 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
                   style={{ fontSize: '0.7rem', padding: '4px 10px', minHeight: 26 }}
                   onClick={() => {
                     setTestRole('ARTIST');
-                    addToast?.('✦ Chuyển sang góc nhìn: Họa sĩ (ARTIST) – Đã khóa quyền mua', 'warning', 3000);
+                    addToast?.('✦ Chuyển sang góc nhìn: Họa sĩ (Chủ tranh) – Đã khóa quyền mua', 'warning', 3000);
                   }}
                 >
-                  Họa sĩ (ARTIST)
+                  Họa sĩ (Chủ tranh)
                 </button>
               </div>
             </div>
@@ -470,44 +471,46 @@ const ArtworkDetailPage = ({ addToast, wishlisted, onWishlist, currentUser }) =>
               <BuyBox artwork={artwork} addToast={addToast} navigate={navigate} isArtist={isArtist} />
             )}
 
-            {/* Action buttons */}
-            <div className={styles.actionBtns}>
-              <button
-                id={`wishlist-detail-${artwork.artwork_id}`}
-                className={`btn btn-ghost ${isWishlisted ? styles.wishlisted : ''}`}
-                onClick={() => { setIsWishlisted(!isWishlisted); onWishlist?.(artwork.artwork_id); }}
-                style={{ flex: 1 }}
-                aria-label={isWishlisted ? 'Xóa khỏi bộ sưu tập theo dõi' : 'Thêm vào bộ sưu tập theo dõi'}
-                title={isWishlisted ? 'Xóa khỏi bộ sưu tập theo dõi' : 'Thêm vào bộ sưu tập theo dõi'}
-              >
-                <Heart size={16} fill={isWishlisted ? '#D4AF37' : 'none'} color={isWishlisted ? '#D4AF37' : undefined} />
-                {isWishlisted ? 'Đã lưu' : 'Lưu tác phẩm'}
-              </button>
-              <button
-                id="share-btn"
-                className="btn btn-ghost"
-                style={{ flex: 1 }}
-                aria-label="Chia sẻ tác phẩm này"
-                title="Sao chép liên kết chia sẻ"
-                onClick={() => {
-                  navigator.clipboard?.writeText(window.location.href);
-                  addToast?.('✦ Đã sao chép liên kết tác phẩm vào bộ nhớ tạm!', 'success');
-                }}
-              >
-                <Share2 size={16} /> Chia sẻ
-              </button>
-              <button
-                id="report-btn"
-                className="btn btn-danger"
-                title="Báo cáo tác phẩm nghi vấn đến Hội đồng Thẩm định"
-                aria-label="Báo cáo tác phẩm nghi vấn"
-                onClick={() => {
-                  addToast?.('Đã ghi nhận yêu cầu giám định lại. Hội đồng sẽ phản hồi trong 24h.', 'info');
-                }}
-              >
-                <AlertTriangle size={16} />
-              </button>
-            </div>
+            {/* Action buttons (Ẩn đối với Họa sĩ, chỉ hiển thị cho Khách hàng/Nhà sưu tầm) */}
+            {!isArtist && (
+              <div className={styles.actionBtns}>
+                <button
+                  id={`wishlist-detail-${artwork.artwork_id}`}
+                  className={`btn btn-ghost ${isWishlisted ? styles.wishlisted : ''}`}
+                  onClick={() => { setIsWishlisted(!isWishlisted); onWishlist?.(artwork.artwork_id); }}
+                  style={{ flex: 1 }}
+                  aria-label={isWishlisted ? 'Xóa khỏi bộ sưu tập theo dõi' : 'Thêm vào bộ sưu tập theo dõi'}
+                  title={isWishlisted ? 'Xóa khỏi bộ sưu tập theo dõi' : 'Thêm vào bộ sưu tập theo dõi'}
+                >
+                  <Heart size={16} fill={isWishlisted ? '#D4AF37' : 'none'} color={isWishlisted ? '#D4AF37' : undefined} />
+                  {isWishlisted ? 'Đã lưu' : 'Lưu tác phẩm'}
+                </button>
+                <button
+                  id="share-btn"
+                  className="btn btn-ghost"
+                  style={{ flex: 1 }}
+                  aria-label="Chia sẻ tác phẩm này"
+                  title="Sao chép liên kết chia sẻ"
+                  onClick={() => {
+                    navigator.clipboard?.writeText(window.location.href);
+                    addToast?.('✦ Đã sao chép liên kết tác phẩm vào bộ nhớ tạm!', 'success');
+                  }}
+                >
+                  <Share2 size={16} /> Chia sẻ
+                </button>
+                <button
+                  id="report-btn"
+                  className="btn btn-danger"
+                  title="Báo cáo tác phẩm nghi vấn đến Hội đồng Thẩm định"
+                  aria-label="Báo cáo tác phẩm nghi vấn"
+                  onClick={() => {
+                    addToast?.('Đã ghi nhận yêu cầu giám định lại. Hội đồng sẽ phản hồi trong 24h.', 'info');
+                  }}
+                >
+                  <AlertTriangle size={16} />
+                </button>
+              </div>
+            )}
 
             {/* Trust Indicators */}
             <div className={styles.trustBox}>
@@ -1052,36 +1055,45 @@ const SealedAuctionBox = ({
             </span>
           </div>
 
-          <div className={styles.rangeMetricsRow}>
-            {/* Giá tối thiểu */}
-            <div className={styles.rangeCol}>
-              <span className={styles.rangeColLabel}>
-                <ArrowDownRight size={13} style={{ color: '#2ECC71' }} /> Giá TỐI THIỂU (Min)
-              </span>
-              <strong className={styles.rangeColVal} style={{ color: '#2ECC71' }}>
-                {formatPriceFull(minBidAmount)}
-              </strong>
-              <span className={styles.rangeColSub}>Mức sàn đề xuất</span>
-            </div>
+          <div className={styles.rangeMetricsCard}>
+            {/* Hàng 2 cột: Min & Max cân đối, rộng rãi không bị gãy chữ */}
+            <div className={styles.rangeColsRow}>
+              {/* Giá tối thiểu */}
+              <div className={styles.rangeCol}>
+                <span className={styles.rangeColLabel}>
+                  <ArrowDownRight size={13} style={{ color: '#2ECC71' }} /> Giá Tối thiểu (Min)
+                </span>
+                <strong className={styles.rangeColVal} style={{ color: '#2ECC71' }}>
+                  {formatPriceFull(minBidAmount)}
+                </strong>
+                <span className={styles.rangeColSub}>Mức sàn đề xuất</span>
+              </div>
 
-            <div className={styles.rangeDividerWrap}>
-              <span className={styles.rangeSpreadText}>
-                Biên độ: {formatPriceFull(maxBidAmount - minBidAmount)}
-              </span>
-              <div className={styles.rangeBarProgress}>
-                <div className={styles.rangeBarGlow} />
+              {/* Giá tối đa */}
+              <div className={`${styles.rangeCol} ${styles.rangeColRight}`}>
+                <span className={styles.rangeColLabel}>
+                  <ArrowUpRight size={13} style={{ color: 'var(--gold-primary)' }} /> Giá Tối đa (Max)
+                </span>
+                <strong className={styles.rangeColVal} style={{ color: 'var(--gold-primary)' }}>
+                  {formatPriceFull(maxBidAmount)}
+                </strong>
+                <span className={styles.rangeColSub}>Mức trần cao nhất</span>
               </div>
             </div>
 
-            {/* Giá tối đa */}
-            <div className={styles.rangeCol}>
-              <span className={styles.rangeColLabel}>
-                <ArrowUpRight size={13} style={{ color: 'var(--gold-primary)' }} /> Giá TỐI ĐA (Max)
-              </span>
-              <strong className={styles.rangeColVal} style={{ color: 'var(--gold-primary)' }}>
-                {formatPriceFull(maxBidAmount)}
-              </strong>
-              <span className={styles.rangeColSub}>Mức trần cao nhất</span>
+            {/* Dải tiến trình trực quan kết nối Min sang Max */}
+            <div className={styles.rangeBarContainer}>
+              <div className={styles.rangeBarTrack}>
+                <span className={styles.rangeDotMin} />
+                <div className={styles.rangeBarFill} />
+                <span className={styles.rangeDotMax} />
+              </div>
+              <div className={styles.rangeSpreadRow}>
+                <span className={styles.rangeSpreadLabel}>Biên độ thị trường:</span>
+                <strong className={styles.rangeSpreadValue}>
+                  {formatPriceFull(maxBidAmount - minBidAmount)}
+                </strong>
+              </div>
             </div>
           </div>
 

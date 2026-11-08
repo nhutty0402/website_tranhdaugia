@@ -117,7 +117,7 @@ const UploadArtworkModal = ({ onClose, onSuccess, currentUser, addToast }) => {
         <div className={styles.header}>
           <div className={styles.headerTitleWrap}>
             <span className="badge badge-gold" style={{ fontSize: '0.68rem', alignSelf: 'flex-start' }}>
-              ✦ Dành cho Họa sĩ · Artist Portal
+              ✦ Cổng Họa Sĩ Đăng Bài Tác Phẩm
             </span>
             <h2 className={styles.headerTitle}>Đăng tải tác phẩm tranh độc bản</h2>
           </div>
@@ -251,7 +251,7 @@ const UploadArtworkModal = ({ onClose, onSuccess, currentUser, addToast }) => {
                     <img src={textureImage} alt="Ảnh vệt cọ" className={styles.previewImg} />
                     <div className={styles.replaceOverlay}>
                       <Palette size={18} />
-                      <span>Thay đổi ảnh texture</span>
+                      <span>Thay đổi ảnh vệt cọ</span>
                     </div>
                   </>
                 ) : (
@@ -259,7 +259,7 @@ const UploadArtworkModal = ({ onClose, onSuccess, currentUser, addToast }) => {
                     <div className={styles.uploadIcon}>
                       <Palette size={20} />
                     </div>
-                    <p className={styles.uploadTitle}>Tải ảnh Macro vệt cọ (Texture)</p>
+                    <p className={styles.uploadTitle}>Tải ảnh chụp vệt cọ cận cảnh</p>
                     <p className={styles.uploadHint}>Chụp cận cảnh chi tiết lớp sơn</p>
                   </div>
                 )}

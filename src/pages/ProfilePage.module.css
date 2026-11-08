@@ -106,6 +106,50 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.artistTabsBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 6px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.artistTabsBar::-webkit-scrollbar {
+  display: none;
+}
+
+.artistTabPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 200ms ease;
+}
+.artistTabPill:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+.artistTabPillActive {
+  background: rgba(197, 160, 89, 0.12);
+  border-color: var(--border-gold);
+  color: var(--gold-light);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 14px rgba(197, 160, 89, 0.12);
+}
+
 .tab {
   padding: 14px 24px;
   font-size: 0.875rem;
@@ -568,6 +612,13 @@
   flex-wrap: wrap;
 }
 
+.artistHeroActionWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .dangerZone {
   background: rgba(239, 68, 68, 0.04);
   border: 1px solid rgba(239, 68, 68, 0.2);
@@ -671,6 +722,16 @@
 }
 
 @media (max-width: 900px) {
+  .profileHero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .profileHeroActions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
   .collectionGrid { grid-template-columns: repeat(2, 1fr); }
   .escrowProgress {
     flex-direction: column;
@@ -701,12 +762,51 @@
 }
 
 @media (max-width: 600px) {
-  .profileHero { flex-direction: column; }
+  .profileHeader { padding: 20px 0 16px !important; }
+  .profileHero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .profileStats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    justify-items: center;
+    margin-top: 8px;
+  }
+  .profileHeroActions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .artistHeroActionWrap {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .profileHeroActions button,
+  .profileHeroActions a {
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
+  }
+  .artistTabsBar {
+    gap: 6px;
+    padding: 4px;
+    margin-bottom: 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .artistTabPill {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
   .collectionGrid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 600px) {
-  .profileHeader { padding: 24px 0 18px !important; }
 }
 
 
@@ -733,6 +833,12 @@
     gap: 18px;
   }
   .profileHeroActions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .artistHeroActionWrap {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
@@ -1955,4 +2061,809 @@
 .securityItem:last-child {
   border-bottom: none;
   padding-bottom: 0;
+}
+
+/* ============================================================
+   LOGISTICS & SHIPPING MANAGEMENT
+   ============================================================ */
+.shippingOverviewCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.shippingStatPill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.shippingStatPill:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.shippingStatIconBox {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.shippingStatNum {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.shippingStatLabel {
+  font-size: 0.8rem;
+  color: #94A3B8;
+  margin-top: 2px;
+}
+
+/* 4-Step Standard Guide */
+.shippingGuideBox {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+
+.shippingGuideHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shippingGuideTitle {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shippingGuideGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 1024px) {
+  .shippingGuideGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .shippingGuideGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shippingStepCard {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shippingStepHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shippingStepBadge {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #F3E5AB;
+  font-weight: 700;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.shippingStepName {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.shippingStepDesc {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #CBD5E1;
+  margin: 0;
+}
+
+/* Shipment Cards */
+.shipmentCard {
+  background: linear-gradient(180deg, #181920 0%, #121317 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shipmentCard:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.shipmentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 14px;
+}
+
+.shipmentMetaLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.shipmentCode {
+  font-weight: 700;
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+
+.shipmentOrderId {
+  font-size: 0.82rem;
+  color: #94A3B8;
+  font-family: var(--font-mono);
+}
+
+/* Artwork Banner Strip */
+.shipmentArtworkBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+
+.shipmentThumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.shipmentArtworkDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.shipmentArtTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.shipmentArtTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-family: var(--font-brand);
+  line-height: 1.35;
+}
+
+.shipmentUniqueBadge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #FBBF24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+}
+
+.shipmentArtSpecs {
+  margin: 0;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.shipmentArtSpecsLabel {
+  color: #94A3B8;
+}
+
+.shipmentArtSpecsValue {
+  color: #F1F5F9;
+  font-weight: 600;
+}
+
+/* Symmetrical 2-Column Grid for Packaging and Delivery Sub-cards */
+.shipmentDetailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (max-width: 860px) {
+  .shipmentDetailsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shipmentSubCard {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.shipmentSubCard:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.shipmentSubCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.shipmentSubCardIconGold {
+  color: var(--gold-primary);
+  flex-shrink: 0;
+}
+
+.shipmentSubCardIconBlue {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.shipmentSubCardTitle {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94A3B8;
+}
+
+.shipmentSubCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.shipmentPackagingContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.shipmentPackagingEmoji {
+  font-size: 1.15rem;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.shipmentPackagingMainText {
+  color: #F8FAFC;
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.shipmentPackagingSubText {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #94A3B8;
+  line-height: 1.45;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.shipmentSubCardStatusPillWarning {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #FBBF24;
+  font-size: 0.76rem;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.shipmentSubCardStatusPillSuccess {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  color: #4ADE80;
+  font-size: 0.76rem;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.shipmentPhoneText {
+  color: #CBD5E1;
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+.shipmentInfoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.45;
+}
+
+.shipmentInfoIcon {
+  color: #94A3B8;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.shipmentInfoLabel {
+  color: #94A3B8;
+  font-size: 0.82rem;
+}
+
+.shipmentInfoValue {
+  color: #F1F5F9;
+  font-weight: 600;
+}
+
+.shipmentInfoText {
+  color: #CBD5E1;
+}
+
+.shipmentClimatePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4ADE80;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  padding: 5px 11px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.shipmentDeliveredPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4ADE80;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 11px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.shipmentFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 14px;
+}
+
+.shipmentDriverMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.82rem;
+  color: #94A3B8;
+}
+
+.shipmentEtaBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: #F1F5F9;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.shipmentBtnConfirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  color: #FBF0B9;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shipmentBtnConfirm:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.15) 100%);
+  border-color: rgba(212, 175, 55, 0.7);
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+}
+
+.shipmentBtnCall {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38BDF8;
+  padding: 9px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shipmentBtnCall:hover {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: rgba(56, 189, 248, 0.6);
+  color: #FFFFFF;
+}
+
+.shipmentBtnReceipt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ADE80;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shipmentBtnReceipt:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #FFFFFF;
+}
+
+/* Post Management Toolbar & Refined Segmented Filter */
+.postManagementToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.galleryFilterSegment {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.galleryFilterBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94A3B8;
+  font-weight: 500;
+  font-size: 0.82rem;
+  padding: 7px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.galleryFilterBtn:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.galleryFilterBtnActive {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(212, 175, 55, 0.08) 100%) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  color: #F5E6B3 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.filterDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.filterCountBadge {
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94A3B8;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.filterCountBadgeActive {
+  background: rgba(212, 175, 55, 0.25);
+  color: #FBBF24;
+}
+
+.postManagementToolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.postCountLabel {
+  font-size: 0.82rem;
+  color: #94A3B8;
+}
+
+.postCountLabel strong {
+  color: #F8FAFC;
+}
+
+.searchActivePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  color: #F5E6B3;
+  font-size: 0.78rem;
+}
+
+.clearSearchBtn {
+  background: transparent;
+  border: none;
+  color: #F5E6B3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.clearSearchBtn:hover {
+  opacity: 1;
+}
+
+/* Avatar Edit Section in Artist Profile Tab */
+.avatarEditCard {
+  background: linear-gradient(145deg, rgba(26, 26, 30, 0.95) 0%, rgba(18, 18, 22, 0.98) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 16px;
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 24px;
+  transition: border-color 0.2s ease;
+}
+
+.avatarEditCard:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+.avatarEditLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.avatarUploadWrap {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+}
+
+.avatarLargeImg {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold-primary);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
+}
+
+.avatarCameraBtn {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+  color: #121316;
+  border: 2px solid #181920;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.avatarCameraBtn:hover {
+  transform: scale(1.1);
+  background: var(--gold-light);
+  color: #000;
+}
+
+.heroAvatarEditBtn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+  color: #121316;
+  border: 2px solid #181920;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.heroAvatarEditBtn:hover {
+  transform: scale(1.15);
+  background: var(--gold-light);
+  color: #000;
+}
+
+.avatarInfoDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.avatarArtistName {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-family: var(--font-brand);
+}
+
+.avatarSubText {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #94A3B8;
+  line-height: 1.5;
+  max-width: 480px;
+}
+
+.avatarFormatNote {
+  font-size: 0.74rem;
+  color: #64748B;
+}
+
+.avatarEditRight {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .avatarEditCard {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .avatarEditRight {
+    align-items: flex-start;
+  }
 }

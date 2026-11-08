@@ -1,10 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Award, MapPin, Star, ArrowRight } from 'lucide-react';
 import { USERS, ARTWORKS } from '../data/mockData';
 import styles from './ArtistsPage.module.css';
 
-const ArtistsPage = ({ addToast }) => {
+const ArtistsPage = ({ addToast, currentUser, onRegisterClick, onLoginClick, onSwitchToCollector }) => {
+  if (currentUser?.role === 'artist') {
+    return <Navigate to="/profile?tab=artworks" replace />;
+  }
+
   const artists = USERS.filter(u => u.role === 'artist');
 
   return (

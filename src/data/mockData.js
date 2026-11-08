@@ -8,11 +8,11 @@ export const USERS = [
     email: 'minh@example.com',
     role: 'collector',
     full_name: 'Nguyễn Minh Khôi',
-    collector_type: 'Nhà sưu tầm tư nhân (Private Collector)',
+    collector_type: 'Nhà sưu tầm tư nhân',
     verification_badge: true,
     kyc_level: 2,
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
-    badge_label: 'Collector L2',
+    badge_label: 'Cấp L2',
   },
   {
     user_id: 'u2',
@@ -280,8 +280,8 @@ export const ARTWORKS = [
     dominant_color: '#00897B',
     reserve_price: 24000000,
     current_price: 24000000,
-    image: 'https://images.unsplash.com/photo-1549887552-cb1071d3e5ca?w=1000&auto=format&fit=crop&q=80',
-    texture_map_url: 'https://images.unsplash.com/photo-1549887552-cb1071d3e5ca?w=1000&auto=format&fit=crop&q=80',
+    image: '/artwork_5.png',
+    texture_map_url: '/artwork_5.png',
     curator_statement: 'Cấu trúc nhịp điệu mãnh liệt giữa màu xanh ngọc bích và các tia sáng tạo cảm giác chuyển động đa chiều bất tận.',
     tags: ['Hiện đại', 'Acrylic', 'Ngọc bích', 'Trừu tượng'],
     style: 'Hiện đại',
@@ -427,7 +427,7 @@ export const formatPrice = (price) => {
 };
 
 export const formatPriceFull = (price) =>
-  price.toLocaleString('vi-VN') + ' ₫';
+  price.toLocaleString('vi-VN') + '\u00A0₫';
 
 export const formatCountdown = (endTime) => {
   const diff = Math.max(0, new Date(endTime) - new Date());

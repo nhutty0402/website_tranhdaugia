@@ -176,13 +176,17 @@ button {
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 clamp(16px, 3.5vw, 40px);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .container-sm {
   max-width: 960px;
   margin: 0 auto;
-  padding: 0 var(--space-4);
+  padding: 0 clamp(14px, 3vw, 24px);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .gold-text {

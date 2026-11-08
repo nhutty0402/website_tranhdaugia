@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import {
   ShieldCheck, CreditCard, Smartphone, Wallet,
   ChevronRight, ChevronDown, ChevronUp, Lock, Check,
@@ -72,9 +72,13 @@ function calcFee(amount, method) {
 }
 
 // ══════════════════════════════════════════════════════════════════════
-export default function CheckoutPage({ currentUser, addToast }) {
+export default function CheckoutPage({ currentUser, addToast, onRegisterClick, onLoginClick, onSwitchToCollector }) {
   const { artworkId } = useParams();
   const navigate = useNavigate();
+
+  if (currentUser?.role === 'artist') {
+    return <Navigate to="/profile?tab=artworks" replace />;
+  }
 
   const artwork = ARTWORKS.find(a => a.artwork_id === artworkId) || ARTWORKS[0];
   const session = AUCTION_SESSIONS.find(s => s.artwork_id === artwork.artwork_id);
