@@ -2867,3 +2867,207 @@
     align-items: flex-start;
   }
 }
+
+@media (max-width: 480px) {
+  .avatarEditCard {
+    padding: 18px 14px;
+  }
+  .avatarEditLeft {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+  }
+  .avatarInfoDetails {
+    align-items: center;
+  }
+  .avatarEditRight {
+    width: 100%;
+  }
+  .avatarEditRight button,
+  .avatarEditRight label {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Responsive quy trình giao nhận & thanh công cụ Họa sĩ (390px Mobile & 768px iPad) */
+@media (max-width: 640px) {
+  .postManagementToolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .galleryFilterSegment {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    padding: 4px;
+  }
+  .galleryFilterSegment::-webkit-scrollbar {
+    display: none;
+  }
+  .galleryFilterBtn {
+    flex-shrink: 0;
+    padding: 6px 11px;
+    font-size: 0.78rem;
+  }
+  .postManagementToolbarRight {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .shipmentHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .shipmentFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .shipmentBtnConfirm,
+  .shipmentBtnCall,
+  .shipmentBtnReceipt {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+  }
+}
+
+/* Artist Post Card Item Responsive */
+.artistPostCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.artistPostCardSold {
+  border-color: rgba(197, 160, 89, 0.3) !important;
+}
+
+.artistPostCardLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 280px;
+  flex: 1;
+}
+
+.artistPostCardRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.artistPostPriceBlock {
+  text-align: right;
+  min-width: 140px;
+}
+
+.artistPostActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .artistPostCard {
+    padding: 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .artistPostCardLeft {
+    min-width: 0;
+    width: 100%;
+    gap: 12px;
+  }
+  .artistPostCardRight {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+  }
+  .artistPostPriceBlock {
+    text-align: left;
+    min-width: 0;
+  }
+  .artistPostActions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+/* Artist Order Card Item Responsive */
+.artistOrderCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.artistOrderBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.artistOrderProductLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 280px;
+  flex: 1;
+}
+
+.artistOrderPriceRight {
+  text-align: right;
+  min-width: 160px;
+}
+
+@media (max-width: 640px) {
+  .artistOrderCard {
+    padding: 14px;
+  }
+  .artistOrderBody {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .artistOrderProductLeft {
+    min-width: 0;
+    width: 100%;
+    gap: 12px;
+  }
+  .artistOrderPriceRight {
+    text-align: left;
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 8px;
+  }
+}

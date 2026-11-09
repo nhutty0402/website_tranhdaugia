@@ -6,7 +6,7 @@ import {
   PlusCircle, LayoutDashboard, Trophy, MessageSquare, AlertCircle, TrendingUp, LogOut, Palette,
   ShieldAlert, CheckCircle2, RotateCcw, Settings as SettingsIcon, UserCog,
   Truck, Copy, Check, Search, Filter, Receipt, FileText, ChevronRight, Eye, ShieldCheck, MapPin, Phone, CreditCard, Sparkles, Printer, X, DollarSign, Wallet, Building2, Send, ChevronDown,
-  Edit3, Trash2, Camera, Upload
+  Edit3, Trash2, Camera, Upload, Gavel, Tag
 } from 'lucide-react';
 import {
   ARTWORKS, AUCTION_SESSIONS, BID_HISTORY, formatPrice, formatPriceFull
@@ -2439,6 +2439,10 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
     e.preventDefault();
     if (!editingArtwork) return;
     setPosts(prev => prev.map(p => p.artwork_id === editingArtwork.artwork_id ? editingArtwork : p));
+    const foundIdx = ARTWORKS.findIndex(a => a.artwork_id === editingArtwork.artwork_id);
+    if (foundIdx !== -1) {
+      ARTWORKS[foundIdx] = { ...ARTWORKS[foundIdx], ...editingArtwork };
+    }
     addToast?.(`✦ Cập nhật bài đăng "${editingArtwork.title}" thành công!`, 'success');
     setEditingArtwork(null);
   };
@@ -2556,20 +2560,9 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
             return (
               <div
                 key={art.artwork_id}
-                style={{
-                  background: 'var(--bg-elevated)',
-                  border: isSold ? '1px solid rgba(197, 160, 89, 0.3)' : '1px solid var(--border-subtle)',
-                  borderRadius: 14,
-                  padding: '18px 20px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: 16,
-                  transition: 'border-color 0.2s ease, transform 0.2s ease'
-                }}
+                className={`${styles.artistPostCard} ${isSold ? styles.artistPostCardSold : ''}`}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 280, flex: 1 }}>
+                <div className={styles.artistPostCardLeft}>
                   <img
                     src={art.image}
                     alt={art.title}
@@ -2579,6 +2572,22 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
                       <span className="badge badge-verified" style={{ fontSize: '0.7rem' }}>Độc bản 1/1</span>
+
+                      {/* Huy hiệu hình thức đăng bán */}
+                      {art.sale_format === 'sealed_auction' || art.auction_type === 'sealed' ? (
+                        <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.35)', fontSize: '0.7rem' }}>
+                          <Lock size={10} /> Đấu giá kín
+                        </span>
+                      ) : art.sale_format === 'direct_sale' || !art.is_auction ? (
+                        <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34D399', border: '1px solid rgba(16, 185, 129, 0.35)', fontSize: '0.7rem' }}>
+                          <Tag size={10} /> Bán bình thường
+                        </span>
+                      ) : (
+                        <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#FBBF24', border: '1px solid rgba(245, 158, 11, 0.35)', fontSize: '0.7rem' }}>
+                          <Gavel size={10} /> Đấu giá trực tiếp
+                        </span>
+                      )}
+
                       {isSold ? (
                         <span className="badge" style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ECC71', border: '1px solid rgba(46, 204, 113, 0.3)', fontSize: '0.7rem' }}>
                           <CheckCircle2 size={11} /> Đã bán
@@ -2607,17 +2616,23 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-                  <div style={{ textAlign: 'right', minWidth: 140 }}>
+                <div className={styles.artistPostCardRight}>
+                  <div className={styles.artistPostPriceBlock}>
                     <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      {isSold ? 'Giá đã bán' : 'Giá niêm yết'}
+                      {isSold
+                        ? 'Giá đã bán'
+                        : (art.sale_format === 'sealed_auction' || art.auction_type === 'sealed')
+                          ? 'Giá sàn đấu kín'
+                          : (art.sale_format === 'direct_sale' || !art.is_auction)
+                            ? 'Giá bán niêm yết'
+                            : 'Giá khởi điểm'}
                     </span>
                     <p style={{ margin: '2px 0 0', fontSize: '1.2rem', fontWeight: 800, color: 'var(--gold-primary)', fontFamily: 'var(--font-display)' }}>
                       {formatPriceFull(art.price_val)}
                     </p>
                   </div>
 
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <div className={styles.artistPostActions}>
                     <Link
                       to={`/artwork/${art.artwork_id}`}
                       className="btn btn-ghost btn-sm"
@@ -2709,10 +2724,33 @@ const ArtistPostManagementTab = ({ currentUser, onOpenUpload, artworksVersion, a
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 6 }}>
-                    Giá bán niêm yết (VNĐ) *
+                    Hình thức phân phối
+                  </label>
+                  <select
+                    className="input"
+                    value={editingArtwork.sale_format || (editingArtwork.auction_type === 'sealed' ? 'sealed_auction' : (editingArtwork.is_auction ? 'live_auction' : 'direct_sale'))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEditingArtwork({
+                        ...editingArtwork,
+                        sale_format: val,
+                        is_auction: val !== 'direct_sale',
+                        auction_type: val === 'sealed_auction' ? 'sealed' : (val === 'live_auction' ? 'live' : null)
+                      });
+                    }}
+                    style={{ background: 'var(--bg-elevated)' }}
+                  >
+                    <option value="live_auction">⚡ Đấu giá trực tiếp</option>
+                    <option value="sealed_auction">🔒 Đấu giá kín</option>
+                    <option value="direct_sale">🏷️ Bán tranh bình thường</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 6 }}>
+                    {editingArtwork.sale_format === 'sealed_auction' ? 'Giá sàn đấu kín (VNĐ) *' : (editingArtwork.sale_format === 'direct_sale' ? 'Giá bán niêm yết (VNĐ) *' : 'Giá khởi điểm (VNĐ) *')}
                   </label>
                   <input
                     type="number"
@@ -2977,15 +3015,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
           return (
             <div
               key={order.order_id}
-              style={{
-                background: 'var(--bg-elevated)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 14,
-                padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 14
-              }}
+              className={styles.artistOrderCard}
             >
               {/* Order Header */}
               <div style={{
@@ -3023,15 +3053,9 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
               </div>
 
               {/* Order Body */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 16
-              }}>
+              <div className={styles.artistOrderBody}>
                 {/* Product info */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 280, flex: 1 }}>
+                <div className={styles.artistOrderProductLeft}>
                   <img
                     src={order.image}
                     alt={order.title}
@@ -3052,7 +3076,7 @@ const ArtistOrderManagementTab = ({ currentUser, onGoToShipping, addToast }) => 
                 </div>
 
                 {/* Amount & Escrow text */}
-                <div style={{ textAlign: 'right', minWidth: 160 }}>
+                <div className={styles.artistOrderPriceRight}>
                   <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                     Giá trị đơn hàng
                   </span>
@@ -3524,7 +3548,7 @@ const DeliveryReceiptModal = ({ shipment, onClose, addToast }) => {
 
   return (
     <div className={styles.invoiceModalOverlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className={styles.invoiceModalBox} style={{ maxWidth: 660, padding: 28 }}>
+      <div className={styles.invoiceModalBox} style={{ maxWidth: 660, padding: '24px 20px' }}>
         {/* Top Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -3610,7 +3634,7 @@ const DeliveryReceiptModal = ({ shipment, onClose, addToast }) => {
           </div>
 
           {/* 2 Parties Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
             {/* Sender / Carrier */}
             <div style={{
               background: 'rgba(255, 255, 255, 0.02)',
@@ -4370,7 +4394,7 @@ const ArtistBeneficiaryModal = ({ currentAccount, onSave, onClose, user }) => {
 
   return (
     <div className={styles.invoiceModalOverlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className={styles.invoiceModalBox} style={{ maxWidth: 520, padding: 28 }}>
+      <div className={styles.invoiceModalBox} style={{ maxWidth: 520, padding: '24px 20px' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
